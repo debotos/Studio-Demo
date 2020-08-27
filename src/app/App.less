@@ -4,3 +4,12 @@ body {
 	-webkit-font-smoothing: antialiased;
 	-moz-osx-font-smoothing: grayscale;
 }
+
+.hide-native-scrollbar {
+	scrollbar-width: none; /* Firefox 64 */
+	-ms-overflow-style: none; /* Internet Explorer 11 */
+	&::-webkit-scrollbar {
+		/** WebKit */
+		display: none;
+	}
+}
