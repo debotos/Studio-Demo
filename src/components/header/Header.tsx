@@ -11,22 +11,18 @@ export function AppHeader() {
 
 	return (
 		<>
-			<header>
-				<Container>
-					<Row align='middle'>
-						<FiMenu
-							style={{ fontSize: 30, cursor: 'pointer' }}
-							onClick={() => setNavigation(true)}
-						/>
-						<AppLogo src={Logo} alt='Ezilm Studio' />
-						<Divider />
-						<Title>EZILM Studio</Title>
-					</Row>
-					<Row align='middle'>
-						<AppUser>KM</AppUser>
-					</Row>
-				</Container>
-			</header>
+			<Container>
+				<Row align='middle'>
+					<FiMenu style={{ fontSize: 30, cursor: 'pointer' }} onClick={() => setNavigation(true)} />
+					<AppLogo src={Logo} alt='Ezilm Studio' />
+					<Divider />
+					<Title>EZILM Studio</Title>
+				</Row>
+				<Row align='middle'>
+					<AppUser>KM</AppUser>
+				</Row>
+			</Container>
+
 			{/* Side Navigation Drawer for Tree View */}
 			<HoverAreaToOpenNavigationDrawer onMouseEnter={() => setNavigation(true)} />
 			<NavigationDrawer
@@ -60,9 +56,10 @@ export function AppHeader() {
 	)
 }
 
-const headerHeight = 65
-const Container = styled.div`
+export const headerHeight = 65
+const Container = styled.header`
 	align-items: center;
+	background: #fff;
 	border-bottom: 2px solid #eee;
 	display: flex;
 	height: ${headerHeight + 'px'};
@@ -72,6 +69,7 @@ const Container = styled.div`
 	padding: 5px 20px;
 	right: 0;
 	top: 0;
+	z-index: 997; /* Ratio with hover open area of NavigationDrawer */
 `
 const AppLogo = styled.img`
 	margin-bottom: 10px;
@@ -120,7 +118,7 @@ const NavigationDrawer = styled.div`
 	top: 0;
 	transition: all 0.3s ease-out;
 	width: max-content;
-	z-index: 999;
+	z-index: 999; /* Greater than all other custom element but lower than antd elements  */
 `
 const NavigationDrawerBody = styled.div`
 	height: calc(100vh - ${headerHeight + 'px'});
