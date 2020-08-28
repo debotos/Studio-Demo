@@ -4,6 +4,7 @@ import { FiMenu, FiXCircle } from 'react-icons/fi'
 import { Row, Avatar } from 'antd'
 
 import Logo from '../../assets/logo/ezilm-blue-logo.png'
+import { SideNavigation } from '../sideNavigation/SideNavigation'
 
 export function AppHeader() {
 	const [navigation, setNavigation] = useState(false)
@@ -29,7 +30,7 @@ export function AppHeader() {
 			{/* Side Navigation Drawer for Tree View */}
 			<HoverAreaToOpenNavigationDrawer onMouseEnter={() => setNavigation(true)} />
 			<NavigationDrawer
-				style={{ transform: navigation ? 'translateX(0)' : 'translateX(-100%)' }}
+				style={{ transform: navigation ? 'translateX(0)' : 'translateX(0)' }}
 				onMouseLeave={() => setNavigation(false)}
 			>
 				{/* Navigation Drawer Header */}
@@ -52,18 +53,19 @@ export function AppHeader() {
 				</Row>
 				{/* Navigation Drawer Body */}
 				<NavigationDrawerBody className='hide-native-scrollbar'>
-					<p>Some contents...</p>
+					<SideNavigation close={() => setNavigation(false)} />
 				</NavigationDrawerBody>
 			</NavigationDrawer>
 		</>
 	)
 }
 
+const headerHeight = 65
 const Container = styled.div`
 	align-items: center;
 	border-bottom: 2px solid #eee;
 	display: flex;
-	height: 65px;
+	height: ${headerHeight + 'px'};
 	justify-content: space-between;
 	left: 0;
 	position: fixed;
@@ -112,8 +114,8 @@ const NavigationDrawer = styled.div`
 	height: 100%;
 	left: 0;
 	min-width: 330px;
-	min-height: 100vh;
 	max-width: 100vw;
+	min-height: 100vh;
 	position: fixed;
 	top: 0;
 	transition: all 0.3s ease-out;
@@ -121,9 +123,8 @@ const NavigationDrawer = styled.div`
 	z-index: 999;
 `
 const NavigationDrawerBody = styled.div`
-	height: 100%;
+	height: calc(100vh - ${headerHeight + 'px'});
 	overflow-y: scroll;
-	padding: 25px;
-	padding-top: 15px;
+	padding: 0 25px;
 	width: 100%;
 `
