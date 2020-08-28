@@ -30,7 +30,7 @@ export function AppHeader() {
 			{/* Side Navigation Drawer for Tree View */}
 			<HoverAreaToOpenNavigationDrawer onMouseEnter={() => setNavigation(true)} />
 			<NavigationDrawer
-				style={{ transform: navigation ? 'translateX(0)' : 'translateX(0)' }}
+				style={{ transform: navigation ? 'translateX(0)' : 'translateX(-100%)' }}
 				onMouseLeave={() => setNavigation(false)}
 			>
 				{/* Navigation Drawer Header */}
