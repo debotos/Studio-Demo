@@ -118,7 +118,7 @@ const NavigationDrawer = styled.div`
 	top: 0;
 	transition: all 0.3s ease-out;
 	width: max-content;
-	z-index: 999; /* Greater than all other custom element but lower than antd elements  */
+	z-index: 999; /* Greater than all other custom element except 'LoadingOverlay' but lower than antd elements  */
 `
 const NavigationDrawerBody = styled.div`
 	height: calc(100vh - ${headerHeight + 'px'});

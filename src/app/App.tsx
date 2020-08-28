@@ -8,11 +8,9 @@ import './App.less'
 import { AppHeader, headerHeight } from '../components/header/Header'
 import getRoutes from './routes'
 
-import { LoaderOverlay } from '../components/loading/Loading'
 export const routeHistory = createBrowserHistory()
 
 function App() {
-	return <LoaderOverlay />
 	return (
 		<>
 			<Router history={routeHistory}>

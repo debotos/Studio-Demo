@@ -44,7 +44,7 @@ export function LoadingCenter(props: any) {
 }
 
 /* props can be -> color, msg, msgColor, opacity */
-export function LoaderOverlay(props: any) {
+export function LoadingOverlay(props: any) {
 	return (
 		<div
 			style={{
@@ -59,8 +59,8 @@ export function LoaderOverlay(props: any) {
 				display: 'flex',
 				justifyContent: 'center',
 				alignItems: 'center',
-				backgroundColor: `rgba(0, 0, 0, ${props.opacity ? props.opacity : 0.7})`,
-				zIndex: 999999,
+				backgroundColor: `rgba(0, 0, 0, ${props.opacity ? props.opacity : 0.6})`,
+				zIndex: 999999 /* Above everything */,
 			}}
 		>
 			<Loading {...props} />
