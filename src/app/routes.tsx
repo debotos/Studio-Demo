@@ -24,11 +24,19 @@ const getRoutes = (action = '', id = '', name = '') => [
 	{ path: '/editor/subject', exact: true, name: 'Subjects', component: Subject },
 	{ path: `/editor/subject/:action`, exact: true, name: str(`${action} new subject`), component: Subject },
 	{ path: `/editor/subject/:action/:id`, exact: true, name: `${name}`, component: Subject },
-
-	{ path: '/editor/level', exact: true, name: 'Level', component: Level },
-	{ path: '/editor/unit', exact: true, name: 'Unit', component: Unit },
-	{ path: '/editor/lesson', exact: true, name: 'Lesson', component: Lesson },
-	{ path: '/editor/slide', exact: true, name: 'Slide', component: Slide },
+	// Level
+	{ path: '/editor/level', exact: true, name: 'Levels', component: Level },
+	{ path: `/editor/level/:action`, exact: true, name: str(`${action} new level`), component: Level },
+	{ path: `/editor/level/:action/:id`, exact: true, name: `${name}`, component: Level },
+	// Unit
+	{ path: '/editor/unit', exact: true, name: 'Units', component: Unit },
+	{ path: `/editor/unit/:action`, exact: true, name: str(`${action} new unit`), component: Unit },
+	{ path: `/editor/unit/:action/:id`, exact: true, name: `${name}`, component: Unit },
+	// Lesson
+	{ path: '/editor/lesson', exact: true, name: 'Lessons', component: Lesson },
+	{ path: `/editor/lesson/:action`, exact: true, name: str(`${action} new lesson`), component: Lesson },
+	{ path: `/editor/lesson/:action/:id`, exact: true, name: `${name}`, component: Lesson },
+	{ path: `/editor/lesson/:lessonID/slide/:slideID`, exact: true, name: `${name}`, component: Slide },
 ]
 
 export default getRoutes
