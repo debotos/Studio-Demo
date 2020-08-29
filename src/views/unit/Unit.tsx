@@ -2,8 +2,9 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 import AddUnit from './AddUnit'
-import EditAndViewUnit from './EditAndViewUnit'
+import EditUnit from './EditUnit'
 import UnitsViewList from './UnitsViewList'
+import ViewUnit from './ViewUnit'
 
 import keys from '../../config/keys'
 
@@ -22,8 +23,9 @@ export default function Unit(props: any) {
 		case keys.createAction:
 			return <AddUnit {...props} />
 		case keys.editAction:
+			return <EditUnit {...props} />
 		case keys.viewAction:
-			return <EditAndViewUnit {...props} />
+			return <ViewUnit {...props} />
 		default:
 			return redirectToRoot
 	}

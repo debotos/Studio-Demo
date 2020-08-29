@@ -2,8 +2,9 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 import AddLevel from './AddLevel'
-import EditAndViewLevel from './EditAndViewLevel'
+import EditLevel from './EditLevel'
 import LevelsViewList from './LevelsViewList'
+import ViewLevel from './ViewLevel'
 
 import keys from '../../config/keys'
 
@@ -22,8 +23,9 @@ export default function Level(props: any) {
 		case keys.createAction:
 			return <AddLevel {...props} />
 		case keys.editAction:
+			return <EditLevel {...props} />
 		case keys.viewAction:
-			return <EditAndViewLevel {...props} />
+			return <ViewLevel {...props} />
 		default:
 			return redirectToRoot
 	}

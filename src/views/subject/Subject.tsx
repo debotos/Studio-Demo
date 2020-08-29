@@ -2,8 +2,9 @@ import React from 'react'
 import { Redirect } from 'react-router-dom'
 
 import AddSubject from './AddSubject'
-import EditAndViewSubject from './EditAndViewSubject'
+import EditSubject from './EditSubject'
 import SubjectsViewList from './SubjectsViewList'
+import ViewSubject from './ViewSubject'
 
 import keys from '../../config/keys'
 
@@ -22,8 +23,9 @@ export default function Subject(props: any) {
 		case keys.createAction:
 			return <AddSubject {...props} />
 		case keys.editAction:
+			return <EditSubject {...props} />
 		case keys.viewAction:
-			return <EditAndViewSubject {...props} />
+			return <ViewSubject {...props} />
 		default:
 			return redirectToRoot
 	}

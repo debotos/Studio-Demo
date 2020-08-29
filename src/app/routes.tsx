@@ -36,7 +36,7 @@ const getRoutes = (action = '', id = '', name = '') => [
 	{ path: '/editor/lesson', exact: true, name: 'Lessons', component: Lesson },
 	{ path: `/editor/lesson/:action`, exact: true, name: str(`${action} new lesson`), component: Lesson },
 	{ path: `/editor/lesson/:action/:id`, exact: true, name: `${name}`, component: Lesson },
-	{ path: `/editor/lesson/:lessonID/slide/:slideID`, exact: true, name: `${name}`, component: Slide },
+	{ path: `/editor/lesson/:id/slide/:slideID`, exact: true, name: `${name}`, component: Slide },
 ]
 
 export default getRoutes
