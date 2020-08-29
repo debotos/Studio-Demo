@@ -18,15 +18,14 @@ function App() {
 				<AppBody>
 					<Switch>
 						{getRoutes().map((route: any, idx: number) => {
+							if (!route.component) return null
 							return (
-								route.component && (
-									<Route
-										key={idx}
-										path={route.path}
-										exact={route.exact}
-										render={(props) => <route.component {...props} />}
-									/>
-								)
+								<Route
+									key={idx}
+									path={route.path}
+									exact={route.exact}
+									render={(props) => <route.component {...props} />}
+								/>
 							)
 						})}
 						<Redirect from='/' to='/dashboard' />
