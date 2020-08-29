@@ -21,14 +21,14 @@ const getRoutes = (action = '', id = '', name = '') => [
 	{ path: '/dashboard', exact: true, name: 'Dashboard', component: Dashboard },
 	/* Editors */
 	// Subject
-	{ path: '/editor/subjects', exact: true, name: 'Subjects', component: Subject },
-	{ path: `/editor/subjects/:action`, exact: true, name: str(`${action} new subject`), component: Subject },
-	{ path: `/editor/subjects/:action/:id`, exact: true, name: `${name}`, component: Subject },
+	{ path: '/editor/subject', exact: true, name: 'Subjects', component: Subject },
+	{ path: `/editor/subject/:action`, exact: true, name: str(`${action} new subject`), component: Subject },
+	{ path: `/editor/subject/:action/:id`, exact: true, name: `${name}`, component: Subject },
 
-	{ path: '/editor/levels', exact: true, name: 'Level', component: Level },
-	{ path: '/editor/units', exact: true, name: 'Unit', component: Unit },
-	{ path: '/editor/lessons', exact: true, name: 'Lesson', component: Lesson },
-	{ path: '/editor/slides', exact: true, name: 'Slide', component: Slide },
+	{ path: '/editor/level', exact: true, name: 'Level', component: Level },
+	{ path: '/editor/unit', exact: true, name: 'Unit', component: Unit },
+	{ path: '/editor/lesson', exact: true, name: 'Lesson', component: Lesson },
+	{ path: '/editor/slide', exact: true, name: 'Slide', component: Slide },
 ]
 
 export default getRoutes
