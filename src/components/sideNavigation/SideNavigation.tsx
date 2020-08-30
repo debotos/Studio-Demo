@@ -16,7 +16,7 @@ interface CProps {
 export function SideNavigation(props: CProps) {
 	return (
 		<Container>
-			<Title>English Content</Title>
+			<Title className='hide-native-scrollbar'>English Content</Title>
 			<Content className='hide-native-scrollbar' headerHeight={props.headerHeight || 65}>
 				{Array(10)
 					.fill(0)
@@ -40,7 +40,10 @@ const Title = styled.div`
 	font-size: 20px;
 	font-weight: 500;
 	height: ${titleHeight + 'px'};
+	overflow-x: scroll;
+	padding: 0 15px;
 	text-align: center;
+	white-space: nowrap;
 `
 const Content: any = styled.div`
 	height: ${(props: any) => `calc(100vh - ${props.headerHeight + titleHeight + 'px'})`};
@@ -175,8 +178,8 @@ function Lesson(props: any) {
 			<LessonItem>
 				<span style={{ minWidth: 30, textAlign: 'center' }}>{getIcon()}</span>
 				<LessonLabel
-					active={index === 5 && 'true'}
-					completed={index < 5 && 'true'}
+					active={index === 5 ? 'true' : 'false'}
+					completed={index < 5 ? 'true' : 'false'}
 					level={5}
 					ellipsis={{ rows: 2 }}
 					onClick={() => routeHistory.push(`/editor/lesson/${keys.viewAction}/${id}`)}
