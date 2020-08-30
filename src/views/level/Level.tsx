@@ -16,8 +16,8 @@ export default function Level(props: any) {
 
 	// No 'action' means give the list
 	if (!action) return <LevelsViewList {...props} />
-	// 'action' exist but no 'id' means user is trying to 'view'|'edit' without specifying the item
-	if (action && !id) return redirectToRoot
+	// 'action' exist and it's not 'create' action but no 'id' means user is trying to 'view'|'edit' without specifying the item
+	if (action && action !== keys.createAction && !id) return redirectToRoot
 
 	switch (action) {
 		case keys.createAction:

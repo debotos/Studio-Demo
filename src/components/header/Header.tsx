@@ -6,6 +6,8 @@ import { Row, Avatar } from 'antd'
 import Logo from '../../assets/logo/ezilm-blue-logo.png'
 import { SideNavigation } from '../sideNavigation/SideNavigation'
 
+export const headerHeight = 65
+
 export function AppHeader() {
 	const [navigation, setNavigation] = useState(false)
 
@@ -30,33 +32,25 @@ export function AppHeader() {
 				onMouseLeave={() => setNavigation(false)}
 			>
 				{/* Navigation Drawer Header */}
-				<Row
-					align='middle'
-					justify='space-between'
-					style={{ padding: '6px 15px 6px 25px', borderBottom: '2px solid #eee' }}
-				>
+				<Row align='middle' justify='space-between' style={{ padding: '6px 15px 6px 25px', borderBottom: '2px solid #eee' }}>
 					<Row align='middle'>
 						<AppLogo src={Logo} alt='Ezilm Studio' style={{ marginLeft: -10 }} />
 						<Divider />
 						<Title>EZILM Studio</Title>
 					</Row>
 					<Row align='middle'>
-						<FiXCircle
-							style={{ fontSize: 25, cursor: 'pointer' }}
-							onClick={() => setNavigation(false)}
-						/>
+						<FiXCircle style={{ fontSize: 25, cursor: 'pointer' }} onClick={() => setNavigation(false)} />
 					</Row>
 				</Row>
 				{/* Navigation Drawer Body */}
-				<NavigationDrawerBody className='hide-native-scrollbar'>
-					<SideNavigation close={() => setNavigation(false)} />
+				<NavigationDrawerBody>
+					<SideNavigation close={() => setNavigation(false)} headerHeight={headerHeight} />
 				</NavigationDrawerBody>
 			</NavigationDrawer>
 		</>
 	)
 }
 
-export const headerHeight = 65
 const Container = styled.header`
 	align-items: center;
 	background: #fff;
@@ -107,22 +101,18 @@ const HoverAreaToOpenNavigationDrawer = styled.div`
 `
 const NavigationDrawer = styled.div`
 	background-color: #fff;
-	box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08),
-		0 9px 28px 8px rgba(0, 0, 0, 0.05);
+	box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
 	height: 100%;
 	left: 0;
-	min-width: 330px;
-	max-width: 100vw;
 	min-height: 100vh;
 	position: fixed;
 	top: 0;
 	transition: all 0.3s ease-out;
-	width: max-content;
+	width: 350px;
 	z-index: 999; /* Greater than all other custom element except 'LoadingOverlay' but lower than antd elements  */
 `
 const NavigationDrawerBody = styled.div`
 	height: calc(100vh - ${headerHeight + 'px'});
-	overflow-y: scroll;
-	padding: 0 25px;
+	padding: 0 0;
 	width: 100%;
 `
