@@ -55,13 +55,13 @@ const Container: any = styled.div`
 	margin-top: -2px; /* To hide the bottom border of SideNavigation Header */
 `
 const EmptyContainer: any = styled.div`
-	padding: 20px;
+	align-items: center;
 	display: flex;
 	flex-direction: column;
-	align-items: center;
-	justify-content: center;
 	height: 100%;
+	justify-content: center;
 	margin-top: ${(props: any) => `${-props.headerHeight + 'px'}`};
+	padding: 20px;
 `
 const Title = styled.div`
 	background-color: #252322e3;

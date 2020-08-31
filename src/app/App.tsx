@@ -34,7 +34,8 @@ export default App
 const AppBody = styled.div`
 	height: 100%;
 	min-height: calc(100vh - ${headerHeight + 'px'});
-	margin-top: ${headerHeight + 'px'};
+	padding: 20px;
+	padding-top: ${headerHeight + 20 + 'px'};
 	position: relative;
 	width: 100%;
 `
