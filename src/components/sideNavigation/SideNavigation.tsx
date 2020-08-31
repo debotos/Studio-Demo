@@ -1,6 +1,6 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { Typography } from 'antd'
+import { Typography, Empty, Button } from 'antd'
 import { FiPlus, FiChevronUp, FiChevronDown } from 'react-icons/fi'
 import { CgShapeCircle, CgCheck } from 'react-icons/cg'
 import { GoPrimitiveDot } from 'react-icons/go'
@@ -14,15 +14,35 @@ interface CProps {
 }
 
 export function SideNavigation(props: CProps) {
+	const subjectIsSelected = true
+	if (!subjectIsSelected) {
+		return (
+			<EmptyContainer headerHeight={props.headerHeight || 65}>
+				<Empty
+					image={Empty.PRESENTED_IMAGE_SIMPLE}
+					description={<span>No subject is currently selected. You have to select a subject first!</span>}
+				>
+					<Button size='small' type='primary' onClick={() => routeHistory.push('/editor/subject')}>
+						See all subjects
+					</Button>
+				</Empty>
+			</EmptyContainer>
+		)
+	}
+	const levels = Array(10).fill(0) || []
 	return (
 		<Container>
 			<Title className='hide-native-scrollbar'>English Content</Title>
 			<Content className='hide-native-scrollbar' headerHeight={props.headerHeight || 65}>
-				{Array(10)
-					.fill(0)
-					.map((_, index) => (
-						<Level key={index} index={index + 1} />
-					))}
+				{levels.length > 0 ? (
+					levels.map((_, index) => <Level key={index} index={index + 1} />)
+				) : (
+					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No level is created under this subject.</span>}>
+						<Button size='small' type='primary' onClick={() => routeHistory.push(`/editor/level/${keys.createAction}`)}>
+							Create a new level
+						</Button>
+					</Empty>
+				)}
 			</Content>
 		</Container>
 	)
@@ -33,6 +53,15 @@ const Container: any = styled.div`
 	height: 100%;
 	width: 100%;
 	margin-top: -2px; /* To hide the bottom border of SideNavigation Header */
+`
+const EmptyContainer: any = styled.div`
+	padding: 20px;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	height: 100%;
+	margin-top: ${(props: any) => `${-props.headerHeight + 'px'}`};
 `
 const Title = styled.div`
 	background-color: #252322e3;
