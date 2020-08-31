@@ -13,7 +13,7 @@ const Unit = loadable(() => import('../views/unit/Unit'), loadableOptions)
 const Lesson = loadable(() => import('../views/lesson/Lesson'), loadableOptions)
 const Slide = loadable(() => import('../views/slide/Slide'), loadableOptions)
 
-const str = (string: string = '') => string.trim().charAt(0).toUpperCase() + string.trim().slice(1)
+export const str = (string: string = '') => string.trim().charAt(0).toUpperCase() + string.trim().slice(1)
 
 const getRoutes = (action = '', id = '', name = '') => [
 	/* General */

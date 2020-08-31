@@ -2,6 +2,7 @@ import React from 'react'
 import { Router, Switch, Route, Redirect } from 'react-router-dom'
 import { createBrowserHistory } from 'history'
 import styled from 'styled-components'
+import media from 'styled-media-query'
 import {} from 'antd'
 
 import './App.less'
@@ -34,8 +35,13 @@ export default App
 const AppBody = styled.div`
 	height: 100%;
 	min-height: calc(100vh - ${headerHeight + 'px'});
-	padding: 20px;
-	padding-top: ${headerHeight + 20 + 'px'};
+	padding: 40px;
 	position: relative;
 	width: 100%;
+	${media.lessThan('medium')`
+    /* screen width is less than 768px (medium) */
+    padding: 25px;
+  `}
+	/* Override upper padding rules */
+	padding-top: ${headerHeight + 20 + 'px'} !important;
 `
