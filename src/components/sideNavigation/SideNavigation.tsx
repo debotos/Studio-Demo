@@ -1,7 +1,8 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
+import { withRouter } from 'react-router-dom'
 import { Typography, Empty, Button } from 'antd'
-import { FiPlus, FiChevronUp, FiChevronDown } from 'react-icons/fi'
+import { FiChevronUp, FiChevronDown } from 'react-icons/fi'
 import { CgShapeCircle, CgCheck } from 'react-icons/cg'
 import { GoPrimitiveDot } from 'react-icons/go'
 
@@ -32,10 +33,10 @@ export function SideNavigation(props: CProps) {
 	const levels = Array(10).fill(0) || []
 	return (
 		<Container>
-			<Title className='hide-native-scrollbar'>English Content</Title>
+			<SubjectTitle className='hide-native-scrollbar'>English Content</SubjectTitle>
 			<Content className='hide-native-scrollbar' headerHeight={props.headerHeight || 65}>
 				{levels.length > 0 ? (
-					levels.map((_, index) => <Level key={index} index={index + 1} />)
+					levels.map((_, index) => <Level key={index} index={index + 1} id={index + 1} />)
 				) : (
 					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No level is created under this subject.</span>}>
 						<Button size='small' type='primary' onClick={() => routeHistory.push(`/editor/level/${keys.createAction}`)}>
@@ -63,7 +64,7 @@ const EmptyContainer: any = styled.div`
 	margin-top: ${(props: any) => `${-props.headerHeight + 'px'}`};
 	padding: 20px;
 `
-const Title = styled.div`
+const SubjectTitle = styled.div`
 	background-color: #252322e3;
 	color: #fff;
 	font-size: 20px;
@@ -79,26 +80,37 @@ const Content: any = styled.div`
 	overflow-y: scroll;
 `
 
-function Level(props: any) {
-	const [expand, setExpand] = useState(false)
+function LevelComponent(props: any) {
+	const { id, location } = props
 
-	const { index } = props
+	const checkActive = () => {
+		// Also have to check parentID and expand parent too
+		// For that have to integrate redux
+		const { pathname } = location
+		if (pathname.includes(`/editor/level/${keys.viewAction}/${id}`)) {
+			return true
+		}
+		return false
+	}
+
+	const [expand, setExpand] = useState(checkActive())
 
 	return (
 		<>
-			<LevelItem active={index === 1 && 'true'}>
+			<LevelItem>
 				<div style={{ flex: 1 }}>
-					<Typography.Title level={4} ellipsis={{ rows: 2 }}>
+					<LevelTitle
+						level={4}
+						ellipsis={{ rows: 2 }}
+						onClick={() => routeHistory.push(`/editor/level/${keys.viewAction}/${id}`)}
+					>
 						Grade 1: The Joy of English
-					</Typography.Title>
+					</LevelTitle>
 					<Typography.Text>100 Units | 700 Exercises</Typography.Text>
 				</div>
 				<LevelActionContainer>
 					<LevelAction onClick={() => setExpand(!expand)}>
 						{expand ? <FiChevronUp size={25} /> : <FiChevronDown size={25} />}
-					</LevelAction>
-					<LevelAction className='side-nav-unit-add-action' style={{ display: 'none' }}>
-						<FiPlus size={20} onClick={() => routeHistory.push(`/editor/unit/${keys.createAction}`)} />
 					</LevelAction>
 				</LevelActionContainer>
 			</LevelItem>
@@ -107,13 +119,15 @@ function Level(props: any) {
 					{Array(10)
 						.fill(0)
 						.map((_, index) => (
-							<Unit key={index} index={index + 1} />
+							<Unit key={index} index={index + 1} id={index + 1} />
 						))}
 				</UnitContainer>
 			)}
 		</>
 	)
 }
+
+const Level = withRouter(LevelComponent)
 
 const LevelItem: any = styled.div`
 	display: flex;
@@ -122,9 +136,13 @@ const LevelItem: any = styled.div`
 	justify-content: space-between;
 	padding: 15px;
 	&:hover {
-		.side-nav-unit-add-action {
-			display: block !important;
-		}
+		background-color: lightcyan;
+	}
+`
+const LevelTitle: any = styled(Typography.Title)`
+	cursor: pointer;
+	&:hover {
+		text-decoration: underline;
 	}
 `
 const LevelActionContainer = styled.div`
@@ -140,74 +158,108 @@ const LevelAction = styled.div`
 `
 const UnitContainer = styled.div`
 	border-bottom: 2px solid #eee;
-	padding: 15px;
+	padding: 5px 0;
 `
 
-function Unit(props: any) {
-	const { index } = props
+function UnitComponent(props: any) {
+	const { index, id, location } = props
+
+	const checkActive = () => {
+		// Also have to check parentID and expand parent too
+		// For that have to integrate redux
+		const { pathname } = location
+		if (pathname.includes(`/editor/unit/${keys.viewAction}/${id}`)) {
+			return true
+		}
+		return false
+	}
+
+	const [expand, setExpand] = useState(checkActive())
+
 	return (
 		<>
 			<UnitItem>
-				<div style={{ flex: 1 }}>
-					<Typography.Title level={5} ellipsis={{ rows: 2 }} style={{ fontSize: 16 }}>
-						<UnitLabel active={index === 1 && 'true'}>Unit 1:</UnitLabel>&nbsp; Demonstrative Pronounce 1
-					</Typography.Title>
-				</div>
-				<UnitAction className='side-nav-lesson-add-action'>
-					<FiPlus onClick={() => routeHistory.push(`/editor/lesson/${keys.createAction}`)} style={{ marginTop: 2 }} size={20} />
+				<UnitTitle level={5} ellipsis={{ rows: 2 }} onClick={() => routeHistory.push(`/editor/unit/${keys.viewAction}/${id}`)}>
+					<UnitLabel>Unit {index}:</UnitLabel>&nbsp; Demonstrative Pronounce {index}
+				</UnitTitle>
+
+				<UnitAction onClick={() => setExpand(!expand)}>
+					{expand ? <FiChevronUp size={25} /> : <FiChevronDown size={25} />}
 				</UnitAction>
 			</UnitItem>
-			<LessonContainer>
-				{Array(10)
-					.fill(0)
-					.map((_, index) => (
-						<Lesson key={index} index={index + 1} id={index} />
-					))}
-			</LessonContainer>
+			{expand && (
+				<LessonContainer>
+					{Array(10)
+						.fill(0)
+						.map((_, index) => (
+							<Lesson key={index} index={index + 1} id={index + 1} />
+						))}
+				</LessonContainer>
+			)}
 		</>
 	)
 }
 
+const Unit = withRouter(UnitComponent)
+
 const UnitItem = styled.div`
 	display: flex;
-	padding: 5px;
+	align-items: center;
+	margin: 0;
+	padding: 10px 15px;
 	&:hover {
-		.side-nav-lesson-add-action {
-			display: block !important;
-		}
+		background-color: lightcyan;
+	}
+`
+const UnitTitle: any = styled(Typography.Title)`
+	cursor: pointer;
+	flex: 1;
+	font-size: 16px;
+	margin: 0 !important;
+	&:hover {
+		text-decoration: underline;
 	}
 `
 const UnitLabel: any = styled.span`
 	color: ${(props: any) => props.active === 'true' && 'lime'};
 `
 const UnitAction = styled.div`
-	display: none;
 	cursor: pointer;
-	width: 25px;
-	text-align: center;
+	display: flex;
+	justify-content: flex-end;
+	align-items: center;
 `
-const LessonContainer = styled.div`
-	padding-left: 30px;
-`
+const LessonContainer = styled.div``
 
-function Lesson(props: any) {
-	const { index, id } = props
+function LessonComponent(props: any) {
+	const { index, id, location } = props
 
 	const getIcon = () => {
-		if (index < 5) {
-			return <CgCheck color={'lime'} size={30} />
-		} else if (index < 6) {
+		if (checkActive()) {
 			return <CgShapeCircle color={'lime'} size={20} />
+		} else if (index < 5) {
+			return <CgCheck color={'lime'} size={25} />
 		} else {
 			return <GoPrimitiveDot color={'#929eaa'} size={20} />
 		}
 	}
+
+	const checkActive = () => {
+		// Also have to check parentID and expand parent too
+		// For that have to integrate redux
+		const { pathname } = location
+		if (pathname.includes(`/editor/lesson/${keys.viewAction}/${id}`)) {
+			return true
+		}
+		return false
+	}
+
 	return (
 		<>
 			<LessonItem>
-				<span style={{ minWidth: 30, textAlign: 'center' }}>{getIcon()}</span>
+				<LessonIcon>{getIcon()}</LessonIcon>
 				<LessonLabel
-					active={index === 5 ? 'true' : 'false'}
+					active={checkActive().toString()}
 					completed={index < 5 ? 'true' : 'false'}
 					level={5}
 					ellipsis={{ rows: 2 }}
@@ -220,10 +272,16 @@ function Lesson(props: any) {
 	)
 }
 
+const Lesson = withRouter(LessonComponent)
+
 const LessonItem = styled.div`
 	align-items: center;
 	display: flex;
-	padding: 0;
+	padding: 5px 0;
+	padding-left: 37px;
+	&:hover {
+		background-color: lightcyan;
+	}
 `
 const LessonLabel: any = styled(Typography.Title)`
 	cursor: pointer;
@@ -231,9 +289,15 @@ const LessonLabel: any = styled(Typography.Title)`
 	opacity: ${(props: any) => (props.completed === 'true' || props.active === 'true' ? 1 : 0.5)};
 	font-size: 15px;
 	font-weight: 500;
-	margin: 0;
+	margin: 0 !important;
 	margin-left: 5px;
 	&:hover {
 		text-decoration: underline;
 	}
+`
+const LessonIcon = styled.span`
+	align-items: center;
+	display: flex;
+	min-width: 30px;
+	justify-content: center;
 `

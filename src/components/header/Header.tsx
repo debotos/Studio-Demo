@@ -1,7 +1,9 @@
 import React, { useState } from 'react'
 import styled from 'styled-components'
-import { FiMenu, FiXCircle } from 'react-icons/fi'
+import media from 'styled-media-query'
+import { FiMenu } from 'react-icons/fi'
 import { Row, Avatar } from 'antd'
+import { PushpinTwoTone, PushpinOutlined } from '@ant-design/icons'
 
 import Logo from '../../assets/logo/ezilm-blue-logo.png'
 import { SideNavigation } from '../sideNavigation/SideNavigation'
@@ -10,6 +12,7 @@ export const headerHeight = 65
 
 export function AppHeader() {
 	const [navigation, setNavigation] = useState(false)
+	const [pin, setPin] = useState(false)
 
 	return (
 		<>
@@ -39,7 +42,9 @@ export function AppHeader() {
 						<Title>EZILM Studio</Title>
 					</Row>
 					<Row align='middle'>
-						<FiXCircle style={{ fontSize: 25, cursor: 'pointer' }} onClick={() => setNavigation(false)} />
+						<PinAction onClick={() => setPin(!pin)} active={pin.toString()}>
+							{pin ? <PushpinTwoTone /> : <PushpinOutlined />}{' '}
+						</PinAction>
 					</Row>
 				</Row>
 				{/* Navigation Drawer Body */}
@@ -77,12 +82,35 @@ const Divider = styled.div`
 	margin: 0 20px;
 	margin-left: 16px;
 	width: 2px;
+	${media.lessThan('small')`
+    /* screen width is less than 450px (small) */
+   display: none;
+  `}
 `
 const Title = styled.h1`
 	font-size: 16px;
 	margin: 0;
 	pointer-events: none;
 	user-select: none;
+	${media.lessThan('small')`
+    /* screen width is less than 450px (small) */
+   display: none;
+  `}
+`
+const PinAction: any = styled.span`
+	align-items: center;
+	border: 1px solid #eee;
+	border-radius: 50%;
+	background-color: ${(props: any) => props.active === 'true' && '#eee'};
+	cursor: pointer;
+	display: flex;
+	font-size: 20px;
+	height: 35px;
+	justify-content: center;
+	width: 35px;
+	&:hover {
+		background-color: #eee;
+	}
 `
 const AppUser = styled(Avatar)`
 	background-color: #00a2ae;

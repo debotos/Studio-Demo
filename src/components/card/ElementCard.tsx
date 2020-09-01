@@ -8,7 +8,7 @@ import { FileImageOutlined } from '@ant-design/icons'
 
 import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
-import { str } from '../../app/routes'
+import { capitalize } from '../../utils/helpers'
 
 interface CProps {
 	id: string | number
@@ -144,7 +144,7 @@ export function AddElementCard(props: { type: string }) {
 			<Row align='middle' justify='center' style={{ height: '100%' }}>
 				<GoPlus size={100} />
 				<Title level={3} ellipsis={{ rows: 2 }}>
-					Create New {str(type)}
+					Create New {capitalize(type)}
 				</Title>
 			</Row>
 		</Container>
