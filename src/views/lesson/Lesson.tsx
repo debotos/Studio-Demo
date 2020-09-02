@@ -8,7 +8,7 @@ import Slide from '../slide/Slide'
 
 import keys from '../../config/keys'
 
-const redirectToRoot = <Redirect to='/editor/lesson' />
+const redirectToRoot = <Redirect to='/editor/lessons' />
 
 export default function Lesson(props: any) {
 	const { params } = props.match

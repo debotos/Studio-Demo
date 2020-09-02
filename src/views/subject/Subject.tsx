@@ -8,7 +8,7 @@ import ViewSubject from './ViewSubject'
 
 import keys from '../../config/keys'
 
-const redirectToRoot = <Redirect to='/editor/subject' />
+const redirectToRoot = <Redirect to='/editor/subjects' />
 
 export default function Subject(props: any) {
 	const { params } = props.match

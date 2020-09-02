@@ -8,7 +8,7 @@ import ViewLevel from './ViewLevel'
 
 import keys from '../../config/keys'
 
-const redirectToRoot = <Redirect to='/editor/level' />
+const redirectToRoot = <Redirect to='/editor/levels' />
 
 export default function Level(props: any) {
 	const { params } = props.match

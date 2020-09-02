@@ -8,7 +8,7 @@ import ViewUnit from './ViewUnit'
 
 import keys from '../../config/keys'
 
-const redirectToRoot = <Redirect to='/editor/unit' />
+const redirectToRoot = <Redirect to='/editor/units' />
 
 export default function Unit(props: any) {
 	const { params } = props.match

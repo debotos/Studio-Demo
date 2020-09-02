@@ -12,21 +12,27 @@ import { capitalize } from '../../utils/helpers'
 
 interface CProps {
 	id: string | number
-	title: string
-	thumbnail: string | undefined
+	data: {
+		title: string
+		thumbnail: string | undefined
+		viewRoute: string
+		editRoute: string
+	}
 	type: string
 }
 
 export function ElementCard(props: CProps) {
+	const { id, data, type } = props
+	const { title, thumbnail, viewRoute, editRoute } = data
+
 	const [showActions, setShowActions] = useState(false)
-	const { id, title, type, thumbnail } = props
 
 	const handleClick = (e: any, action: string) => {
 		e.stopPropagation()
-		console.log('Action:', action)
+		console.log(`'${action}' action for '${type}' with id '${id}'`)
 		switch (action) {
 			case 'navigate':
-				routeHistory.push(`/editor/${type}/${keys.viewAction}/${id}`)
+				viewRoute && routeHistory.push(viewRoute)
 				return
 			case 'toggle':
 				setShowActions(!showActions)
@@ -38,13 +44,13 @@ export function ElementCard(props: CProps) {
 				console.log('share action!')
 				return
 			case 'edit':
-				routeHistory.push(`/editor/${type}/${keys.editAction}/${id}`)
+				editRoute && routeHistory.push(editRoute)
 				return
 			case 'delete':
 				console.log('delete action!')
 				return
 			default:
-				routeHistory.push(`/editor/${type}/${keys.viewAction}/${id}`)
+				viewRoute && routeHistory.push(viewRoute)
 				return
 		}
 	}
@@ -90,6 +96,8 @@ export function ElementCard(props: CProps) {
 	)
 }
 
+export default ElementCard
+
 const Container = styled.div`
 	align-items: center;
 	border: 2px solid #eee;
@@ -134,8 +142,6 @@ const Title = styled(Typography.Title)`
 		text-decoration: underline;
 	}
 `
-
-export default ElementCard
 
 export function AddElementCard(props: { type: string }) {
 	const { type } = props

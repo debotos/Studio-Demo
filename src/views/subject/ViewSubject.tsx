@@ -1,5 +1,7 @@
 import React from 'react'
 
-export default function () {
-	return <div>View Subject means list of levels</div>
+export default function (props: any) {
+	const { match } = props
+
+	return <div>View Subject ID: {match?.params?.id} means list of levels under it.</div>
 }
