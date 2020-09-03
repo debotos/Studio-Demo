@@ -24,16 +24,26 @@ export default function Loading({ color, msg, msgColor }: any) {
 	)
 }
 
+const fullScreenStyles: any = {
+	position: 'fixed',
+	top: 0,
+	left: 0,
+	bottom: 0,
+	right: 0,
+	height: '100vh',
+	width: '100vw',
+	overflow: 'hidden',
+	display: 'flex',
+	justifyContent: 'center',
+	alignItems: 'center',
+}
+
 /* props can be -> color, msg, msgColor, opacity */
 export function LoadingCenter(props: any) {
 	return (
 		<div
 			style={{
-				height: '100vh',
-				width: '100vw',
-				display: 'flex',
-				justifyContent: 'center',
-				alignItems: 'center',
+				...fullScreenStyles,
 				backgroundColor: props.bgColor ? props.bgColor : 'transparent',
 				zIndex: 999999,
 			}}
@@ -48,17 +58,7 @@ export function LoadingOverlay(props: any) {
 	return (
 		<div
 			style={{
-				position: 'fixed',
-				top: 0,
-				left: 0,
-				bottom: 0,
-				right: 0,
-				height: '100vh',
-				width: '100vw',
-				overflow: 'hidden',
-				display: 'flex',
-				justifyContent: 'center',
-				alignItems: 'center',
+				...fullScreenStyles,
 				backgroundColor: `rgba(0, 0, 0, ${props.opacity ? props.opacity : 0.6})`,
 				zIndex: 999999 /* Above everything */,
 			}}

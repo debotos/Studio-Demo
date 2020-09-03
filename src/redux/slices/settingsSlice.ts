@@ -18,6 +18,7 @@ const getSideNavInitValue = () => {
 
 const initialState: SliceState = { sideNav: getSideNavInitValue() }
 
+/* Store overall app UI settings */
 const settingsSlice = createSlice({
 	name: 'settings',
 	initialState,

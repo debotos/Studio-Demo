@@ -10,6 +10,7 @@ import { AppDispatch, RootState } from '../../redux/store'
 import { setSettings } from '../../redux/slices/settingsSlice'
 import { NavigationDrawerHead } from '../sideNavigation/SideNavigation'
 import vars from '../../config/vars'
+import { routeHistory } from '../../app/App'
 
 const { headerHeight } = vars
 
@@ -21,6 +22,8 @@ export function AppHeader() {
 		const pinned = sideNav === 'pinned'
 		return { display: pinned ? 'block' : 'none', transform: pinned ? 'translateX(0)' : 'translateX(-100%)' }
 	}
+
+	const goHome = () => routeHistory.push('/')
 
 	return (
 		<>
@@ -34,10 +37,10 @@ export function AppHeader() {
 					{/* Actual header left portion */}
 					{sideNav === false && (
 						<LeftRow align='middle'>
-							<FiMenu style={{ fontSize: 30, cursor: 'pointer' }} onClick={() => dispatch(setSettings({ sideNav: true }))} />
-							<AppLogo src={Logo} alt='Ezilm Studio' />
+							<FiMenu onClick={() => dispatch(setSettings({ sideNav: true }))} style={{ fontSize: 30, cursor: 'pointer' }} />
+							<AppLogo alt='Ezilm Studio' onClick={goHome} src={Logo} />
 							<Divider />
-							<Title>EZILM Studio</Title>
+							<Title onClick={goHome}>EZILM Studio</Title>
 						</LeftRow>
 					)}
 				</div>
@@ -77,9 +80,9 @@ const RightRow = styled(Row)`
 	padding: 5px 20px 5px 0;
 `
 export const AppLogo = styled.img`
+	cursor: pointer;
 	margin-bottom: 10px;
 	margin-left: 20px;
-	pointer-events: none;
 	user-select: none;
 `
 export const Divider = styled.div`
@@ -94,9 +97,9 @@ export const Divider = styled.div`
   `}
 `
 export const Title = styled.h1`
+	cursor: pointer;
 	font-size: 16px;
 	margin: 0;
-	pointer-events: none;
 	user-select: none;
 	${media.lessThan('small')`
     /* screen width is less than 450px (small) */

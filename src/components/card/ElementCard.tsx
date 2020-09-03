@@ -4,34 +4,41 @@ import { FiMoreHorizontal } from 'react-icons/fi'
 import { GoPlus } from 'react-icons/go'
 import { RiFileCopyLine, RiShareBoxFill, RiPencilLine, RiDeleteBinLine, RiCloseCircleLine } from 'react-icons/ri'
 import { Row, Typography, Avatar } from 'antd'
+import { useDispatch } from 'react-redux'
 import { FileImageOutlined } from '@ant-design/icons'
 
 import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
+import { AppDispatch } from '../../redux/store'
 import { capitalize } from '../../utils/helpers'
+import { setActiveItems } from '../../redux/slices/activeItemsSlice'
 
 interface CProps {
-	id: string | number
 	data: {
+		id: string | number
+		type: string
 		title: string
 		thumbnail: string | undefined
 		viewRoute: string
 		editRoute: string
 	}
-	type: string
 }
 
 export function ElementCard(props: CProps) {
-	const { id, data, type } = props
-	const { title, thumbnail, viewRoute, editRoute } = data
+	const dispatch: AppDispatch = useDispatch()
+	const { data } = props
+	const { id, type, title, thumbnail, viewRoute, editRoute } = data
 
 	const [showActions, setShowActions] = useState(false)
+
+	const setAsActive = () => dispatch(setActiveItems({ [type]: data }))
 
 	const handleClick = (e: any, action: string) => {
 		e.stopPropagation()
 		console.log(`'${action}' action for '${type}' with id '${id}'`)
 		switch (action) {
 			case 'navigate':
+				setAsActive()
 				viewRoute && routeHistory.push(viewRoute)
 				return
 			case 'toggle':
@@ -50,6 +57,7 @@ export function ElementCard(props: CProps) {
 				console.log('delete action!')
 				return
 			default:
+				setAsActive()
 				viewRoute && routeHistory.push(viewRoute)
 				return
 		}

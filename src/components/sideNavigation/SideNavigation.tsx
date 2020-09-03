@@ -117,12 +117,14 @@ export function NavigationDrawerHead(props: any) {
 		}
 	}
 
+	const goHome = () => routeHistory.push('/')
+
 	return (
 		<NavigationDrawerHeadContainer align='middle' justify='space-between'>
 			<Row align='middle'>
-				<AppLogo src={Logo} alt='Ezilm Studio' style={{ marginLeft: -10 }} />
+				<AppLogo src={Logo} alt='Ezilm Studio' onClick={goHome} style={{ marginLeft: -10 }} />
 				<Divider />
-				<Title>EZILM Studio</Title>
+				<Title onClick={goHome}>EZILM Studio</Title>
 			</Row>
 			<Row align='middle'>
 				<PinAction onClick={handlePinning} pinned={nav.toString()}>
@@ -143,8 +145,9 @@ const NavigationDrawerHeadContainer: any = styled(Row)`
 /* Side Navigation Body Content */
 function NavigationDrawerBodyContent(props: any) {
 	const { nav } = props
-	const subjectIsSelected = true
-	if (!subjectIsSelected) {
+	const subject = useSelector((state: RootState) => state.activeItems.subject)
+
+	if (!subject) {
 		return (
 			<EmptyContainer nav={nav}>
 				<Empty
@@ -158,11 +161,12 @@ function NavigationDrawerBodyContent(props: any) {
 			</EmptyContainer>
 		)
 	}
+
 	const levels = Array(10).fill(0) || []
 	return (
 		<Container>
 			<SubjectTitle className='hide-native-scrollbar' nav={nav}>
-				English Content
+				{subject.title}
 			</SubjectTitle>
 			<Content className='hide-native-scrollbar' nav={nav}>
 				{levels.length > 0 ? (
