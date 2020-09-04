@@ -1,9 +1,10 @@
 import { createSlice } from '@reduxjs/toolkit'
 
+import { EditorDataType } from '../store'
+
 type SliceState = { subjects: any[]; levels: any[]; units: any[]; lessons: any[]; slides: any[] }
-type DataType = 'subject' | 'level' | 'unit' | 'lesson' | 'slide'
 type KeyType = 'subjects' | 'levels' | 'units' | 'lessons' | 'slides'
-type PayloadType = { type: DataType; data: any }
+type PayloadType = { type: EditorDataType; data: any }
 
 const initialState: SliceState = { subjects: [], levels: [], units: [], lessons: [], slides: [] }
 
@@ -37,8 +38,14 @@ const dataListSlice = createSlice({
 			const newItems = data.filter((x: any) => newItemKeys.includes(x.id))
 			state[key] = [...newItems, ...dataAfterDelete]
 		},
+		addDataListItem(state, { payload }) {
+			console.log('DataList Item add called: ', payload)
+			const { type, data }: PayloadType = payload
+			const key = (type + 's') as KeyType
+			state[key].unshift(data)
+		},
 		updateDataListItem(state, { payload }) {
-			console.log('DataList update called: ', payload)
+			console.log('DataList Item update called: ', payload)
 			const { type, data }: PayloadType = payload
 			const key = (type + 's') as KeyType
 			state[key] = state[key].map((item: any) => {
@@ -47,7 +54,7 @@ const dataListSlice = createSlice({
 			})
 		},
 		deleteDataListItem(state, { payload }) {
-			console.log('DataList delete called: ', payload)
+			console.log('DataList Item delete called: ', payload)
 			const { type, data }: PayloadType = payload
 			const key = (type + 's') as KeyType
 			state[key] = state[key].filter((item: any) => item.id !== data.id)

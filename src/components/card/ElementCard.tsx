@@ -10,7 +10,7 @@ import { FileImageOutlined } from '@ant-design/icons'
 import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
 import { AppDispatch } from '../../redux/store'
-import { capitalize } from '../../utils/helpers'
+import { capitalize, getElementCardRoute } from '../../utils/helpers'
 import { setActiveItems } from '../../redux/slices/activeItemsSlice'
 
 interface CProps {
@@ -18,16 +18,15 @@ interface CProps {
 		id: string | number
 		type: string
 		title: string
-		thumbnail: string | undefined
-		viewRoute: string
-		editRoute: string
+		thumbnail?: string
 	}
 }
 
 export function ElementCard(props: CProps) {
 	const dispatch: AppDispatch = useDispatch()
 	const { data } = props
-	const { id, type, title, thumbnail, viewRoute, editRoute } = data
+	const { viewRoute, editRoute } = getElementCardRoute(data)
+	const { id, type, title, thumbnail } = data
 
 	const [showActions, setShowActions] = useState(false)
 

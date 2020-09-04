@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import styled, { css } from 'styled-components'
 import { withRouter } from 'react-router-dom'
 import { useSelector, useDispatch } from 'react-redux'
@@ -12,7 +12,11 @@ import Logo from '../../assets/logo/ezilm-blue-logo.png'
 import { AppDispatch, RootState } from '../../redux/store'
 import { AppLogo, Divider, Title } from '../header/Header'
 import { setSettings } from '../../redux/slices/settingsSlice'
+import { setActiveItems } from '../../redux/slices/activeItemsSlice'
+import { setTreeData } from '../../redux/slices/treeDataSlice'
+import { genTreeKey, isEmpty } from '../../utils/helpers'
 import { routeHistory } from '../../app/App'
+import * as dummyDataProvider from '../../utils/dummyData'
 import keys from '../../config/keys'
 import vars from '../../config/vars'
 
@@ -145,9 +149,24 @@ const NavigationDrawerHeadContainer: any = styled(Row)`
 /* Side Navigation Body Content */
 function NavigationDrawerBodyContent(props: any) {
 	const { nav } = props
+	const dispatch: AppDispatch = useDispatch()
 	const subject = useSelector((state: RootState) => state.activeItems.subject)
+	const subjectID = subject ? subject.id : ''
+	const levels = useSelector((state: RootState) => state.treeData[genTreeKey('subject', subjectID)])
 
-	if (!subject) {
+	useEffect(() => {
+		getData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
+	const getData = async () => {
+		if (isEmpty(levels)) {
+			// TODO: Get all the levels under this specific subject via ajax
+			dispatch(setTreeData({ type: 'subject', id: subjectID, data: dummyDataProvider.getLevelsByParentID(subjectID) }))
+		}
+	}
+
+	if (isEmpty(subject)) {
 		return (
 			<EmptyContainer nav={nav}>
 				<Empty
@@ -155,25 +174,34 @@ function NavigationDrawerBodyContent(props: any) {
 					description={<span>No subject is currently selected. You have to select a subject first!</span>}
 				>
 					<Button size='small' type='primary' onClick={() => routeHistory.push('/editor/subjects')}>
-						See all subjects
+						Select a subject
 					</Button>
 				</Empty>
 			</EmptyContainer>
 		)
 	}
 
-	const levels = Array(10).fill(0) || []
+	const title = subject.title || ''
+
 	return (
 		<Container>
 			<SubjectTitle className='hide-native-scrollbar' nav={nav}>
-				{subject.title}
+				{title}
 			</SubjectTitle>
 			<Content className='hide-native-scrollbar' nav={nav}>
-				{levels.length > 0 ? (
-					levels.map((_, index) => <Level key={index} index={index + 1} subjectID={1} id={index + 1} />)
+				{!isEmpty(levels) ? (
+					levels.map((level: any, index: number) => <Level key={index} data={level} subjectTitle={title} />)
 				) : (
 					<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No level is created under this subject.</span>}>
-						<Button size='small' type='primary' onClick={() => routeHistory.push(`/editor/level/${keys.createAction}`)}>
+						<Button
+							size='small'
+							type='primary'
+							onClick={() =>
+								routeHistory.push(
+									`/editor/level/${keys.createAction}?subjectID=${subjectID}&subjectTitle=${encodeURIComponent(title)}`
+								)
+							}
+						>
 							Create a new level
 						</Button>
 					</Empty>
@@ -231,9 +259,10 @@ const Content: any = styled.div`
 
 /* Side Navigation Level */
 function LevelComponent(props: any) {
-	const { subjectID, id, location } = props
+	// Vars
+	const { data, location, subjectTitle } = props
+	const { id, subjectID, title, unitCount, lessonCount } = data
 	const path = `/editor/${subjectID}/levels/${keys.viewAction}/${id}`
-
 	const checkActive = () => {
 		// Also have to check parentID and expand parent too
 		// For that have to integrate redux
@@ -244,16 +273,38 @@ function LevelComponent(props: any) {
 		return false
 	}
 
+	// State Hooks & vars
+	const dispatch: AppDispatch = useDispatch()
+	const level = useSelector((state: RootState) => state.activeItems.level)
+	const units = useSelector((state: RootState) => state.treeData[genTreeKey('level', id)])
 	const [expand, setExpand] = useState(checkActive())
+
+	useEffect(() => {
+		if (isEmpty(level)) {
+			dispatch(setActiveItems({ level: data }))
+		}
+		getData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
+	// Functions
+	const getData = async () => {
+		if (isEmpty(units)) {
+			// TODO: Get all the units under this specific level via ajax
+			dispatch(setTreeData({ type: 'level', id, data: dummyDataProvider.getUnitsByParentID(id) }))
+		}
+	}
 
 	return (
 		<>
-			<LevelItem>
+			<LevelItem active={checkActive().toString()}>
 				<div style={{ flex: 1 }}>
 					<LevelTitle level={4} ellipsis={{ rows: 2 }} onClick={() => routeHistory.push(path)}>
-						Grade {id}: The Joy of English
+						{title}
 					</LevelTitle>
-					<Typography.Text>100 Units | 700 Exercises</Typography.Text>
+					<Typography.Text>
+						{unitCount} Units | {lessonCount} Exercises
+					</Typography.Text>
 				</div>
 				<LevelActionContainer>
 					<LevelAction onClick={() => setExpand(!expand)}>
@@ -263,11 +314,27 @@ function LevelComponent(props: any) {
 			</LevelItem>
 			{expand && (
 				<UnitContainer>
-					{Array(10)
-						.fill(0)
-						.map((_, index) => (
-							<Unit key={index} index={index + 1} subjectID={subjectID} levelID={id} id={index + 1} />
-						))}
+					{!isEmpty(units) ? (
+						units.map((unit: any, index: number) => (
+							<Unit key={index} data={unit} subjectTitle={subjectTitle} levelTitle={title} />
+						))
+					) : (
+						<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No unit is created under this level.</span>}>
+							<Button
+								size='small'
+								type='primary'
+								onClick={() =>
+									routeHistory.push(
+										`/editor/unit/${keys.createAction}?levelID=${id}&levelTitle=${encodeURIComponent(
+											title
+										)}&subjectID=${subjectID}`
+									)
+								}
+							>
+								Create a new unit
+							</Button>
+						</Empty>
+					)}
 				</UnitContainer>
 			)}
 		</>
@@ -277,7 +344,7 @@ const Level = withRouter(LevelComponent)
 
 const LevelItem: any = styled.div`
 	display: flex;
-	border-left: ${(props: any) => props.active === 'true' && '5px solid lime'};
+	background-color: ${(props: any) => props.active === 'true' && 'lightcyan'};
 	border-bottom: 2px solid #eee;
 	justify-content: space-between;
 	padding: 15px;
@@ -309,7 +376,9 @@ const UnitContainer = styled.div`
 
 /* Side Navigation Unit */
 function UnitComponent(props: any) {
-	const { index, subjectID, levelID, id, location } = props
+	// Vars
+	const { data, location, levelTitle, subjectTitle } = props
+	const { id, subjectID, levelID, title } = data
 	const path = `/editor/${subjectID}/${levelID}/units/${keys.viewAction}/${id}`
 
 	const checkActive = () => {
@@ -321,14 +390,33 @@ function UnitComponent(props: any) {
 		}
 		return false
 	}
-
+	// State Hooks & vars
+	const dispatch: AppDispatch = useDispatch()
+	const unit = useSelector((state: RootState) => state.activeItems.unit)
+	const lessons = useSelector((state: RootState) => state.treeData[genTreeKey('unit', id)])
 	const [expand, setExpand] = useState(checkActive())
+
+	useEffect(() => {
+		if (isEmpty(unit)) {
+			dispatch(setActiveItems({ unit: data }))
+		}
+		getData()
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [])
+
+	// Functions
+	const getData = async () => {
+		if (isEmpty(lessons)) {
+			// TODO: Get all the lessons under this specific unit via ajax
+			dispatch(setTreeData({ type: 'unit', id, data: dummyDataProvider.getLessonsByParentID(id) }))
+		}
+	}
 
 	return (
 		<>
-			<UnitItem>
+			<UnitItem active={checkActive().toString()}>
 				<UnitTitle level={5} ellipsis={{ rows: 2 }} onClick={() => routeHistory.push(path)}>
-					<UnitLabel>Unit {index}:</UnitLabel>&nbsp; Demonstrative Pronounce {index}
+					{title}
 				</UnitTitle>
 
 				<UnitAction onClick={() => setExpand(!expand)}>
@@ -337,11 +425,27 @@ function UnitComponent(props: any) {
 			</UnitItem>
 			{expand && (
 				<LessonContainer>
-					{Array(10)
-						.fill(0)
-						.map((_, index) => (
-							<Lesson key={index} index={index + 1} subjectID={subjectID} levelID={levelID} unitID={id} id={index + 1} />
-						))}
+					{!isEmpty(lessons) ? (
+						lessons.map((lesson: any, index: number) => <Lesson key={index} data={lesson} />)
+					) : (
+						<Empty image={Empty.PRESENTED_IMAGE_SIMPLE} description={<span>No lesson is created under this unit.</span>}>
+							<Button
+								size='small'
+								type='primary'
+								onClick={() =>
+									routeHistory.push(
+										`/editor/unit/${keys.createAction}?unitID=${id}&unitTitle=${encodeURIComponent(
+											title
+										)}&levelID=${id}&levelTitle=${encodeURIComponent(
+											levelTitle
+										)}&subjectID=${subjectID}&subjectTitle=${encodeURIComponent(subjectTitle)}`
+									)
+								}
+							>
+								Create a new lesson
+							</Button>
+						</Empty>
+					)}
 				</LessonContainer>
 			)}
 		</>
@@ -349,9 +453,10 @@ function UnitComponent(props: any) {
 }
 const Unit = withRouter(UnitComponent)
 
-const UnitItem = styled.div`
-	display: flex;
+const UnitItem: any = styled.div`
 	align-items: center;
+	background-color: ${(props: any) => props.active === 'true' && 'lightcyan'};
+	display: flex;
 	margin: 0;
 	padding: 10px 15px;
 	&:hover {
@@ -367,9 +472,6 @@ const UnitTitle: any = styled(Typography.Title)`
 		text-decoration: underline;
 	}
 `
-const UnitLabel: any = styled.span`
-	color: ${(props: any) => props.active === 'true' && 'lime'};
-`
 const UnitAction = styled.div`
 	cursor: pointer;
 	display: flex;
@@ -380,13 +482,14 @@ const LessonContainer = styled.div``
 
 /* Side Navigation Lesson */
 function LessonComponent(props: any) {
-	const { index, id, subjectID, levelID, unitID, location } = props
+	const { data, location } = props
+	const { id, subjectID, levelID, unitID, published } = data
 	const path = `/editor/${subjectID}/${levelID}/${unitID}/lessons/${keys.viewAction}/${id}`
 
 	const getIcon = () => {
 		if (checkActive()) {
 			return <CgShapeCircle color={'lime'} size={20} />
-		} else if (index < 5) {
+		} else if (published) {
 			return <CgCheck color={'lime'} size={25} />
 		} else {
 			return <GoPrimitiveDot color={'#929eaa'} size={20} />
@@ -405,11 +508,11 @@ function LessonComponent(props: any) {
 
 	return (
 		<>
-			<LessonItem>
+			<LessonItem active={checkActive().toString()}>
 				<LessonIcon>{getIcon()}</LessonIcon>
 				<LessonLabel
 					active={checkActive().toString()}
-					completed={index < 5 ? 'true' : 'false'}
+					published={published.toString()}
 					level={5}
 					ellipsis={{ rows: 2 }}
 					onClick={() => routeHistory.push(path)}
@@ -422,8 +525,9 @@ function LessonComponent(props: any) {
 }
 const Lesson = withRouter(LessonComponent)
 
-const LessonItem = styled.div`
+const LessonItem: any = styled.div`
 	align-items: center;
+	background-color: ${(props: any) => props.active === 'true' && 'lightcyan'};
 	display: flex;
 	padding: 5px 0;
 	padding-left: 37px;
@@ -434,7 +538,7 @@ const LessonItem = styled.div`
 const LessonLabel: any = styled(Typography.Title)`
 	cursor: pointer;
 	color: ${(props: any) => props.active === 'true' && 'lime !important'};
-	opacity: ${(props: any) => (props.completed === 'true' || props.active === 'true' ? 1 : 0.5)};
+	opacity: ${(props: any) => (props.published === 'true' || props.active === 'true' ? 1 : 0.5)};
 	font-size: 15px;
 	font-weight: 500;
 	margin: 0 !important;

@@ -3,14 +3,9 @@ import { Row, Col, Card, Statistic, Button } from 'antd'
 
 import { capitalize } from '../../utils/helpers'
 import { routeHistory } from '../../app/App'
+import * as dummyDataProvider from '../../utils/dummyData'
 
-const statistics = [
-	{ type: 'subject', total: 10 },
-	{ type: 'level', total: 100 },
-	{ type: 'unit', total: 1000 },
-	{ type: 'lesson', total: 10000 },
-	{ type: 'slide', total: 100000 },
-]
+const statistics = dummyDataProvider.getStatistics()
 
 export default function Dashboard() {
 	return (
