@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { Row, Typography } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -7,12 +7,14 @@ import { setDataList, mergeDataList } from '../../redux/slices/dataListSlice'
 import { ElementCard, AddElementCard } from '../../components/card/ElementCard'
 import { isEmpty } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
+import { LoadingCenter } from '../../components/loading/Loading'
 
 const type = 'subject'
 
 export function SubjectsViewList(props: any) {
 	const subjects = useSelector((state: RootState) => state.dataList.subjects)
 	const dispatch: AppDispatch = useDispatch()
+	const [loadingData, setLoadingData] = useState(true)
 
 	useEffect(() => {
 		getData()
@@ -20,6 +22,7 @@ export function SubjectsViewList(props: any) {
 	}, [])
 
 	const getData = async () => {
+		setLoadingData(true)
 		if (isEmpty(subjects)) {
 			// TODO: Get subjects via ajax and set
 			dispatch(setDataList({ type, data: dummyDataProvider.getSubjects() }))
@@ -27,6 +30,11 @@ export function SubjectsViewList(props: any) {
 			// TODO: This request will happen in background as data is already there, we just need to pull latest data and merge
 			dispatch(mergeDataList({ type, data: dummyDataProvider.getSubjects() }))
 		}
+		setLoadingData(false)
+	}
+
+	if (loadingData) {
+		return <LoadingCenter msg='Data loading...' />
 	}
 
 	return (

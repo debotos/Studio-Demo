@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { message, Typography, Row, Empty, Button } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 
@@ -10,6 +10,7 @@ import ElementCard, { AddElementCard } from '../../components/card/ElementCard'
 import { genTreeKey, isEmpty } from '../../utils/helpers'
 import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
+import { LoadingCenter } from '../../components/loading/Loading'
 
 /* View specific subject means list of levels under it */
 export default function (props: any) {
@@ -18,8 +19,9 @@ export default function (props: any) {
 	const activeSubjectInfo = useSelector((state: RootState) => state.activeItems.subject)
 	const levels = useSelector((state: RootState) => state.treeData[genTreeKey('subject', subjectID)])
 	const dispatch: AppDispatch = useDispatch()
+	const [loadingData, setLoadingData] = useState(true)
 
-	if (!subjectID || subjectID === 'null' || subjectID === 'undefined') {
+	if (isEmpty(subjectID)) {
 		message.error('Invalid subject chosen. Please select a valid subject!')
 		return null
 	}
@@ -30,6 +32,7 @@ export default function (props: any) {
 	}, [])
 
 	const getData = async () => {
+		setLoadingData(true)
 		if (isEmpty(activeSubjectInfo)) {
 			// User came via direct url not via step by step navigation
 			// TODO: Get subject info via ajax and set
@@ -40,7 +43,14 @@ export default function (props: any) {
 			// TODO: Get all the levels under this specific subject via ajax
 			dispatch(setTreeData({ id: subjectID, type: 'subject', data: dummyDataProvider.getLevelsByParentID(subjectID) }))
 		}
+		setLoadingData(false)
 	}
+
+	if (loadingData) {
+		return <LoadingCenter msg='Data loading...' />
+	}
+
+	const addRouteSuffix = `?subjectID=${subjectID}&subjectTitle=${encodeURIComponent(activeSubjectInfo.title)}`
 
 	if (isEmpty(levels)) {
 		return (
@@ -50,13 +60,7 @@ export default function (props: any) {
 						<Button
 							size='small'
 							type='primary'
-							onClick={() =>
-								routeHistory.push(
-									`/editor/level/${keys.createAction}?subjectID=${subjectID}&subjectTitle=${encodeURIComponent(
-										activeSubjectInfo.title
-									)}`
-								)
-							}
+							onClick={() => routeHistory.push(`/editor/level/${keys.createAction}${addRouteSuffix}`)}
 						>
 							Create a new level
 						</Button>
@@ -81,7 +85,7 @@ export default function (props: any) {
 			)}
 			<Typography.Title level={2}>Create new level</Typography.Title>
 			<Row>
-				<AddElementCard type={'level'} />
+				<AddElementCard type={'level'} routeSuffix={addRouteSuffix} />
 				{levels.map((item: any, index: number) => {
 					return <ElementCard key={index} data={item} />
 				})}

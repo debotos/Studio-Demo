@@ -125,6 +125,9 @@ const Container = styled.div`
 const MoreButton = styled(FiMoreHorizontal)`
 	cursor: pointer;
 	margin-top: -10px;
+	&:hover {
+		opacity: 0.7;
+	}
 `
 const ActionsContainer = styled(Row)`
 	height: 30px;
@@ -140,6 +143,9 @@ const ActionsWrapper = styled.div`
 const ActionItem = styled.span`
 	cursor: pointer;
 	padding: 0 5px;
+	&:hover {
+		opacity: 0.7;
+	}
 `
 const Title = styled(Typography.Title)`
 	cursor: pointer;
@@ -150,10 +156,10 @@ const Title = styled(Typography.Title)`
 	}
 `
 
-export function AddElementCard(props: { type: string }) {
-	const { type } = props
+export function AddElementCard(props: { type: string; routeSuffix?: string }) {
+	const { type, routeSuffix = '' } = props
 	return (
-		<Container onClick={() => routeHistory.push(`/editor/${type}/${keys.createAction}`)}>
+		<Container onClick={() => routeHistory.push(`/editor/${type}/${keys.createAction}${routeSuffix}`)}>
 			<Row align='middle' justify='center' style={{ height: '100%' }}>
 				<GoPlus size={100} />
 				<Title level={3} ellipsis={{ rows: 2 }}>

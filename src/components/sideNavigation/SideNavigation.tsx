@@ -185,7 +185,7 @@ function NavigationDrawerBodyContent(props: any) {
 
 	return (
 		<Container>
-			<SubjectTitle className='hide-native-scrollbar' nav={nav}>
+			<SubjectTitle className='hide-native-scrollbar' nav={nav} onClick={() => routeHistory.push('/editor/subjects')}>
 				{title}
 			</SubjectTitle>
 			<Content className='hide-native-scrollbar' nav={nav}>
@@ -234,6 +234,7 @@ const EmptyContainer: any = styled.div`
 const SubjectTitle: any = styled.div`
 	background-color: #252322e3;
 	color: #fff;
+	cursor: pointer;
 	font-size: 20px;
 	font-weight: 500;
 	height: ${titleHeight + 'px'};
@@ -261,15 +262,11 @@ const Content: any = styled.div`
 function LevelComponent(props: any) {
 	// Vars
 	const { data, location, subjectTitle } = props
+	const { pathname } = location
 	const { id, subjectID, title, unitCount, lessonCount } = data
 	const path = `/editor/${subjectID}/levels/${keys.viewAction}/${id}`
 	const checkActive = () => {
-		// Also have to check parentID and expand parent too
-		// For that have to integrate redux
-		const { pathname } = location
-		if (pathname.includes(path)) {
-			return true
-		}
+		if (pathname.includes(`${id}`)) return true
 		return false
 	}
 
@@ -286,6 +283,11 @@ function LevelComponent(props: any) {
 		getData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	useEffect(() => {
+		setExpand(checkActive())
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pathname])
 
 	// Functions
 	const getData = async () => {
@@ -371,25 +373,21 @@ const LevelAction = styled.div`
 `
 const UnitContainer = styled.div`
 	border-bottom: 2px solid #eee;
-	padding: 5px 0;
+	padding: 0;
 `
 
 /* Side Navigation Unit */
 function UnitComponent(props: any) {
 	// Vars
 	const { data, location, levelTitle, subjectTitle } = props
+	const { pathname } = location
 	const { id, subjectID, levelID, title } = data
 	const path = `/editor/${subjectID}/${levelID}/units/${keys.viewAction}/${id}`
-
 	const checkActive = () => {
-		// Also have to check parentID and expand parent too
-		// For that have to integrate redux
-		const { pathname } = location
-		if (pathname.includes(path)) {
-			return true
-		}
+		if (pathname.includes(`${id}`)) return true
 		return false
 	}
+
 	// State Hooks & vars
 	const dispatch: AppDispatch = useDispatch()
 	const unit = useSelector((state: RootState) => state.activeItems.unit)
@@ -403,6 +401,11 @@ function UnitComponent(props: any) {
 		getData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
+
+	useEffect(() => {
+		setExpand(checkActive())
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [pathname])
 
 	// Functions
 	const getData = async () => {
@@ -478,11 +481,14 @@ const UnitAction = styled.div`
 	justify-content: flex-end;
 	align-items: center;
 `
-const LessonContainer = styled.div``
+const LessonContainer = styled.div`
+	margin: 0;
+`
 
 /* Side Navigation Lesson */
 function LessonComponent(props: any) {
 	const { data, location } = props
+	const { pathname } = location
 	const { id, subjectID, levelID, unitID, published } = data
 	const path = `/editor/${subjectID}/${levelID}/${unitID}/lessons/${keys.viewAction}/${id}`
 
@@ -497,12 +503,7 @@ function LessonComponent(props: any) {
 	}
 
 	const checkActive = () => {
-		// Also have to check parentID and expand parent too
-		// For that have to integrate redux
-		const { pathname } = location
-		if (pathname.includes(path)) {
-			return true
-		}
+		if (pathname.includes(`${id}`)) return true
 		return false
 	}
 

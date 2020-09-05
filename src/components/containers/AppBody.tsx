@@ -30,7 +30,8 @@ export default AppBody
 
 const Body: any = styled.div`
 	height: 100%;
-	min-height: calc(100vh - ${headerHeight + 'px'});
+	/* min-height: calc(100vh - ${headerHeight + 'px'}); */
+	min-height: 100vh;
 	padding: 40px;
 	position: relative;
 	width: 100%;

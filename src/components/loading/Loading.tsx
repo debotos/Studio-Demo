@@ -3,10 +3,20 @@ import { Skeleton, Spin } from 'antd'
 
 import LoadingSVG from '../../assets/loading.svg'
 
+type LoadingProps = {
+	color?: string
+	msg?: string
+	msgColor?: string
+	opacity?: number
+	spin?: boolean
+	size?: 'small' | 'large' | 'default' | undefined // antd spin size
+	bgColor?: string
+}
+
 /* Just a SVG animated image */
-export default function Loading({ color, msg, msgColor }: any) {
+export default function Loading({ color, msg, msgColor }: LoadingProps) {
 	return (
-		<div style={{ marginTop: '-100px' }}>
+		<div style={{ marginTop: '-100px', textAlign: 'center' }}>
 			<img src={LoadingSVG} alt='Loading...' />
 			<p
 				style={{
@@ -14,8 +24,9 @@ export default function Loading({ color, msg, msgColor }: any) {
 					fontWeight: 'bold',
 					fontSize: '15px',
 					opacity: 0.8,
-					margin: '0 10px',
-					color: msgColor ? msgColor : '#fff',
+					margin: '15px 0',
+					marginLeft: 10,
+					color: msgColor && msgColor,
 				}}
 			>
 				{msg}
@@ -39,7 +50,7 @@ const fullScreenStyles: any = {
 }
 
 /* props can be -> color, msg, msgColor, opacity */
-export function LoadingCenter(props: any) {
+export function LoadingCenter(props: LoadingProps) {
 	return (
 		<div
 			style={{
@@ -54,7 +65,7 @@ export function LoadingCenter(props: any) {
 }
 
 /* props can be -> color, msg, msgColor, opacity */
-export function LoadingOverlay(props: any) {
+export function LoadingOverlay(props: LoadingProps) {
 	return (
 		<div
 			style={{

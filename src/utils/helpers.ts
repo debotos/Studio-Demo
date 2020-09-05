@@ -14,7 +14,9 @@ export const capitalize = (string: string = '') => string.trim().charAt(0).toUpp
 
 export const isEmpty = (value: any) =>
 	value === undefined ||
+	value === 'undefined' ||
 	value === null ||
+	value === 'null' ||
 	(typeof value === 'object' && Object.keys(value).length === 0) ||
 	(typeof value === 'string' && value.trim().length === 0)
 
@@ -56,4 +58,20 @@ export const getElementCardRoute = (data: any) => {
 	}
 
 	return { viewRoute, editRoute }
+}
+
+/**
+ * Get all the URL parameters
+ * @param  {String} search  By default window.location.search
+ * @return {Object}         The URL parameters
+ */
+export const getAllQueryVariables = function (search?: string) {
+	search = search ? search : window.location.search
+	const params: any = new URLSearchParams(search)
+	let paramObj: any = {}
+	for (var value of params.keys()) {
+		paramObj[value] = params.get(value)
+	}
+	console.log('Query variables: ', paramObj)
+	return paramObj
 }
