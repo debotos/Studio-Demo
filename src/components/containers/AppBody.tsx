@@ -7,6 +7,7 @@ import media from 'styled-media-query'
 import getRoutes from '../../app/routes'
 import vars from '../../config/vars'
 import { RootState } from '../../redux/store'
+import ScrollToTop from './ScrollToTop'
 
 const { headerHeight } = vars
 
@@ -15,13 +16,16 @@ export function AppBody() {
 
 	return (
 		<Body nav={nav.toString()}>
-			<Switch>
-				{getRoutes().map((route: any, idx: number) => {
-					if (!route.component) return null
-					return <Route key={idx} path={route.path} exact={route.exact} render={(props) => <route.component {...props} />} />
-				})}
-				<Redirect from='/' to='/dashboard' />
-			</Switch>
+			<ScrollToTop>
+				<Switch>
+					{getRoutes().map((route: any, idx: number) => {
+						if (!route.component) return null
+						return <Route key={idx} path={route.path} exact={route.exact} render={(props) => <route.component {...props} />} />
+					})}
+
+					<Redirect from='/' to='/dashboard' />
+				</Switch>
+			</ScrollToTop>
 		</Body>
 	)
 }

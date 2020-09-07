@@ -3,7 +3,7 @@ import { Row, Typography } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { AppDispatch, RootState } from '../../redux/store'
-import { setDataList, mergeDataList } from '../../redux/slices/dataListSlice'
+import { setDataList } from '../../redux/slices/dataListSlice'
 import { ElementCard, AddElementCard } from '../../components/card/ElementCard'
 import { isEmpty } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
@@ -26,11 +26,8 @@ export function SlidesViewList(props: any) {
 		if (isEmpty(slides)) {
 			// TODO: Get slides via ajax and set
 			dispatch(setDataList({ type, data: dummyDataProvider.getSlides() }))
-		} else {
-			// TODO: This request will happen in background as data is already there, we just need to pull latest data and merge
-			dispatch(mergeDataList({ type, data: dummyDataProvider.getSlides() }))
 		}
-		setLoadingData(false)
+		setTimeout(() => setLoadingData(false), 1000)
 	}
 
 	if (loadingData) {

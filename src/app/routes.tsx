@@ -4,7 +4,7 @@ import loadable from '@loadable/component'
 import { LoadingCenter } from '../components/loading/Loading'
 import { capitalize } from '../utils/helpers'
 
-const loadableOptions = { fallback: <LoadingCenter /> }
+const loadableOptions = { fallback: <LoadingCenter msg='Component loading...' /> }
 
 // React code splitting
 const Dashboard = loadable(() => import('../views/dashboard/Dashboard'), loadableOptions)

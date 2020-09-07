@@ -35,7 +35,7 @@ export default function (props: any) {
 	useEffect(() => {
 		getData()
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [])
+	}, [window.location.pathname])
 
 	const getData = async () => {
 		setLoadingData(true)

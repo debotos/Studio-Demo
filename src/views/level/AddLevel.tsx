@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { AppDispatch, RootState } from '../../redux/store'
 import AppForm from '../../components/form/AppForm'
-import { setDataList, mergeDataList } from '../../redux/slices/dataListSlice'
+import { setDataList } from '../../redux/slices/dataListSlice'
 import { getAllQueryVariables, isEmpty } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { LoadingCenter } from '../../components/loading/Loading'
@@ -24,9 +24,6 @@ export default function () {
 		if (isEmpty(subjects)) {
 			// TODO: Get subjects via ajax and set
 			dispatch(setDataList({ type: 'subject', data: dummyDataProvider.getSubjects() }))
-		} else {
-			// TODO: This request will happen in background as data is already there, we just need to pull latest data and merge
-			dispatch(mergeDataList({ type: 'subject', data: dummyDataProvider.getSubjects() }))
 		}
 		setLoadingData(false)
 	}
