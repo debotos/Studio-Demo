@@ -5,6 +5,8 @@ import AppForm from '../../components/form/AppForm'
 import { metadata } from './AddSubject'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
+import keys from '../../config/keys'
 
 export default function (props: any) {
 	const { match } = props
@@ -34,10 +36,17 @@ export default function (props: any) {
 		subject_name: title,
 		author_name: author,
 		image: [{ uid: shortid.generate(), name: 'Subject image', url: thumbnail, uploaded: true }],
-	} // TODO:START: passing image is causing error
+	}
+
+	const breadcrumbItems: any[] = [
+		{ name: 'Subjects', path: `/editor/subjects`, isLink: true },
+		{ name: title, path: `/editor/subjects/${keys.viewAction}/${subjectID}`, isLink: true },
+		{ name: 'Edit', path: ``, isLink: false },
+	]
 
 	return (
 		<>
+			<Breadcrumb items={breadcrumbItems} />
 			<AppForm metadata={{ ...metadata, form_type: 'edit' as const, label: 'Edit subject', initValues }} />
 		</>
 	)

@@ -8,45 +8,48 @@ import { routeHistory } from '../../app/App'
 import * as dummyDataProvider from '../../utils/dummyData'
 import vars from '../../config/vars'
 import keys from '../../config/keys'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 const statistics = dummyDataProvider.getStatistics()
 
 export default function Dashboard() {
+	const breadcrumbItems: any[] = [{ name: 'Dashboard', path: '/dashboard', isLink: false }]
 	return (
-		<Container>
-			<Row gutter={[24, 24]}>
-				{statistics.map((item: any, index: number) => {
-					const { type, total } = item
-					const title = `Total ${capitalize(type)}s`
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<Container>
+				<Row gutter={[24, 24]}>
+					{statistics.map((item: any, index: number) => {
+						const { type, total } = item
+						const title = `Total ${capitalize(type)}s`
 
-					return (
-						<Col key={index} xs={24} sm={12} md={8}>
-							<Card>
-								<div style={{ display: 'flex' }}>
-									<div style={{ flex: 1 }}>
-										<Statistic title={title} value={total} />
+						return (
+							<Col key={index} xs={24} sm={12} md={8}>
+								<Card>
+									<div style={{ display: 'flex' }}>
+										<div style={{ flex: 1 }}>
+											<Statistic title={title} value={total} />
+										</div>
+										<div style={{ width: 25, display: 'flex', justifyContent: 'flex-end' }}>
+											<Tooltip color={vars.appPrimaryColor} title={`Create new ${type}`}>
+												<AddButton onClick={() => routeHistory.push(`/editor/${type}/${keys.createAction}`)} />
+											</Tooltip>
+										</div>
 									</div>
-									<div style={{ width: 25, display: 'flex', justifyContent: 'flex-end' }}>
-										<Tooltip color={vars.appPrimaryColor} title={`Create new ${type}`}>
-											<AddButton onClick={() => routeHistory.push(`/editor/${type}/${keys.createAction}`)} />
-										</Tooltip>
-									</div>
-								</div>
-								<Button onClick={() => routeHistory.push(`/editor/${type}s`)} style={{ padding: 0 }} type='link'>
-									View all {type}s
-								</Button>
-							</Card>
-						</Col>
-					)
-				})}
-			</Row>
-		</Container>
+									<Button onClick={() => routeHistory.push(`/editor/${type}s`)} style={{ padding: 0 }} type='link'>
+										View all {type}s
+									</Button>
+								</Card>
+							</Col>
+						)
+					})}
+				</Row>
+			</Container>
+		</>
 	)
 }
 
-const Container = styled.div`
-	margin-top: 15px;
-`
+const Container = styled.div``
 const AddButton = styled(PlusOutlined)`
 	align-items: center;
 	display: flex;

@@ -11,6 +11,7 @@ import { genTreeKey, isEmpty } from '../../utils/helpers'
 import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 /* View specific subject means list of levels under it */
 export default function (props: any) {
@@ -50,7 +51,8 @@ export default function (props: any) {
 		return <LoadingCenter msg='Data loading...' />
 	}
 
-	const addRouteSuffix = `?subjectID=${subjectID}&subjectTitle=${encodeURIComponent(activeSubjectInfo.title)}`
+	const { title: subjectTitle } = activeSubjectInfo
+	const addRouteSuffix = `?subjectID=${subjectID}&subjectTitle=${encodeURIComponent(subjectTitle)}`
 
 	if (isEmpty(levels)) {
 		return (
@@ -70,26 +72,34 @@ export default function (props: any) {
 		)
 	}
 
+	const breadcrumbItems: any[] = [
+		{ name: 'Subjects', path: `/editor/subjects`, isLink: true },
+		{ name: subjectTitle, path: `/editor/subjects/${keys.viewAction}/${subjectID}`, isLink: false },
+	]
+
 	return (
-		<div>
-			{!isEmpty(levels) && (
-				<>
-					<Typography.Title level={2}>Recently updated levels...</Typography.Title>
-					<Row>
-						{levels.slice(0, 2).map((item: any, index: number) => {
-							return <ElementCard key={index} data={item} />
-						})}
-					</Row>
-					<br />
-				</>
-			)}
-			<Typography.Title level={2}>List of levels</Typography.Title>
-			<Row>
-				<AddElementCard type={'level'} routeSuffix={addRouteSuffix} />
-				{levels.map((item: any, index: number) => {
-					return <ElementCard key={index} data={item} />
-				})}
-			</Row>
-		</div>
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<div>
+				{!isEmpty(levels) && (
+					<>
+						<Typography.Title level={2}>Recently updated levels...</Typography.Title>
+						<Row>
+							{levels.slice(0, 2).map((item: any, index: number) => {
+								return <ElementCard key={index} data={item} />
+							})}
+						</Row>
+						<br />
+					</>
+				)}
+				<Typography.Title level={2}>List of levels</Typography.Title>
+				<Row>
+					<AddElementCard type={'level'} routeSuffix={addRouteSuffix} />
+					{levels.map((item: any, index: number) => {
+						return <ElementCard key={index} data={item} />
+					})}
+				</Row>
+			</div>
+		</>
 	)
 }

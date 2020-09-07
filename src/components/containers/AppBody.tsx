@@ -13,12 +13,13 @@ const { headerHeight } = vars
 
 export function AppBody() {
 	const nav = useSelector((state: RootState) => state.settings.sideNav)
+	const routes = getRoutes()
 
 	return (
 		<Body nav={nav.toString()}>
 			<ScrollToTop>
 				<Switch>
-					{getRoutes().map((route: any, idx: number) => {
+					{routes.map((route: any, idx: number) => {
 						if (!route.component) return null
 						return <Route key={idx} path={route.path} exact={route.exact} render={(props) => <route.component {...props} />} />
 					})}

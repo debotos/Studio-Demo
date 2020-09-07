@@ -2,6 +2,8 @@ import React from 'react'
 
 import AppForm from '../../components/form/AppForm'
 import { getAllQueryVariables } from '../../utils/helpers'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
+import keys from '../../config/keys'
 
 export const metadata = {
 	form_type: 'create' as const,
@@ -41,8 +43,11 @@ export const metadata = {
 export default function () {
 	const initValues = getAllQueryVariables()
 
+	const breadcrumbItems: any[] = [{ name: 'Create new subject', path: `/editor/subject/${keys.createAction}`, isLink: false }]
+
 	return (
 		<>
+			<Breadcrumb items={breadcrumbItems} />
 			<AppForm metadata={{ ...metadata, initValues }} />
 		</>
 	)

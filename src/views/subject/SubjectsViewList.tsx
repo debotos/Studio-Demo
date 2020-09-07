@@ -8,6 +8,7 @@ import { ElementCard, AddElementCard } from '../../components/card/ElementCard'
 import { isEmpty } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 const type = 'subject'
 
@@ -34,27 +35,32 @@ export function SubjectsViewList(props: any) {
 		return <LoadingCenter msg='Data loading...' />
 	}
 
+	const breadcrumbItems: any[] = [{ name: 'Subjects', path: `/editor/subjects`, isLink: false }]
+
 	return (
-		<div>
-			{!isEmpty(subjects) && (
-				<>
-					<Typography.Title level={2}>Recently updated subjects...</Typography.Title>
-					<Row>
-						{subjects.slice(0, 2).map((item, index) => {
-							return <ElementCard key={index} data={item} />
-						})}
-					</Row>
-					<br />
-				</>
-			)}
-			<Typography.Title level={2}>List of subjects</Typography.Title>
-			<Row>
-				<AddElementCard type={type} />
-				{subjects.map((item, index) => {
-					return <ElementCard key={index} data={item} />
-				})}
-			</Row>
-		</div>
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<div>
+				{!isEmpty(subjects) && (
+					<>
+						<Typography.Title level={2}>Recently updated subjects...</Typography.Title>
+						<Row>
+							{subjects.slice(0, 2).map((item, index) => {
+								return <ElementCard key={index} data={item} />
+							})}
+						</Row>
+						<br />
+					</>
+				)}
+				<Typography.Title level={2}>List of subjects</Typography.Title>
+				<Row>
+					<AddElementCard type={type} />
+					{subjects.map((item, index) => {
+						return <ElementCard key={index} data={item} />
+					})}
+				</Row>
+			</div>
+		</>
 	)
 }
 
