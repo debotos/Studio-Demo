@@ -489,7 +489,7 @@ const LessonContainer = styled.div`
 function LessonComponent(props: any) {
 	const { data, location } = props
 	const { pathname } = location
-	const { id, subjectID, levelID, unitID, published } = data
+	const { id, title, subjectID, levelID, unitID, published } = data
 	const path = `/editor/${subjectID}/${levelID}/${unitID}/lessons/${keys.viewAction}/${id}`
 
 	const getIcon = () => {
@@ -518,7 +518,7 @@ function LessonComponent(props: any) {
 					ellipsis={{ rows: 2 }}
 					onClick={() => routeHistory.push(path)}
 				>
-					Skip - counting stories
+					{title}
 				</LessonLabel>
 			</LessonItem>
 		</>

@@ -41,7 +41,7 @@ export function SubjectsViewList(props: any) {
 		<div>
 			{!isEmpty(subjects) && (
 				<>
-					<Typography.Title level={2}>Recently updated...</Typography.Title>
+					<Typography.Title level={2}>Recently updated subjects...</Typography.Title>
 					<Row>
 						{subjects.slice(0, 2).map((item, index) => {
 							return <ElementCard key={index} data={item} />
@@ -50,7 +50,7 @@ export function SubjectsViewList(props: any) {
 					<br />
 				</>
 			)}
-			<Typography.Title level={2}>Create new subject</Typography.Title>
+			<Typography.Title level={2}>List of subjects</Typography.Title>
 			<Row>
 				<AddElementCard type={type} />
 				{subjects.map((item, index) => {

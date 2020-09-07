@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from 'react'
+import shortid from 'shortid'
 
 import AppForm from '../../components/form/AppForm'
 import { metadata } from './AddSubject'
@@ -28,12 +29,16 @@ export default function (props: any) {
 		return <LoadingCenter msg='Data loading...' />
 	}
 
-	const { title, thumbnail } = subjectData as any
-	const initValues = { subject_name: title } // TODO:START: passing image is causing error
+	const { title, author, thumbnail } = subjectData as any
+	const initValues = {
+		subject_name: title,
+		author_name: author,
+		image: [{ uid: shortid.generate(), name: 'Subject image', url: thumbnail, uploaded: true }],
+	} // TODO:START: passing image is causing error
 
 	return (
 		<>
-			<AppForm metadata={{ ...metadata, label: 'Edit subject', initValues }} />
+			<AppForm metadata={{ ...metadata, form_type: 'edit' as const, label: 'Edit subject', initValues }} />
 		</>
 	)
 }

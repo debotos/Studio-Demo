@@ -47,9 +47,8 @@ export const getElementCardRoute = (data: any) => {
 			editRoute = `/editor/${subjectID}/${levelID}/${unitID}/${type}s/${keys.editAction}/${id}`
 			break
 		case 'slide':
-			const route = `/editor/${subjectID}/${levelID}/${unitID}/${lessonID}/${type}/${id}`
-			viewRoute = route
-			editRoute = route
+			viewRoute = `/editor/${subjectID}/${levelID}/${unitID}/${lessonID}/${type}s/${keys.viewAction}/${id}`
+			editRoute = `/editor/${subjectID}/${levelID}/${unitID}/${lessonID}/${type}s/${keys.editAction}/${id}`
 			break
 		default:
 			viewRoute = `/editor/${type}s/${keys.viewAction}/${id}`

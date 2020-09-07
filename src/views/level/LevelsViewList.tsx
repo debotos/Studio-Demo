@@ -41,7 +41,7 @@ export function LevelsViewList(props: any) {
 		<div>
 			{!isEmpty(levels) && (
 				<>
-					<Typography.Title level={2}>Recently updated...</Typography.Title>
+					<Typography.Title level={2}>Recently updated levels...</Typography.Title>
 					<Row>
 						{levels.slice(0, 2).map((item, index) => {
 							return <ElementCard key={index} data={item} />
@@ -50,7 +50,7 @@ export function LevelsViewList(props: any) {
 					<br />
 				</>
 			)}
-			<Typography.Title level={2}>Create new level</Typography.Title>
+			<Typography.Title level={2}>List of levels</Typography.Title>
 			<Row>
 				<AddElementCard type={type} />
 				{levels.map((item, index) => {

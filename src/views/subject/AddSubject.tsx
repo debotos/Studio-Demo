@@ -4,7 +4,8 @@ import AppForm from '../../components/form/AppForm'
 import { getAllQueryVariables } from '../../utils/helpers'
 
 export const metadata = {
-	schema_for: 'subject',
+	form_type: 'create' as const,
+	schema_for: 'subject' as const,
 	label: 'Create Subject',
 	fields: [
 		{

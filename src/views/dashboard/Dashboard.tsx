@@ -1,5 +1,5 @@
 import React from 'react'
-import { Row, Col, Card, Statistic, Button, Tooltip, message } from 'antd'
+import { Row, Col, Card, Statistic, Button, Tooltip } from 'antd'
 import { PlusOutlined } from '@ant-design/icons'
 import styled from 'styled-components'
 
@@ -12,25 +12,12 @@ import keys from '../../config/keys'
 const statistics = dummyDataProvider.getStatistics()
 
 export default function Dashboard() {
-	const onSlideAction = () => {
-		message.info('Please select a lesson to add slide under it!', 5)
-		routeHistory.push(`/editor/lessons`)
-	}
-
 	return (
 		<Container>
 			<Row gutter={[24, 24]}>
 				{statistics.map((item: any, index: number) => {
 					const { type, total } = item
 					const title = `Total ${capitalize(type)}s`
-
-					const goToCreate = () => {
-						if (type !== 'slide') {
-							routeHistory.push(`/editor/${type}/${keys.createAction}`)
-						} else {
-							onSlideAction()
-						}
-					}
 
 					return (
 						<Col key={index} xs={24} sm={12} md={8}>
@@ -41,17 +28,13 @@ export default function Dashboard() {
 									</div>
 									<div style={{ width: 25, display: 'flex', justifyContent: 'flex-end' }}>
 										<Tooltip color={vars.appPrimaryColor} title={`Create new ${type}`}>
-											<AddButton onClick={goToCreate} />
+											<AddButton onClick={() => routeHistory.push(`/editor/${type}/${keys.createAction}`)} />
 										</Tooltip>
 									</div>
 								</div>
-								{type !== 'slide' ? (
-									<Button onClick={() => routeHistory.push(`/editor/${type}s`)} style={{ padding: 0 }} type='link'>
-										View all {type}s
-									</Button>
-								) : (
-									<Button />
-								)}
+								<Button onClick={() => routeHistory.push(`/editor/${type}s`)} style={{ padding: 0 }} type='link'>
+									View all {type}s
+								</Button>
 							</Card>
 						</Col>
 					)

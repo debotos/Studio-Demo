@@ -4,7 +4,7 @@ import { Redirect } from 'react-router-dom'
 import AddLesson from './AddLesson'
 import EditLesson from './EditLesson'
 import LessonsViewList from './LessonsViewList'
-import Slide from '../slide/Slide'
+import ViewLesson from './ViewLesson'
 
 import keys from '../../config/keys'
 
@@ -25,7 +25,7 @@ export default function Lesson(props: any) {
 		case keys.editAction:
 			return <EditLesson {...props} />
 		case keys.viewAction:
-			return <Slide {...props} />
+			return <ViewLesson {...props} />
 		default:
 			return redirectToRoot
 	}

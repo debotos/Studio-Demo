@@ -9,10 +9,10 @@ import { isEmpty } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { LoadingCenter } from '../../components/loading/Loading'
 
-const type = 'lesson'
+const type = 'slide'
 
-export function LessonsViewList(props: any) {
-	const lessons = useSelector((state: RootState) => state.dataList.lessons)
+export function SlidesViewList(props: any) {
+	const slides = useSelector((state: RootState) => state.dataList.slides)
 	const dispatch: AppDispatch = useDispatch()
 	const [loadingData, setLoadingData] = useState(true)
 
@@ -23,12 +23,12 @@ export function LessonsViewList(props: any) {
 
 	const getData = async () => {
 		setLoadingData(true)
-		if (isEmpty(lessons)) {
-			// TODO: Get lessons via ajax and set
-			dispatch(setDataList({ type, data: dummyDataProvider.getLessons() }))
+		if (isEmpty(slides)) {
+			// TODO: Get slides via ajax and set
+			dispatch(setDataList({ type, data: dummyDataProvider.getSlides() }))
 		} else {
 			// TODO: This request will happen in background as data is already there, we just need to pull latest data and merge
-			dispatch(mergeDataList({ type, data: dummyDataProvider.getLessons() }))
+			dispatch(mergeDataList({ type, data: dummyDataProvider.getSlides() }))
 		}
 		setLoadingData(false)
 	}
@@ -39,21 +39,21 @@ export function LessonsViewList(props: any) {
 
 	return (
 		<div>
-			{!isEmpty(lessons) && (
+			{!isEmpty(slides) && (
 				<>
-					<Typography.Title level={2}>Recently updated lessons...</Typography.Title>
+					<Typography.Title level={2}>Recently updated slides...</Typography.Title>
 					<Row>
-						{lessons.slice(0, 2).map((item, index) => {
+						{slides.slice(0, 2).map((item, index) => {
 							return <ElementCard key={index} data={item} />
 						})}
 					</Row>
 					<br />
 				</>
 			)}
-			<Typography.Title level={2}>List of lessons</Typography.Title>
+			<Typography.Title level={2}>List of slides</Typography.Title>
 			<Row>
 				<AddElementCard type={type} />
-				{lessons.map((item, index) => {
+				{slides.map((item, index) => {
 					return <ElementCard key={index} data={item} />
 				})}
 			</Row>
@@ -61,4 +61,4 @@ export function LessonsViewList(props: any) {
 	)
 }
 
-export default LessonsViewList
+export default SlidesViewList

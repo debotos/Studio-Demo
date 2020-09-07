@@ -28,7 +28,7 @@ export default function (props: any) {
 	const [loadingData, setLoadingData] = useState(true)
 
 	if (isEmpty(subjectID) || isEmpty(levelID) || isEmpty(unitID)) {
-		message.error('Invalid level chosen. Please select a valid level!')
+		message.error('Invalid unit chosen. Please select a valid unit!')
 		return null
 	}
 
@@ -104,7 +104,7 @@ export default function (props: any) {
 		<div>
 			{!isEmpty(lessons) && (
 				<>
-					<Typography.Title level={2}>Recently updated...</Typography.Title>
+					<Typography.Title level={2}>Recently updated lessons...</Typography.Title>
 					<Row>
 						{lessons.slice(0, 2).map((item: any, index: number) => {
 							return <ElementCard key={index} data={item} />
@@ -113,9 +113,9 @@ export default function (props: any) {
 					<br />
 				</>
 			)}
-			<Typography.Title level={2}>Create new lesson</Typography.Title>
+			<Typography.Title level={2}>List of lessons</Typography.Title>
 			<Row>
-				<AddElementCard type={'unit'} routeSuffix={addRouteSuffix} />
+				<AddElementCard type={'lesson'} routeSuffix={addRouteSuffix} />
 				{lessons.map((item: any, index: number) => {
 					return <ElementCard key={index} data={item} />
 				})}

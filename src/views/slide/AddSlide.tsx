@@ -14,6 +14,8 @@ export default function () {
 	const [loadingData, setLoadingData] = useState(true)
 	const subjects = useSelector((state: RootState) => state.dataList.subjects)
 	const levels = useSelector((state: RootState) => state.dataList.levels)
+	const units = useSelector((state: RootState) => state.dataList.units)
+	const lessons = useSelector((state: RootState) => state.dataList.lessons)
 
 	useEffect(() => {
 		getData()
@@ -36,6 +38,20 @@ export default function () {
 			// TODO: This request will happen in background as data is already there, we just need to pull latest data and merge
 			dispatch(mergeDataList({ type: 'level', data: dummyDataProvider.getLevels() }))
 		}
+		if (isEmpty(units)) {
+			// TODO: Get units via ajax and set
+			dispatch(setDataList({ type: 'unit', data: dummyDataProvider.getUnits() }))
+		} else {
+			// TODO: This request will happen in background as data is already there, we just need to pull latest data and merge
+			dispatch(mergeDataList({ type: 'unit', data: dummyDataProvider.getUnits() }))
+		}
+		if (isEmpty(lessons)) {
+			// TODO: Get lessons via ajax and set
+			dispatch(setDataList({ type: 'lesson', data: dummyDataProvider.getLessons() }))
+		} else {
+			// TODO: This request will happen in background as data is already there, we just need to pull latest data and merge
+			dispatch(mergeDataList({ type: 'lesson', data: dummyDataProvider.getLessons() }))
+		}
 		setLoadingData(false)
 	}
 
@@ -45,20 +61,20 @@ export default function () {
 
 	const metadata = {
 		form_type: 'create' as const,
-		schema_for: 'unit' as const,
-		label: 'Create new Unit',
+		schema_for: 'slide' as const,
+		label: 'Create new slide',
 		initValues,
 		fields: [
 			{
-				label: 'Unit name',
-				key: 'unit_name',
+				label: 'Slide name',
+				key: 'slide_name',
 				type: 'text',
-				placeholder: 'Unit name',
+				placeholder: 'Slide name',
 				has_feedback: true,
 				validations: [
-					{ whitespace: true, required: true, message: 'Unit name is required' },
+					{ whitespace: true, required: true, message: 'Slide name is required' },
 					{ min: 2, message: 'Minimum length is 2' },
-					{ max: 50, message: 'Max value length is 50' },
+					{ max: 100, message: 'Max value length is 100' },
 				],
 			},
 			{
@@ -78,6 +94,24 @@ export default function () {
 				has_feedback: true,
 				options: levels ? levels.map((x) => ({ label: x.title, value: x.id, disabled: false })) : [],
 				validations: [{ whitespace: true, required: true, message: 'Level is required' }],
+			},
+			{
+				label: 'Unit associated with',
+				key: 'unitID',
+				type: 'select',
+				placeholder: 'Select unit',
+				has_feedback: true,
+				options: units ? units.map((x) => ({ label: x.title, value: x.id, disabled: false })) : [],
+				validations: [{ whitespace: true, required: true, message: 'Unit is required' }],
+			},
+			{
+				label: 'Lesson associated with',
+				key: 'lessonID',
+				type: 'select',
+				placeholder: 'Select lesson',
+				has_feedback: true,
+				options: lessons ? lessons.map((x) => ({ label: x.title, value: x.id, disabled: false })) : [],
+				validations: [{ whitespace: true, required: true, message: 'Lesson is required' }],
 			},
 			{
 				label: 'Author name',

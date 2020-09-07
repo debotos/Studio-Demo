@@ -74,7 +74,7 @@ export default function (props: any) {
 		<div>
 			{!isEmpty(levels) && (
 				<>
-					<Typography.Title level={2}>Recently updated...</Typography.Title>
+					<Typography.Title level={2}>Recently updated levels...</Typography.Title>
 					<Row>
 						{levels.slice(0, 2).map((item: any, index: number) => {
 							return <ElementCard key={index} data={item} />
@@ -83,7 +83,7 @@ export default function (props: any) {
 					<br />
 				</>
 			)}
-			<Typography.Title level={2}>Create new level</Typography.Title>
+			<Typography.Title level={2}>List of levels</Typography.Title>
 			<Row>
 				<AddElementCard type={'level'} routeSuffix={addRouteSuffix} />
 				{levels.map((item: any, index: number) => {

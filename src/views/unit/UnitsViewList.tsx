@@ -41,7 +41,7 @@ export function UnitsViewList(props: any) {
 		<div>
 			{!isEmpty(units) && (
 				<>
-					<Typography.Title level={2}>Recently updated...</Typography.Title>
+					<Typography.Title level={2}>Recently updated units...</Typography.Title>
 					<Row>
 						{units.slice(0, 2).map((item, index) => {
 							return <ElementCard key={index} data={item} />
@@ -50,7 +50,7 @@ export function UnitsViewList(props: any) {
 					<br />
 				</>
 			)}
-			<Typography.Title level={2}>Create new unit</Typography.Title>
+			<Typography.Title level={2}>List of units</Typography.Title>
 			<Row>
 				<AddElementCard type={type} />
 				{units.map((item, index) => {

@@ -52,7 +52,8 @@ export default function () {
 	}
 
 	const metadata = {
-		schema_for: 'lesson',
+		form_type: 'create' as const,
+		schema_for: 'lesson' as const,
 		label: 'Create new lesson',
 		initValues,
 		fields: [

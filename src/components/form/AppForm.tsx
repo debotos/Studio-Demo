@@ -9,6 +9,8 @@ import { getBase64 } from '../../utils/helpers'
 
 interface CProps {
 	metadata: {
+		form_type: 'create' | 'edit'
+		schema_for: 'subject' | 'level' | 'unit' | 'lesson' | 'slide' | 'other'
 		label: string
 		fields: any[]
 		initValues?: any
@@ -17,7 +19,7 @@ interface CProps {
 
 export function AppForm(props: CProps) {
 	const { metadata } = props
-	const { label, fields, initValues: initialValues } = metadata
+	const { form_type, label, fields, initValues: initialValues } = metadata
 	const [form] = Form.useForm()
 	const sideNav = useSelector((state: RootState) => state.settings.sideNav)
 	const sideNavPinned = sideNav === 'pinned'
@@ -33,6 +35,7 @@ export function AppForm(props: CProps) {
 
 	const onFinish = (values: any) => {
 		console.log('Finish:', values)
+		// Todo: remove 'image' property if it is [] & if not filter out all uploaded: true
 		console.log('AfterTodo:', afterTodo)
 	}
 
@@ -49,6 +52,8 @@ export function AppForm(props: CProps) {
 
 	const fieldKeyList = fields.map((x: any) => x.key)
 	const initialValuesArray = Object.keys(initialValues || {})
+	const fieldsRequiredTouch = fieldKeyList.filter((key: any) => !initialValuesArray.includes(key))
+	// console.log({ fieldKeyList, initialValuesArray, fieldsRequiredTouch })
 
 	const getCols = () => {
 		let cols = { xs: 24, sm: 16, md: 12, lg: 9, xl: 8, xxl: 6 }
@@ -101,7 +106,14 @@ export function AppForm(props: CProps) {
 											listType='picture-card'
 											fileList={imageFileList}
 											onPreview={handleImagePreview}
-											onChange={({ fileList }: any) => setImageFileList(fileList)}
+											onChange={({ fileList }: any) => {
+												if (form_type === 'edit') {
+													// Edit form! So if new image selected replace current one
+													setImageFileList(fileList.length > 1 ? fileList.shift() : fileList)
+												} else {
+													setImageFileList(fileList)
+												}
+											}}
 											beforeUpload={(file, fileList) => {
 												// console.log(file, fileList)
 												return false /* To stop the default upload behavior */
@@ -117,9 +129,7 @@ export function AppForm(props: CProps) {
 						})}
 						<Form.Item shouldUpdate={true} style={{ marginTop: 20 }}>
 							{() => {
-								const isFieldsNotTouched = !form.isFieldsTouched(
-									fieldKeyList.filter((key: any) => !initialValuesArray.includes(key))
-								)
+								const isFieldsNotTouched = fieldsRequiredTouch.length > 0 ? !form.isFieldsTouched(fieldsRequiredTouch) : false
 								const haveFieldsError = checkFieldsError()
 
 								// console.log({ isFieldsNotTouched, haveFieldsError })
@@ -160,7 +170,11 @@ export function AppForm(props: CProps) {
 				onCancel={() => setImagePreviewModal(false)}
 				width='90vw'
 			>
-				<img alt={previewImageTitle} style={{ width: '100%' }} src={previewImage} />
+				<Row justify={'center'}>
+					<Col>
+						<img alt={previewImageTitle} style={{ maxWidth: '100%', height: 'auto', display: 'block' }} src={previewImage} />
+					</Col>
+				</Row>
 			</Modal>
 		</>
 	)

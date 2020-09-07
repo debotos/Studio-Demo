@@ -36,7 +36,8 @@ export default function () {
 	}
 
 	const metadata = {
-		schema_for: 'level',
+		form_type: 'create' as const,
+		schema_for: 'level' as const,
 		label: 'Create new level',
 		initValues,
 		fields: [
