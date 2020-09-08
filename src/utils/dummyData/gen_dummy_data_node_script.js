@@ -1,6 +1,7 @@
 /* Run using 'node' & make sure shortid npm is globally available(yarn global add shortid) */
 const fs = require('fs')
 const shortid = require('shortid')
+const faker = require('faker')
 
 const count = { subject: 4, level: 4, unit: 3, lesson: 3, slide: 2 }
 
@@ -33,7 +34,7 @@ const generateLevels = () => {
 					id,
 					subjectID: subject.id,
 					type: 'level',
-					title: `Level ${index + 1}`,
+					title: `Level ${index + 1} ${faker.lorem.words()}`,
 					thumbnail: 'https://picsum.photos/100/100',
 					unitCount: count.unit,
 					lessonCount: count.unit * count.lesson,
@@ -60,7 +61,7 @@ const generateUnits = () => {
 					subjectID: level.subjectID,
 					levelID: level.id,
 					type: 'unit',
-					title: `Unit ${index + 1}`,
+					title: `Unit ${index + 1} ${faker.lorem.words()}`,
 					thumbnail: 'https://picsum.photos/100/100',
 					lessonCount: count.lesson,
 					slideCount: count.lesson * count.slide,
@@ -87,7 +88,7 @@ const generateLessons = () => {
 					levelID: unit.levelID,
 					unitID: unit.id,
 					type: 'lesson',
-					title: `Lesson ${index + 1}`,
+					title: `Lesson ${index + 1} ${faker.lorem.words()}`,
 					thumbnail: 'https://picsum.photos/100/100',
 					slideCount: count.slide,
 					published: index < 1,
@@ -115,7 +116,7 @@ const generateSlides = () => {
 					unitID: lesson.unitID,
 					lessonID: lesson.id,
 					type: 'slide',
-					title: `Slide ${index + 1}`,
+					title: `Slide ${index + 1} ${faker.lorem.words()}`,
 					thumbnail: 'https://picsum.photos/100/100',
 				}
 			})
