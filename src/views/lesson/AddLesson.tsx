@@ -4,12 +4,13 @@ import { useSelector, useDispatch } from 'react-redux'
 import { AppDispatch, RootState } from '../../redux/store'
 import AppForm from '../../components/form/AppForm'
 import { setDataList } from '../../redux/slices/dataListSlice'
-import { getAllQueryVariables, isEmpty } from '../../utils/helpers'
+import { getAllQueryVariables, isEmpty, getCreateElementFormBreadcrumb } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 export default function () {
-	const initValues = getAllQueryVariables()
+	const queryVars = getAllQueryVariables()
 	const dispatch: AppDispatch = useDispatch()
 	const [loadingData, setLoadingData] = useState(true)
 	const subjects = useSelector((state: RootState) => state.dataList.subjects)
@@ -46,7 +47,7 @@ export default function () {
 		form_type: 'create' as const,
 		schema_for: 'lesson' as const,
 		label: 'Create new lesson',
-		initValues,
+		initValues: queryVars,
 		fields: [
 			{
 				label: 'Lesson name',
@@ -105,8 +106,11 @@ export default function () {
 		],
 	}
 
+	let breadcrumbItems: any[] = getCreateElementFormBreadcrumb(queryVars, 'lesson')
+
 	return (
 		<>
+			<Breadcrumb items={breadcrumbItems} />
 			<AppForm metadata={metadata} />
 		</>
 	)

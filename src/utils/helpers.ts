@@ -59,6 +59,50 @@ export const getElementCardRoute = (data: any) => {
 	return { viewRoute, editRoute }
 }
 
+export const getCreateElementFormBreadcrumb = (queryVars: any, type: EditorDataType) => {
+	let breadcrumbItems: any[] = []
+	if (!isEmpty(queryVars)) {
+		const subjectTitle = queryVars['subjectTitle']
+		const subjectID = queryVars['subjectID']
+		const levelTitle = queryVars['levelTitle']
+		const levelID = queryVars['levelID']
+		const unitTitle = queryVars['unitTitle']
+		const unitID = queryVars['unitID']
+		const lessonTitle = queryVars['lessonTitle']
+		const lessonID = queryVars['lessonID']
+		if (subjectTitle && subjectID) {
+			breadcrumbItems = [
+				...breadcrumbItems,
+				{ name: 'Subjects', path: `/editor/subjects`, isLink: true },
+				{ name: subjectTitle, path: `/editor/subjects/${keys.viewAction}/${subjectID}`, isLink: true },
+			]
+			if (levelTitle && levelID) {
+				breadcrumbItems.push({
+					name: levelTitle,
+					path: `/editor/${subjectID}/levels/${keys.viewAction}/${levelID}`,
+					isLink: true,
+				})
+				if (unitTitle && unitID) {
+					breadcrumbItems.push({
+						name: unitTitle,
+						path: `/editor/${subjectID}/${levelID}/units/${keys.viewAction}/${unitID}`,
+						isLink: true,
+					})
+					if (lessonTitle && lessonID) {
+						breadcrumbItems.push({
+							name: lessonTitle,
+							path: `/editor/${subjectID}/${levelID}/${unitID}/lessons/${keys.viewAction}/${lessonID}`,
+							isLink: true,
+						})
+					}
+				}
+			}
+		}
+	}
+	breadcrumbItems.push({ name: `Create new ${type}`, path: `/editor/${type}/${keys.createAction}`, isLink: false })
+	return breadcrumbItems
+}
+
 /**
  * Get all the URL parameters
  * @param  {String} search  By default window.location.search

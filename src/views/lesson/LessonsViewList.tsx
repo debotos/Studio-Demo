@@ -8,6 +8,7 @@ import { ElementCard, AddElementCard } from '../../components/card/ElementCard'
 import { isEmpty } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 const type = 'lesson'
 
@@ -34,27 +35,32 @@ export function LessonsViewList(props: any) {
 		return <LoadingCenter msg='Data loading...' />
 	}
 
+	const breadcrumbItems: any[] = [{ name: 'Lessons', path: `/editor/lessons`, isLink: false }]
+
 	return (
-		<div>
-			{!isEmpty(lessons) && (
-				<>
-					<Typography.Title level={2}>Recently updated lessons...</Typography.Title>
-					<Row>
-						{lessons.slice(0, 2).map((item, index) => {
-							return <ElementCard key={index} data={item} />
-						})}
-					</Row>
-					<br />
-				</>
-			)}
-			<Typography.Title level={2}>List of lessons</Typography.Title>
-			<Row>
-				<AddElementCard type={type} />
-				{lessons.map((item, index) => {
-					return <ElementCard key={index} data={item} />
-				})}
-			</Row>
-		</div>
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<div>
+				{!isEmpty(lessons) && (
+					<>
+						<Typography.Title level={2}>Recently updated lessons...</Typography.Title>
+						<Row>
+							{lessons.slice(0, 2).map((item, index) => {
+								return <ElementCard key={index} data={item} />
+							})}
+						</Row>
+						<br />
+					</>
+				)}
+				<Typography.Title level={2}>List of lessons</Typography.Title>
+				<Row>
+					<AddElementCard type={type} />
+					{lessons.map((item, index) => {
+						return <ElementCard key={index} data={item} />
+					})}
+				</Row>
+			</div>
+		</>
 	)
 }
 

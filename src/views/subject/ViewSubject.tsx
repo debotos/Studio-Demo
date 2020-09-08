@@ -34,12 +34,10 @@ export default function (props: any) {
 
 	const getData = async () => {
 		setLoadingData(true)
-		if (isEmpty(activeSubjectInfo)) {
-			// User came via direct url not via step by step navigation
-			// TODO: Get subject info via ajax and set
-			const activeSubjectData = dummyDataProvider.findSubjectByID(subjectID)
-			dispatch(setActiveItems({ subject: activeSubjectData }))
-		}
+		// TODO: Get subject info via ajax and set
+		const activeSubjectData = dummyDataProvider.findSubjectByID(subjectID)
+		dispatch(setActiveItems({ subject: activeSubjectData }))
+
 		if (isEmpty(levels)) {
 			// TODO: Get all the levels under this specific subject via ajax
 			dispatch(setTreeData({ id: subjectID, type: 'subject', data: dummyDataProvider.getLevelsByParentID(subjectID) }))

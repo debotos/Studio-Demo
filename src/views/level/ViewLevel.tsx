@@ -11,6 +11,7 @@ import { genTreeKey, isEmpty } from '../../utils/helpers'
 import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 /* View specific level means list of units under it */
 export default function (props: any) {
@@ -36,17 +37,15 @@ export default function (props: any) {
 
 	const getData = async () => {
 		setLoadingData(true)
+		// TODO: Get level info via ajax and set
+		const activeLevelData = dummyDataProvider.findLevelByID(levelID)
+		dispatch(setActiveItems({ level: activeLevelData }))
+
 		if (isEmpty(activeSubjectInfo)) {
 			// User came via direct url not via step by step navigation
 			// TODO: Get parent subject info via ajax and set
 			const activeSubjectData = dummyDataProvider.findSubjectByID(subjectID)
 			dispatch(setActiveItems({ subject: activeSubjectData }))
-		}
-		if (isEmpty(activeLevelInfo)) {
-			// User came via direct url not via step by step navigation
-			// TODO: Get level info via ajax and set
-			const activeLevelData = dummyDataProvider.findLevelByID(levelID)
-			dispatch(setActiveItems({ level: activeLevelData }))
 		}
 		if (isEmpty(levels)) {
 			// TODO: Get all the levels under this specific subject via ajax
@@ -85,26 +84,35 @@ export default function (props: any) {
 		)
 	}
 
+	const breadcrumbItems: any[] = [
+		{ name: 'Subjects', path: `/editor/subjects`, isLink: true },
+		{ name: activeSubjectInfo.title, path: `/editor/subjects/${keys.viewAction}/${subjectID}`, isLink: true },
+		{ name: activeLevelInfo.title, path: `/editor/${subjectID}/levels/${keys.viewAction}/${levelID}`, isLink: false },
+	]
+
 	return (
-		<div>
-			{!isEmpty(units) && (
-				<>
-					<Typography.Title level={2}>Recently updated units...</Typography.Title>
-					<Row>
-						{units.slice(0, 2).map((item: any, index: number) => {
-							return <ElementCard key={index} data={item} />
-						})}
-					</Row>
-					<br />
-				</>
-			)}
-			<Typography.Title level={2}>List of units</Typography.Title>
-			<Row>
-				<AddElementCard type={'unit'} routeSuffix={addRouteSuffix} />
-				{units.map((item: any, index: number) => {
-					return <ElementCard key={index} data={item} />
-				})}
-			</Row>
-		</div>
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<div>
+				{!isEmpty(units) && (
+					<>
+						<Typography.Title level={2}>Recently updated units...</Typography.Title>
+						<Row>
+							{units.slice(0, 2).map((item: any, index: number) => {
+								return <ElementCard key={index} data={item} />
+							})}
+						</Row>
+						<br />
+					</>
+				)}
+				<Typography.Title level={2}>List of units</Typography.Title>
+				<Row>
+					<AddElementCard type={'unit'} routeSuffix={addRouteSuffix} />
+					{units.map((item: any, index: number) => {
+						return <ElementCard key={index} data={item} />
+					})}
+				</Row>
+			</div>
+		</>
 	)
 }

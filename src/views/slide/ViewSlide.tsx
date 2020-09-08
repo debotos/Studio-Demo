@@ -9,6 +9,8 @@ import * as dummyDataProvider from '../../utils/dummyData'
 import { genTreeKey, isEmpty } from '../../utils/helpers'
 import { LoadingCenter } from '../../components/loading/Loading'
 import SlideEditor from '../../components/slideEditor/SlideEditor'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
+import keys from '../../config/keys'
 
 /* View specific slide means open slide editor for it */
 export default function (props: any) {
@@ -42,6 +44,10 @@ export default function (props: any) {
 
 	const getData = async () => {
 		setLoadingData(true)
+		// TODO: Get slide info via ajax and set
+		const activeSlideData = dummyDataProvider.findSlideByID(slideID)
+		dispatch(setActiveItems({ slide: activeSlideData }))
+
 		if (isEmpty(activeSubjectInfo)) {
 			// User came via direct url not via step by step navigation
 			// TODO: Get parent subject info via ajax and set
@@ -63,14 +69,8 @@ export default function (props: any) {
 		if (isEmpty(activeLessonInfo)) {
 			// User came via direct url not via step by step navigation
 			// TODO: Get lesson info via ajax and set
-			const activeLessonData = dummyDataProvider.findLessonByID(unitID)
+			const activeLessonData = dummyDataProvider.findLessonByID(lessonID)
 			dispatch(setActiveItems({ lesson: activeLessonData }))
-		}
-		if (isEmpty(activeSlideInfo)) {
-			// User came via direct url not via step by step navigation
-			// TODO: Get slide info via ajax and set
-			const activeSlideData = dummyDataProvider.findSlideByID(unitID)
-			dispatch(setActiveItems({ slide: activeSlideData }))
 		}
 		if (isEmpty(levels)) {
 			// TODO: Get all the levels under this specific subject via ajax
@@ -95,5 +95,23 @@ export default function (props: any) {
 		return <LoadingCenter msg='Data loading...' />
 	}
 
-	return <SlideEditor {...props} />
+	const breadcrumbItems: any[] = [
+		{ name: 'Subjects', path: `/editor/subjects`, isLink: true },
+		{ name: activeSubjectInfo.title, path: `/editor/subjects/${keys.viewAction}/${subjectID}`, isLink: true },
+		{ name: activeLevelInfo.title, path: `/editor/${subjectID}/levels/${keys.viewAction}/${levelID}`, isLink: true },
+		{ name: activeUnitInfo.title, path: `/editor/${subjectID}/${levelID}/units/${keys.viewAction}/${unitID}`, isLink: true },
+		{
+			name: activeLessonInfo.title,
+			path: `/editor/${subjectID}/${levelID}/${unitID}/lessons/${keys.viewAction}/${lessonID}`,
+			isLink: true,
+		},
+		{ name: activeSlideInfo.title, path: ``, isLink: false },
+	]
+
+	return (
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<SlideEditor {...props} />
+		</>
+	)
 }

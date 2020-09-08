@@ -3,6 +3,7 @@ import { Breadcrumb as AntdBreadcrumb } from 'antd'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
+import { RightOutlined } from '@ant-design/icons'
 
 import { RootState } from '../../redux/store'
 
@@ -16,7 +17,7 @@ export function Breadcrumb(props: any) {
 
 	return (
 		<Container>
-			<AntdBreadcrumb separator='>' style={{ fontSize: 15 }}>
+			<AntdBreadcrumb separator={<RightOutlined style={{ fontSize: '14px' }} />} style={{ fontSize: 15 }}>
 				{[homeRoute, ...items].map((route: any, index: number) => {
 					const { isLink, path, name } = route
 					return (

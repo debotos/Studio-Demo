@@ -11,6 +11,7 @@ import { genTreeKey, isEmpty } from '../../utils/helpers'
 import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 /* View specific unit means list of lessons under it */
 export default function (props: any) {
@@ -39,6 +40,10 @@ export default function (props: any) {
 
 	const getData = async () => {
 		setLoadingData(true)
+		// TODO: Get level info via ajax and set
+		const activeUnitData = dummyDataProvider.findUnitByID(unitID)
+		dispatch(setActiveItems({ unit: activeUnitData }))
+
 		if (isEmpty(activeSubjectInfo)) {
 			// User came via direct url not via step by step navigation
 			// TODO: Get parent subject info via ajax and set
@@ -50,12 +55,6 @@ export default function (props: any) {
 			// TODO: Get level info via ajax and set
 			const activeLevelData = dummyDataProvider.findLevelByID(levelID)
 			dispatch(setActiveItems({ level: activeLevelData }))
-		}
-		if (isEmpty(activeUnitInfo)) {
-			// User came via direct url not via step by step navigation
-			// TODO: Get level info via ajax and set
-			const activeUnitData = dummyDataProvider.findUnitByID(unitID)
-			dispatch(setActiveItems({ unit: activeUnitData }))
 		}
 		if (isEmpty(levels)) {
 			// TODO: Get all the levels under this specific subject via ajax
@@ -100,26 +99,36 @@ export default function (props: any) {
 		)
 	}
 
+	const breadcrumbItems: any[] = [
+		{ name: 'Subjects', path: `/editor/subjects`, isLink: true },
+		{ name: activeSubjectInfo.title, path: `/editor/subjects/${keys.viewAction}/${subjectID}`, isLink: true },
+		{ name: activeLevelInfo.title, path: `/editor/${subjectID}/levels/${keys.viewAction}/${levelID}`, isLink: true },
+		{ name: activeUnitInfo.title, path: ``, isLink: false },
+	]
+
 	return (
-		<div>
-			{!isEmpty(lessons) && (
-				<>
-					<Typography.Title level={2}>Recently updated lessons...</Typography.Title>
-					<Row>
-						{lessons.slice(0, 2).map((item: any, index: number) => {
-							return <ElementCard key={index} data={item} />
-						})}
-					</Row>
-					<br />
-				</>
-			)}
-			<Typography.Title level={2}>List of lessons</Typography.Title>
-			<Row>
-				<AddElementCard type={'lesson'} routeSuffix={addRouteSuffix} />
-				{lessons.map((item: any, index: number) => {
-					return <ElementCard key={index} data={item} />
-				})}
-			</Row>
-		</div>
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<div>
+				{!isEmpty(lessons) && (
+					<>
+						<Typography.Title level={2}>Recently updated lessons...</Typography.Title>
+						<Row>
+							{lessons.slice(0, 2).map((item: any, index: number) => {
+								return <ElementCard key={index} data={item} />
+							})}
+						</Row>
+						<br />
+					</>
+				)}
+				<Typography.Title level={2}>List of lessons</Typography.Title>
+				<Row>
+					<AddElementCard type={'lesson'} routeSuffix={addRouteSuffix} />
+					{lessons.map((item: any, index: number) => {
+						return <ElementCard key={index} data={item} />
+					})}
+				</Row>
+			</div>
+		</>
 	)
 }

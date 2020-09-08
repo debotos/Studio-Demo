@@ -1,5 +1,6 @@
 import React from 'react'
-import { Switch, Route, Redirect } from 'react-router-dom'
+import { Route, Redirect } from 'react-router-dom'
+import { AnimatedSwitch } from 'react-router-transition'
 import { useSelector } from 'react-redux'
 import styled, { css } from 'styled-components'
 import media from 'styled-media-query'
@@ -11,6 +12,9 @@ import ScrollToTop from './ScrollToTop'
 
 const { headerHeight } = vars
 
+const mapStyles = (styles: any) => ({ opacity: styles.opacity, width: '100%', height: '100%' })
+const bounceTransition = { atEnter: { opacity: 0 }, atLeave: { opacity: 0 }, atActive: { opacity: 1 } }
+
 export function AppBody() {
 	const nav = useSelector((state: RootState) => state.settings.sideNav)
 	const routes = getRoutes()
@@ -18,14 +22,19 @@ export function AppBody() {
 	return (
 		<Body nav={nav.toString()}>
 			<ScrollToTop>
-				<Switch>
+				<AnimatedSwitch
+					atEnter={bounceTransition.atEnter}
+					atLeave={bounceTransition.atLeave}
+					atActive={bounceTransition.atActive}
+					mapStyles={mapStyles}
+					className='route-wrapper'
+				>
 					{routes.map((route: any, idx: number) => {
 						if (!route.component) return null
 						return <Route key={idx} path={route.path} exact={route.exact} render={(props) => <route.component {...props} />} />
 					})}
-
 					<Redirect from='/' to='/dashboard' />
-				</Switch>
+				</AnimatedSwitch>
 			</ScrollToTop>
 		</Body>
 	)

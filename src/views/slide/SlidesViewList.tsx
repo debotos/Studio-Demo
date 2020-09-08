@@ -8,6 +8,7 @@ import { ElementCard, AddElementCard } from '../../components/card/ElementCard'
 import { isEmpty } from '../../utils/helpers'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { LoadingCenter } from '../../components/loading/Loading'
+import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 
 const type = 'slide'
 
@@ -34,27 +35,32 @@ export function SlidesViewList(props: any) {
 		return <LoadingCenter msg='Data loading...' />
 	}
 
+	const breadcrumbItems: any[] = [{ name: 'Slides', path: `/editor/slides`, isLink: false }]
+
 	return (
-		<div>
-			{!isEmpty(slides) && (
-				<>
-					<Typography.Title level={2}>Recently updated slides...</Typography.Title>
-					<Row>
-						{slides.slice(0, 2).map((item, index) => {
-							return <ElementCard key={index} data={item} />
-						})}
-					</Row>
-					<br />
-				</>
-			)}
-			<Typography.Title level={2}>List of slides</Typography.Title>
-			<Row>
-				<AddElementCard type={type} />
-				{slides.map((item, index) => {
-					return <ElementCard key={index} data={item} />
-				})}
-			</Row>
-		</div>
+		<>
+			<Breadcrumb items={breadcrumbItems} />
+			<div>
+				{!isEmpty(slides) && (
+					<>
+						<Typography.Title level={2}>Recently updated slides...</Typography.Title>
+						<Row>
+							{slides.slice(0, 2).map((item, index) => {
+								return <ElementCard key={index} data={item} />
+							})}
+						</Row>
+						<br />
+					</>
+				)}
+				<Typography.Title level={2}>List of slides</Typography.Title>
+				<Row>
+					<AddElementCard type={type} />
+					{slides.map((item, index) => {
+						return <ElementCard key={index} data={item} />
+					})}
+				</Row>
+			</div>
+		</>
 	)
 }
 
