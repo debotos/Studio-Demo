@@ -6,6 +6,7 @@ import { Link } from 'react-router-dom'
 import { RightOutlined } from '@ant-design/icons'
 
 import { RootState } from '../../redux/store'
+import { truncate } from '../../utils/helpers'
 
 const homeRoute = { name: 'Home', path: '/', isLink: true }
 
@@ -20,9 +21,10 @@ export function Breadcrumb(props: any) {
 			<AntdBreadcrumb separator={<RightOutlined style={{ fontSize: '14px' }} />} style={{ fontSize: 15 }}>
 				{[homeRoute, ...items].map((route: any, index: number) => {
 					const { isLink, path, name } = route
+					const label = truncate(name, 20)
 					return (
 						<AntdBreadcrumb.Item {...props} key={index}>
-							{isLink ? <Link to={path}>{name}</Link> : name}
+							{isLink ? <Link to={path}>{label}</Link> : label}
 						</AntdBreadcrumb.Item>
 					)
 				})}
