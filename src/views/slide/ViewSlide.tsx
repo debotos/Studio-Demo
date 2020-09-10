@@ -8,8 +8,8 @@ import { setTreeData } from '../../redux/slices/treeDataSlice'
 import * as dummyDataProvider from '../../utils/dummyData'
 import { genTreeKey, isEmpty } from '../../utils/helpers'
 import { LoadingCenter } from '../../components/loading/Loading'
+import { setSettings } from '../../redux/slices/settingsSlice'
 import SlideEditor from '../../components/slideEditor/SlideEditor'
-import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 import keys from '../../config/keys'
 
 /* View specific slide means open slide editor for it */
@@ -39,6 +39,9 @@ export default function (props: any) {
 
 	useEffect(() => {
 		getData()
+		return () => {
+			dispatch(setSettings({ bodyPadding: 40 }))
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [window.location.pathname])
 
@@ -108,10 +111,7 @@ export default function (props: any) {
 		{ name: activeSlideInfo.title, path: ``, isLink: false },
 	]
 
-	return (
-		<>
-			<Breadcrumb items={breadcrumbItems} />
-			<SlideEditor {...props} />
-		</>
-	)
+	const ids = { subjectID, levelID, unitID, lessonID, slideID }
+
+	return <SlideEditor {...props} breadcrumbItems={breadcrumbItems} ids={ids} />
 }

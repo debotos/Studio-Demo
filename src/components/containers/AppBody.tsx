@@ -17,10 +17,11 @@ const bounceTransition = { atEnter: { opacity: 0 }, atLeave: { opacity: 0 }, atA
 
 export function AppBody() {
 	const nav = useSelector((state: RootState) => state.settings.sideNav)
+	const bodyPadding = useSelector((state: RootState) => state.settings.bodyPadding)
 	const routes = getRoutes()
 
 	return (
-		<Body nav={nav.toString()}>
+		<Body nav={nav.toString()} bodyPadding={bodyPadding}>
 			<ScrollToTop>
 				<AnimatedSwitch
 					atEnter={bounceTransition.atEnter}
@@ -46,7 +47,7 @@ const Body: any = styled.div`
 	height: 100%;
 	/* min-height: calc(100vh - ${headerHeight + 'px'}); */
 	min-height: 100vh;
-	padding: 40px;
+	padding: ${(props: any) => props.bodyPadding && `${props.bodyPadding}px`};
 	position: relative;
 	width: 100%;
 	${(props: any) =>

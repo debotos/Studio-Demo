@@ -30,7 +30,9 @@ export function SideNavigation(props: CProps) {
 
 	const handleMouseAction = () => {
 		if (nav === 'pinned') return
-		dispatch(setSettings({ sideNav: !nav }))
+		const val = !nav
+		dispatch(setSettings({ sideNav: val }))
+		localStorage.setItem(keys.sideNav, val.toString())
 	}
 
 	const getDrawerStyle = () => {

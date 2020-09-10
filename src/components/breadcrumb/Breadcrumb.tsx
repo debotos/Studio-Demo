@@ -12,12 +12,13 @@ const homeRoute = { name: 'Home', path: '/', isLink: true }
 
 export function Breadcrumb(props: any) {
 	const breadcrumb = useSelector((state: RootState) => state.settings.breadcrumb)
+	const bodyPadding = useSelector((state: RootState) => state.settings.bodyPadding)
 	if (!breadcrumb) return null
 
 	const { items = [] } = props
 
 	return (
-		<Container>
+		<Container bodyPadding={bodyPadding}>
 			<AntdBreadcrumb separator={<RightOutlined style={{ fontSize: '14px' }} />} style={{ fontSize: 15 }}>
 				{[homeRoute, ...items].map((route: any, index: number) => {
 					const { isLink, path, name } = route
@@ -35,6 +36,7 @@ export function Breadcrumb(props: any) {
 
 export default Breadcrumb
 
-const Container = styled.div`
+const Container: any = styled.div`
 	margin-bottom: 15px;
+	padding: ${(props: any) => props.bodyPadding === 0 && '0 30px'};
 `

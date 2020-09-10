@@ -2,7 +2,7 @@ import { createSlice } from '@reduxjs/toolkit'
 
 import keys from '../../config/keys'
 
-type SliceState = { sideNav: 'pinned' | boolean; breadcrumb: boolean }
+type SliceState = { sideNav: 'pinned' | boolean; breadcrumb: boolean; bodyPadding: number }
 
 const getSideNavInitValue = () => {
 	const val = localStorage.getItem(keys.sideNav)
@@ -16,7 +16,7 @@ const getSideNavInitValue = () => {
 	}
 }
 
-const initialState: SliceState = { sideNav: getSideNavInitValue(), breadcrumb: true }
+const initialState: SliceState = { sideNav: getSideNavInitValue(), breadcrumb: true, bodyPadding: 40 }
 
 /* Store overall app UI settings */
 const settingsSlice = createSlice({
