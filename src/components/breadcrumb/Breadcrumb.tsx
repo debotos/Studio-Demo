@@ -37,6 +37,6 @@ export function Breadcrumb(props: any) {
 export default Breadcrumb
 
 const Container: any = styled.div`
-	margin-bottom: 15px;
+	margin-bottom: ${(props: any) => (props.bodyPadding === 0 ? '20px' : '15px')};
 	padding: ${(props: any) => props.bodyPadding === 0 && '0 30px'};
 `

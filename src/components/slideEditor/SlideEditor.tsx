@@ -1,11 +1,13 @@
 import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
+import { Affix } from 'antd'
 
 import { AppDispatch } from '../../redux/store'
 import { setSettings } from '../../redux/slices/settingsSlice'
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
-import { EditorToolBar } from './molecularElements/ToolBar'
-import { EditorSideBar } from './molecularElements/SideBar'
+import { EditorToolBar } from './molecularElements/EditorToolBar'
+import { EditorBody } from './molecularElements/EditorBody'
+import vars from '../../config/vars'
 
 interface CProps {
 	breadcrumbItems: any[]
@@ -22,10 +24,12 @@ export default function SlideEditor(props: any) {
 	}, [])
 
 	return (
-		<>
+		<div>
 			<Breadcrumb items={breadcrumbItems} />
-			<EditorToolBar ids={ids} />
-			<EditorSideBar ids={ids} />
-		</>
+			<Affix offsetTop={vars.headerHeight - 2}>
+				<EditorToolBar ids={ids} />
+			</Affix>
+			<EditorBody ids={ids} />
+		</div>
 	)
 }

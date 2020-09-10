@@ -6,6 +6,11 @@ import { FiVideo } from 'react-icons/fi'
 import { CgImage, CgStack, CgCheckO, CgMathPlus } from 'react-icons/cg'
 import { MdMultilineChart } from 'react-icons/md'
 import { BiRectangle, BiPaint } from 'react-icons/bi'
+import { Row as AntRow, Switch } from 'antd'
+import { CloseOutlined, CheckOutlined } from '@ant-design/icons'
+import vars from '../../../config/vars'
+
+const { editorSideNavWidth, editorToolBarHeight } = vars
 
 interface CProps {
 	ids: any
@@ -15,7 +20,7 @@ export function EditorToolBar(props: CProps) {
 	return (
 		<Container>
 			<LeftContent>
-				<IconBtn style={{ marginLeft: 0 }}>
+				<IconBtn style={{ marginLeft: 0, marginRight: 5 }}>
 					<BsReverseLayoutTextWindowReverse size={25} />
 					<RiArrowDownSLine size={15} />
 				</IconBtn>
@@ -27,6 +32,9 @@ export function EditorToolBar(props: CProps) {
 				</IconBtn>
 				<IconBtn>
 					<SVGIcon>SVG</SVGIcon>
+				</IconBtn>
+				<IconBtn>
+					<CgImage size={25} />
 				</IconBtn>
 				<IconBtn>
 					<BiPaint size={25} />
@@ -41,30 +49,61 @@ export function EditorToolBar(props: CProps) {
 					<BsTextareaT size={25} />
 				</IconBtn>
 			</LeftContent>
-			<RightContent>Right Container</RightContent>
+			<RightContent>
+				<Row justify='space-between' align='middle' style={{ width: '100%' }}>
+					<Row align='middle'>
+						<IconBtn style={{ marginLeft: 0, marginRight: 10 }}>
+							<CgStack size={25} />
+						</IconBtn>
+						<Row align='middle'>
+							<Label>My Items</Label>&nbsp;&nbsp;
+							<Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />
+						</Row>
+					</Row>
+					<Row align='middle'>
+						<Row align='middle' style={{ color: '#52c41a', marginRight: 10 }}>
+							<CgCheckO size={25} /> &nbsp;&nbsp; <Label>Saved</Label>
+						</Row>
+						<IconBtn>
+							<CgMathPlus size={25} />
+						</IconBtn>
+						<IconBtn>
+							<RiFileCopyLine size={25} />
+						</IconBtn>
+						<IconBtn style={{ marginRight: 0 }}>
+							<BsThreeDots size={25} />
+						</IconBtn>
+					</Row>
+				</Row>
+			</RightContent>
 		</Container>
 	)
 }
 
+const Row = styled(AntRow)`
+	height: 100%;
+`
 const Container = styled.div`
 	align-items: center;
+	background-color: #fff;
 	border-bottom: 2px solid #eee;
 	border-top: 2px solid #eee;
 	display: flex;
-	height: 50px;
+	flex-wrap: wrap;
+	height: ${editorToolBarHeight + 'px'};
 `
 const LeftContent = styled.div`
 	align-items: center;
+	border-right: 2px solid #eee;
 	display: flex;
-	flex: 1;
 	height: 100%;
 	justify-content: flex-start;
 	padding-left: 30px;
 	padding-right: 15px;
+	width: ${editorSideNavWidth + 'px'};
 `
-const RightContent = styled(LeftContent)`
-	flex: 2;
-	border-left: 2px solid #eee;
+const RightContent = styled.div`
+	flex: 1;
 	height: 100%;
 	padding-left: 15px;
 	padding-right: 30px;
@@ -91,4 +130,9 @@ const SVGIcon = styled.span`
 	margin: 0;
 	padding: 2px;
 	text-transform: uppercase;
+`
+const Label = styled.span`
+	font-size: 15px;
+	font-weight: 500;
+	margin-top: -2px;
 `
