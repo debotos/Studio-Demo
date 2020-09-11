@@ -1,9 +1,9 @@
 import React, { useState } from 'react'
+import { RiFileCopyLine, RiShareBoxFill, RiPencilLine, RiDeleteBinLine, RiCloseCircleLine } from 'react-icons/ri'
+import { Row, Typography, Avatar } from 'antd'
 import styled from 'styled-components'
 import { FiMoreHorizontal } from 'react-icons/fi'
 import { GoPlus } from 'react-icons/go'
-import { RiFileCopyLine, RiShareBoxFill, RiPencilLine, RiDeleteBinLine, RiCloseCircleLine } from 'react-icons/ri'
-import { Row, Typography, Avatar } from 'antd'
 import { useDispatch } from 'react-redux'
 import { FileImageOutlined } from '@ant-design/icons'
 

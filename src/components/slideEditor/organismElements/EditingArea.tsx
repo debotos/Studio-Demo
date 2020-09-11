@@ -1,8 +1,8 @@
 import React from 'react'
 
-import { EditorBodyPropsType } from './EditorBody'
+import { EditorPropsType } from '../SlideEditor'
 
-export default function EditingArea(props: EditorBodyPropsType) {
+export default function EditingArea(props: EditorPropsType) {
 	return (
 		<div className='hide-native-scrollbar'>
 			Esse fugiat pariatur ad Lorem et amet Lorem. Minim ut veniam officia ea magna mollit ex dolor proident pariatur occaecat do.

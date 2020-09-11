@@ -348,7 +348,7 @@ const Level = withRouter(LevelComponent)
 
 const LevelItem: any = styled.div`
 	display: flex;
-	background-color: ${(props: any) => props.active === 'true' && 'lightcyan'};
+	background-color: ${(props: any) => props.active === 'true' && vars.sideNavActiveBGColor};
 	border-bottom: 2px solid #eee;
 	justify-content: space-between;
 	padding: 15px;
@@ -460,7 +460,7 @@ const Unit = withRouter(UnitComponent)
 
 const UnitItem: any = styled.div`
 	align-items: center;
-	background-color: ${(props: any) => props.active === 'true' && 'lightcyan'};
+	background-color: ${(props: any) => props.active === 'true' && vars.sideNavActiveBGColor};
 	display: flex;
 	margin: 0;
 	padding: 10px 15px;
@@ -496,9 +496,9 @@ function LessonComponent(props: any) {
 
 	const getIcon = () => {
 		if (checkActive()) {
-			return <CgShapeCircle color={'lime'} size={20} />
+			return <CgShapeCircle color={vars.sideNavActiveColor} size={20} />
 		} else if (published) {
-			return <CgCheck color={'lime'} size={25} />
+			return <CgCheck color={vars.sideNavActiveColor} size={25} />
 		} else {
 			return <GoPrimitiveDot color={'#929eaa'} size={20} />
 		}
@@ -530,7 +530,7 @@ const Lesson = withRouter(LessonComponent)
 
 const LessonItem: any = styled.div`
 	align-items: center;
-	background-color: ${(props: any) => props.active === 'true' && 'lightcyan'};
+	background-color: ${(props: any) => props.active === 'true' && vars.sideNavActiveBGColor};
 	display: flex;
 	padding: 5px 0;
 	padding-left: 37px;
@@ -540,7 +540,7 @@ const LessonItem: any = styled.div`
 `
 const LessonLabel: any = styled(Typography.Title)`
 	cursor: pointer;
-	color: ${(props: any) => props.active === 'true' && 'lime !important'};
+	color: ${(props: any) => props.active === 'true' && `${vars.sideNavActiveColor} !important`};
 	opacity: ${(props: any) => (props.published === 'true' || props.active === 'true' ? 1 : 0.5)};
 	font-size: 15px;
 	font-weight: 500;

@@ -5,17 +5,19 @@ import { Affix } from 'antd'
 import { AppDispatch } from '../../redux/store'
 import { setSettings } from '../../redux/slices/settingsSlice'
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
-import { EditorToolBar } from './molecularElements/EditorToolBar'
-import { EditorBody } from './molecularElements/EditorBody'
+import { EditorToolBar } from './organismElements/EditorToolBar'
+import { EditorBody } from './organismElements/EditorBody'
 import vars from '../../config/vars'
 
-interface CProps {
+export interface EditorPropsType {
 	breadcrumbItems: any[]
 	ids: any
+	activeSlideInfo: any
+	slides: any[]
 }
 
-export default function SlideEditor(props: any) {
-	const { ids, breadcrumbItems } = props
+export default function SlideEditor(props: EditorPropsType) {
+	const { breadcrumbItems } = props
 	const dispatch: AppDispatch = useDispatch()
 
 	useEffect(() => {
@@ -27,9 +29,9 @@ export default function SlideEditor(props: any) {
 		<div>
 			<Breadcrumb items={breadcrumbItems} />
 			<Affix offsetTop={vars.headerHeight - 2}>
-				<EditorToolBar ids={ids} />
+				<EditorToolBar {...props} />
 			</Affix>
-			<EditorBody ids={ids} />
+			<EditorBody {...props} />
 		</div>
 	)
 }

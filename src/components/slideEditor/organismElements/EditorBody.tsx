@@ -1,18 +1,15 @@
 import React from 'react'
 import styled from 'styled-components'
+import { Affix } from 'antd'
 
+import { EditorPropsType } from '../SlideEditor'
 import EditorSideBar from './EditorSideBar'
 import EditingArea from './EditingArea'
 import vars from '../../../config/vars'
-import { Affix } from 'antd'
 
 const { headerHeight, editorToolBarHeight } = vars
 
-export interface EditorBodyPropsType {
-	ids: any
-}
-
-export function EditorBody(props: EditorBodyPropsType) {
+export function EditorBody(props: EditorPropsType) {
 	return (
 		<Container>
 			<Affix offsetTop={headerHeight + editorToolBarHeight - 2}>
@@ -35,7 +32,7 @@ const LeftContent = styled.div`
 	border-right: 2px solid #eee;
 	display: flex;
 	height: 100%;
-	padding-left: 30px;
+	padding-left: 20px;
 	max-width: ${vars.editorSideNavWidth + 'px'};
 `
 const RightContent = styled.div`

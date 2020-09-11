@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { message } from 'antd'
+import { matchPath } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
 
 import { AppDispatch, RootState } from '../../redux/store'
@@ -40,7 +41,14 @@ export default function (props: any) {
 	useEffect(() => {
 		getData()
 		return () => {
-			dispatch(setSettings({ bodyPadding: 40 }))
+			const match = matchPath(window.location.pathname, {
+				path: `/editor/:subjectID/:levelID/:unitID/:lessonID/slides/${keys.viewAction}/:id`,
+			})
+			const leaving = !match?.isExact
+			console.log('Leaving slide editor:', leaving)
+			if (leaving) {
+				dispatch(setSettings({ bodyPadding: 40 }))
+			}
 		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [window.location.pathname])
@@ -113,5 +121,5 @@ export default function (props: any) {
 
 	const ids = { subjectID, levelID, unitID, lessonID, slideID }
 
-	return <SlideEditor {...props} breadcrumbItems={breadcrumbItems} ids={ids} />
+	return <SlideEditor breadcrumbItems={breadcrumbItems} ids={ids} slides={slides} activeSlideInfo={activeSlideInfo} />
 }

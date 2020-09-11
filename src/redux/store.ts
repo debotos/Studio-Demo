@@ -1,15 +1,17 @@
 import { configureStore, combineReducers } from '@reduxjs/toolkit'
 
 import settingsSlice from './slices/settingsSlice'
-import activeItemsSlice from './slices/activeItemsSlice'
 import dataListSlice from './slices/dataListSlice'
 import treeDataSlice from './slices/treeDataSlice'
+import activeItemsSlice from './slices/activeItemsSlice'
+import slideEditorStateSlice from './slices/slideEditorStateSlice'
 
 const rootReducer = combineReducers({
 	settings: settingsSlice,
 	activeItems: activeItemsSlice,
 	dataList: dataListSlice,
 	treeData: treeDataSlice,
+	slideEditorState: slideEditorStateSlice,
 })
 
 export type EditorDataType = 'subject' | 'level' | 'unit' | 'lesson' | 'slide'
