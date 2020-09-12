@@ -1,8 +1,8 @@
-const editorSideNavFirstContainerWidth = 215
+const editorSideNavFirstContainerWidth = 220
 const editorSideNavSecondContainerWidth = 85
 const editorSideNavThirdContainerWidth = 250
 
-const vars: any = {
+const vars = {
 	appPrimaryColor: '#38444f',
 	// Header Specific
 	headerHeight: 65,
@@ -12,12 +12,13 @@ const vars: any = {
 	sideNavActiveBGColor: 'lightcyan',
 	// Slide Editor Specific
 	editorToolBarHeight: 50,
+	editorSubToolBarHeight: 45,
 	editorSideNavFirstContainerWidth,
 	editorSideNavSecondContainerWidth,
 	editorSideNavThirdContainerWidth,
 	editorSideNavWidth: editorSideNavFirstContainerWidth + editorSideNavSecondContainerWidth + editorSideNavThirdContainerWidth,
 	editorActiveColor: '#0e7de4',
-	editorSlidesListImageHeight: 130,
+	editorSlidesListImageHeight: 120,
 }
 
 export default vars

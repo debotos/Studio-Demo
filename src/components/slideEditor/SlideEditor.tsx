@@ -2,11 +2,13 @@ import React, { useEffect } from 'react'
 import { useDispatch } from 'react-redux'
 import { Affix } from 'antd'
 
-import { AppDispatch } from '../../redux/store'
 import { setSettings } from '../../redux/slices/settingsSlice'
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
 import { EditorToolBar } from './organismElements/EditorToolBar'
 import { EditorBody } from './organismElements/EditorBody'
+import { RequireDesktop } from '../device/RequireDesktop'
+import { Desktop, Mobile } from '../device/Device'
+import { AppDispatch } from '../../redux/store'
 import vars from '../../config/vars'
 
 export interface EditorPropsType {
@@ -26,12 +28,17 @@ export default function SlideEditor(props: EditorPropsType) {
 	}, [])
 
 	return (
-		<div>
-			<Breadcrumb items={breadcrumbItems} />
-			<Affix offsetTop={vars.headerHeight - 2}>
-				<EditorToolBar {...props} />
-			</Affix>
-			<EditorBody {...props} />
-		</div>
+		<>
+			<Desktop editor={true}>
+				<Breadcrumb items={breadcrumbItems} />
+				<Affix offsetTop={vars.headerHeight - 2}>
+					<EditorToolBar {...props} />
+				</Affix>
+				<EditorBody {...props} />
+			</Desktop>
+			<Mobile editor={true}>
+				<RequireDesktop />
+			</Mobile>
+		</>
 	)
 }

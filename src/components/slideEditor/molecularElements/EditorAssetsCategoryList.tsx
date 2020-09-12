@@ -19,7 +19,7 @@ export const slideEditorAssetCategories: slideEditorAssetCategoryType[] = [
 	{ key: 'upload', label: 'Upload', icon: 'bs/BsUpload' },
 ]
 
-export function AssetsCategoryList(props: EditorPropsType) {
+export function EditorAssetsCategoryList(props: EditorPropsType) {
 	const categories = useSelector((state: RootState) => state.slideEditorState.assetCategories)
 	return (
 		<>

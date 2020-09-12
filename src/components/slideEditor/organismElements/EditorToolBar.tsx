@@ -108,7 +108,7 @@ const RightContent = styled.div`
 	padding-left: 15px;
 	padding-right: 30px;
 `
-const IconBtn = styled.span`
+export const IconBtn = styled.span`
 	align-items: center;
 	cursor: pointer;
 	display: flex;

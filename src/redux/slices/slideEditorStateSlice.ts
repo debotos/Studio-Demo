@@ -3,13 +3,36 @@ import { createSlice } from '@reduxjs/toolkit'
 import {
 	slideEditorAssetCategoryType,
 	slideEditorAssetCategories,
-} from '../../components/slideEditor/molecularElements/AssetsCategoryList'
+} from '../../components/slideEditor/molecularElements/EditorAssetsCategoryList'
+import {
+	slideEditorAssetSubCategoryType,
+	slideEditorAssetSubCategories,
+} from '../../components/slideEditor/molecularElements/EditorAssetsArea'
 
-type SliceState = { assetCategories: slideEditorAssetCategoryType[]; activeAssetCategoryKey: string }
+type SliceState = {
+	showEditorSideBar: boolean
+	showSlidesListUI: boolean
+	showEditorSideBarAssetCategoryUI: boolean
+	showEditorSideBarAssetViewerUI: boolean
+	assetCategories: slideEditorAssetCategoryType[]
+	activeAssetCategoryKey: string
+	assetSubCategories: slideEditorAssetSubCategoryType[]
+	activeAssetSubCategoryKey: string
+	assets: any[]
+}
 
 const initialState: SliceState = {
+	showEditorSideBar: true,
+	showSlidesListUI: true,
+	showEditorSideBarAssetCategoryUI: true,
+	showEditorSideBarAssetViewerUI: true,
 	assetCategories: slideEditorAssetCategories,
 	activeAssetCategoryKey: slideEditorAssetCategories[0].key,
+	assetSubCategories: slideEditorAssetSubCategories,
+	activeAssetSubCategoryKey: slideEditorAssetSubCategories[0].key,
+	assets: Array(50)
+		.fill(0)
+		.map((x, i) => ({ id: i, name: `Asset ${i}`, url: 'https://picsum.photos/100/100' })),
 }
 
 /* Central State for slide editor */

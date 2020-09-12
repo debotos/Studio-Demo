@@ -3,14 +3,16 @@ import { useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
 
 import { setActiveItems } from '../../../redux/slices/activeItemsSlice'
+import FallbackImage from '../../../assets/fallback.png'
 import { EditorPropsType } from '../SlideEditor'
 import { truncate } from '../../../utils/helpers'
 import { routeHistory } from '../../../app/App'
 import { AppDispatch } from '../../../redux/store'
 import vars from '../../../config/vars'
 import keys from '../../../config/keys'
+import { Image } from 'antd'
 
-export function SlidesList(props: EditorPropsType) {
+export function EditorSlidesList(props: EditorPropsType) {
 	const { slides, ids } = props
 	const { subjectID, levelID, unitID, lessonID, slideID } = ids
 	const dispatch: AppDispatch = useDispatch()
@@ -34,7 +36,7 @@ export function SlidesList(props: EditorPropsType) {
 						<Serial>{serial}</Serial>
 						<SlideDetails>
 							<ImageContainer active={active.toString()}>
-								<Img src={thumbnail} alt={title} />
+								<Img src={thumbnail} alt={title} fallback={FallbackImage} preview={false} />
 							</ImageContainer>
 							<Title>{truncate(title, 40)}</Title>
 						</SlideDetails>
@@ -51,9 +53,6 @@ const SlideItem: any = styled.div`
 	display: flex;
 	margin-bottom: 15px;
 	transition: all 0.2s ease-in;
-	&:hover {
-		font-weight: bold;
-	}
 	${(props: any) =>
 		props.active === 'true' &&
 		css`
@@ -71,8 +70,8 @@ const SlideDetails = styled.div`
 `
 const ImageContainer: any = styled.div`
 	border: 2px solid #eee;
-	min-width: 161px;
-	max-width: 161px;
+	min-width: 100%;
+	max-width: 100%;
 	height: ${vars.editorSlidesListImageHeight + 'px'};
 	position: relative;
 	transition: all 0.2s ease-in;
@@ -85,17 +84,14 @@ const ImageContainer: any = styled.div`
 			border-color: ${vars.editorActiveColor};
 		`}
 `
-const Img = styled.img`
+export const Img: any = styled(Image)`
 	width: 100%;
 	height: 100%;
-	object-fit: cover;
-	/* Or */
-	/* Center */
-	/* display: block;
-	position: absolute;
-	top: 50%;
-	left: 50%;
-	transform: translate(-50%, -50%); */
+	img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+	}
 `
 const Title = styled.p`
 	margin: 5px 0 0 0;
