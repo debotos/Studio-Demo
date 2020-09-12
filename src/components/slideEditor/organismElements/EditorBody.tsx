@@ -90,7 +90,8 @@ const LeftContent = styled.div`
 	border-right: 2px solid #eee;
 	display: flex;
 	height: 100%;
-	padding-left: 20px;
+	padding-left: ${vars.editorSideNavPaddingLeft + 'px'};
+	width: max-content;
 	max-width: ${vars.editorSideNavWidth + 'px'};
 `
 const RightContent = styled.div`

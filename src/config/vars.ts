@@ -1,6 +1,7 @@
 const editorSideNavFirstContainerWidth = 220
 const editorSideNavSecondContainerWidth = 85
 const editorSideNavThirdContainerWidth = 250
+const editorSideNavPaddingLeft = 20
 
 const vars = {
 	appPrimaryColor: '#38444f',
@@ -16,7 +17,12 @@ const vars = {
 	editorSideNavFirstContainerWidth,
 	editorSideNavSecondContainerWidth,
 	editorSideNavThirdContainerWidth,
-	editorSideNavWidth: editorSideNavFirstContainerWidth + editorSideNavSecondContainerWidth + editorSideNavThirdContainerWidth,
+	editorSideNavPaddingLeft,
+	editorSideNavWidth:
+		editorSideNavFirstContainerWidth +
+		editorSideNavSecondContainerWidth +
+		editorSideNavThirdContainerWidth +
+		editorSideNavPaddingLeft,
 	editorActiveColor: '#0e7de4',
 	editorSlidesListImageHeight: 120,
 }
