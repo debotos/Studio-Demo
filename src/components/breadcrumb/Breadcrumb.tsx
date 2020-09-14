@@ -1,5 +1,5 @@
 import React from 'react'
-import { Breadcrumb as AntdBreadcrumb } from 'antd'
+import { Breadcrumb as AntdBreadcrumb, Tooltip } from 'antd'
 import { useSelector } from 'react-redux'
 import styled from 'styled-components'
 import { Link } from 'react-router-dom'
@@ -7,6 +7,7 @@ import { RightOutlined } from '@ant-design/icons'
 
 import { RootState } from '../../redux/store'
 import { truncate } from '../../utils/helpers'
+import vars from '../../config/vars'
 
 const homeRoute = { name: 'Home', path: '/', isLink: true }
 
@@ -21,8 +22,17 @@ export function Breadcrumb(props: any) {
 		<Container bodyPadding={bodyPadding}>
 			<AntdBreadcrumb separator={<RightOutlined style={{ fontSize: '14px' }} />} style={{ fontSize: 15 }}>
 				{[homeRoute, ...items].map((route: any, index: number) => {
-					const { isLink, path, name } = route
-					const label = truncate(name, 20)
+					const { isLink, path, name, tooltip = true } = route
+					const truncatedLabel = truncate(name, 20)
+
+					const label = tooltip ? (
+						<Tooltip key={index} color={vars.appPrimaryColor} placement='top' title={name}>
+							<span>{truncatedLabel}</span>
+						</Tooltip>
+					) : (
+						truncatedLabel
+					)
+
 					return (
 						<AntdBreadcrumb.Item {...props} key={index}>
 							{isLink ? <Link to={path}>{label}</Link> : label}

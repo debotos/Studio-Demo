@@ -39,8 +39,10 @@ export default function (props: any) {
 	}
 
 	useEffect(() => {
+		dispatch(setSettings({ slideEditor: true }))
 		getData()
 		return () => {
+			dispatch(setSettings({ slideEditor: false }))
 			const match = matchPath(window.location.pathname, {
 				path: `/editor/:subjectID/:levelID/:unitID/:lessonID/slides/${keys.viewAction}/:id`,
 			})

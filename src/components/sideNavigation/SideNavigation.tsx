@@ -27,6 +27,7 @@ interface CProps {}
 export function SideNavigation(props: CProps) {
 	const dispatch: AppDispatch = useDispatch()
 	const nav = useSelector((state: RootState) => state.settings.sideNav)
+	const slideEditor = useSelector((state: RootState) => state.settings.slideEditor)
 
 	const handleMouseAction = () => {
 		if (nav === 'pinned') return
@@ -43,7 +44,7 @@ export function SideNavigation(props: CProps) {
 	const sideNavElement = (
 		<>
 			{/* Side Navigation Drawer for Tree View */}
-			{nav !== 'pinned' && <HoverAreaToOpenNavigationDrawer onMouseEnter={handleMouseAction} />}
+			{nav !== 'pinned' && !slideEditor && <HoverAreaToOpenNavigationDrawer onMouseEnter={handleMouseAction} />}
 			<NavigationDrawer nav={nav.toString()} onMouseLeave={handleMouseAction} style={getDrawerStyle()}>
 				{/* Navigation Drawer Header */}
 				<NavigationDrawerHead />

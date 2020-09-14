@@ -53,12 +53,13 @@ const FirstContainer = styled.div`
 	width: ${vars.editorSideNavFirstContainerWidth + 'px'};
 `
 const SecondContainer = styled.div`
-	margin-top: -2px;
+	/* margin-top: -2px; */
 	overflow-y: scroll;
 	width: ${vars.editorSideNavSecondContainerWidth + 'px'};
 `
 const ThirdContainer = styled.div`
-	margin: 15px 20px 0 20px;
+	margin: 0 20px 0 20px;
+	padding-top: 15px;
 	overflow-y: scroll;
 	width: ${vars.editorSideNavThirdContainerWidth + 'px'};
 `

@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react'
+import React, { useEffect, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Affix } from 'antd'
 
@@ -21,6 +21,7 @@ export interface EditorPropsType {
 export default function SlideEditor(props: EditorPropsType) {
 	const { breadcrumbItems } = props
 	const dispatch: AppDispatch = useDispatch()
+	const [toolbarAffixed, setToolbarAffixed] = useState<boolean>(false)
 
 	useEffect(() => {
 		dispatch(setSettings({ bodyPadding: 0 }))
@@ -31,8 +32,8 @@ export default function SlideEditor(props: EditorPropsType) {
 		<>
 			<Desktop editor={true}>
 				<Breadcrumb items={breadcrumbItems} />
-				<Affix offsetTop={vars.headerHeight - 2}>
-					<EditorToolBar {...props} />
+				<Affix offsetTop={vars.headerHeight + 0.1} onChange={(val) => setToolbarAffixed(!!val)}>
+					<EditorToolBar {...props} toolbarAffixed={toolbarAffixed} />
 				</Affix>
 				<EditorBody {...props} />
 			</Desktop>

@@ -50,6 +50,7 @@ const Body: any = styled.div`
 	padding: ${(props: any) => props.bodyPadding + 'px'};
 	position: relative;
 	width: 100%;
+	transition: all 0.5s ease-in-out;
 	${(props: any) =>
 		props.nav === 'pinned' &&
 		css`

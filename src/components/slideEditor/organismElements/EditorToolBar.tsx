@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { BsReverseLayoutTextWindowReverse, BsTextareaT, BsThreeDots } from 'react-icons/bs'
 import { RiArrowDownSLine, RiVolumeUpLine, RiFileCopyLine } from 'react-icons/ri'
 import { FiVideo } from 'react-icons/fi'
@@ -8,17 +8,20 @@ import { MdMultilineChart } from 'react-icons/md'
 import { BiRectangle, BiPaint } from 'react-icons/bi'
 import { Row as AntRow, Switch } from 'antd'
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons'
+
 import vars from '../../../config/vars'
+import { EditorPropsType } from '../SlideEditor'
 
 const { editorSideNavWidth, editorToolBarHeight } = vars
 
-interface CProps {
-	ids: any
+interface CProps extends EditorPropsType {
+	toolbarAffixed: boolean
 }
 
 export function EditorToolBar(props: CProps) {
+	const { toolbarAffixed } = props
 	return (
-		<Container>
+		<Container affixed={toolbarAffixed.toString()}>
 			<LeftContent>
 				<IconBtn style={{ marginLeft: 0, marginRight: 5 }}>
 					<BsReverseLayoutTextWindowReverse size={25} />
@@ -83,7 +86,7 @@ export function EditorToolBar(props: CProps) {
 const Row = styled(AntRow)`
 	height: 100%;
 `
-const Container = styled.div`
+const Container: any = styled.div`
 	align-items: center;
 	background-color: #fff;
 	border-bottom: 2px solid #eee;
@@ -91,6 +94,11 @@ const Container = styled.div`
 	display: flex;
 	flex-wrap: wrap;
 	height: ${editorToolBarHeight + 'px'};
+	${(props: any) =>
+		props.affixed === 'true' &&
+		css`
+			border-top-color: transparent;
+		`}
 `
 const LeftContent = styled.div`
 	align-items: center;
