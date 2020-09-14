@@ -14,6 +14,7 @@ type SliceState = {
 	showSlidesListUI: boolean
 	showEditorSideBarAssetCategoryUI: boolean
 	showEditorSideBarAssetViewerUI: boolean
+	showToolbarTopBorder: boolean
 	assetCategories: slideEditorAssetCategoryType[]
 	activeAssetCategoryKey: string
 	assetSubCategories: slideEditorAssetSubCategoryType[]
@@ -26,6 +27,7 @@ const initialState: SliceState = {
 	showSlidesListUI: true,
 	showEditorSideBarAssetCategoryUI: true,
 	showEditorSideBarAssetViewerUI: true,
+	showToolbarTopBorder: false,
 	assetCategories: slideEditorAssetCategories,
 	activeAssetCategoryKey: slideEditorAssetCategories[0].key,
 	assetSubCategories: slideEditorAssetSubCategories,

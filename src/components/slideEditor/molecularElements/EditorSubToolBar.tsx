@@ -9,12 +9,13 @@ import { EditorPropsType } from '../SlideEditor'
 import vars from '../../../config/vars'
 
 export function EditorSubToolBar(props: EditorPropsType) {
-	const { activeSlideInfo } = props
+	const { activeSlideInfo, isFullScreen } = props
 	const { title } = activeSlideInfo
 	const [affixed, setAffixed] = useState<boolean>(false)
+	const offsetTop = isFullScreen ? vars.editorToolBarHeight - 2 : vars.headerHeight + vars.editorToolBarHeight - 2
 
 	return (
-		<Affix offsetTop={vars.headerHeight + vars.editorToolBarHeight - 2} onChange={(val) => setAffixed(!!val)}>
+		<Affix offsetTop={offsetTop} onChange={(val) => setAffixed(!!val)}>
 			<Container justify='space-between' align='middle' className={affixed ? 'app-box-shadow-bottom' : ''}>
 				<Col flex={1}>
 					<Title level={3}>{title}</Title>

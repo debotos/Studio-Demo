@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import { useDispatch } from 'react-redux'
 import { Affix } from 'antd'
 
@@ -16,26 +16,48 @@ export interface EditorPropsType {
 	ids: any
 	activeSlideInfo: any
 	slides: any[]
+	isFullScreen: boolean
+	fullScreenBtnAlreadyClicked: boolean
 }
 
 export default function SlideEditor(props: EditorPropsType) {
-	const { breadcrumbItems } = props
+	const { breadcrumbItems, isFullScreen, fullScreenBtnAlreadyClicked } = props
 	const dispatch: AppDispatch = useDispatch()
 	const [toolbarAffixed, setToolbarAffixed] = useState<boolean>(false)
+	const bodyElementRef = useRef<any>(null)
 
 	useEffect(() => {
 		dispatch(setSettings({ bodyPadding: 0 }))
 		// eslint-disable-next-line react-hooks/exhaustive-deps
 	}, [])
 
+	// Scroll up to hide breadcrumb when full screen mode exit
+	useEffect(() => {
+		// To prevent scrolling at the first time when landing on editor
+		if (isFullScreen !== fullScreenBtnAlreadyClicked) {
+			bodyElementRef?.current &&
+				window.scrollTo({
+					top: bodyElementRef.current.offsetTop,
+					behavior: 'smooth', // optional
+				})
+		}
+		// eslint-disable-next-line react-hooks/exhaustive-deps
+	}, [isFullScreen])
+
+	const toolBar = <EditorToolBar {...props} toolbarAffixed={toolbarAffixed} />
+
 	return (
 		<>
 			<Desktop editor={true}>
-				<Breadcrumb items={breadcrumbItems} />
-				<Affix offsetTop={vars.headerHeight + 0.1} onChange={(val) => setToolbarAffixed(!!val)}>
-					<EditorToolBar {...props} toolbarAffixed={toolbarAffixed} />
-				</Affix>
-				<EditorBody {...props} />
+				{!isFullScreen && <Breadcrumb items={breadcrumbItems} />}
+				{isFullScreen ? (
+					toolBar
+				) : (
+					<Affix offsetTop={vars.headerHeight + 0.1} onChange={(val) => setToolbarAffixed(!!val)}>
+						{toolBar}
+					</Affix>
+				)}
+				<EditorBody {...props} bodyElementRef={bodyElementRef} />
 			</Desktop>
 			<Mobile editor={true}>
 				<RequireDesktop />

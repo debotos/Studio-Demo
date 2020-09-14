@@ -10,12 +10,15 @@ import { EditorAssetsArea } from '../molecularElements/EditorAssetsArea'
 import { EditorAssetsCategoryList } from '../molecularElements/EditorAssetsCategoryList'
 
 export default function EditorSideBar(props: EditorPropsType) {
+	const { isFullScreen } = props
 	const { showSlidesListUI, showEditorSideBarAssetCategoryUI, showEditorSideBarAssetViewerUI } = useSelector(
 		(state: RootState) => state.slideEditorState
 	)
 
+	const offsetTop = isFullScreen ? vars.editorToolBarHeight + 'px' : vars.headerHeight + vars.editorToolBarHeight + 'px'
+
 	return (
-		<Container>
+		<Container offsetTop={offsetTop}>
 			{/* All slides list vertical scroll view */}
 			{showSlidesListUI && (
 				<FirstContainer className='hide-native-scrollbar'>
@@ -40,9 +43,9 @@ export default function EditorSideBar(props: EditorPropsType) {
 	)
 }
 
-const Container = styled.div`
+const Container: any = styled.div`
 	display: flex;
-	height: calc(100vh - ${vars.headerHeight + vars.editorToolBarHeight + 'px'});
+	height: ${(props: any) => `calc(100vh - ${props.offsetTop})`};
 	width: 100%;
 `
 const FirstContainer = styled.div`
@@ -58,8 +61,7 @@ const SecondContainer = styled.div`
 	width: ${vars.editorSideNavSecondContainerWidth + 'px'};
 `
 const ThirdContainer = styled.div`
-	margin: 0 20px 0 20px;
-	padding-top: 15px;
+	padding: 10px 20px 0 20px;
 	overflow-y: scroll;
 	width: ${vars.editorSideNavThirdContainerWidth + 'px'};
 `

@@ -6,10 +6,15 @@ import { EditorSubToolBar } from '../molecularElements/EditorSubToolBar'
 import vars from '../../../config/vars'
 
 export default function EditingArea(props: EditorPropsType) {
+	const { isFullScreen } = props
+	const offsetTop = isFullScreen
+		? vars.editorToolBarHeight + vars.editorSubToolBarHeight
+		: vars.headerHeight + vars.editorToolBarHeight + vars.editorSubToolBarHeight
+
 	return (
 		<Wrapper className='hide-native-scrollbar'>
 			<EditorSubToolBar {...props} />
-			<Container>
+			<Container offsetTop={offsetTop}>
 				<img
 					alt='editor'
 					width='100%'
@@ -25,9 +30,10 @@ const Wrapper = styled.div`
 	height: 100%;
 	width: 100%;
 `
-
-const Container = styled.div`
-	height: calc(100vh - ${vars.headerHeight + vars.editorToolBarHeight + vars.editorSubToolBarHeight + 'px'});
+const Container: any = styled.div`
+	height: ${(props: any) => `calc(100vh - ${props.offsetTop + 'px'})`};
+	max-height: ${(props: any) => `calc(100vh - ${props.offsetTop + 'px'})`};
+	min-height: ${(props: any) => `calc(100vh - ${props.offsetTop + 'px'})`};
 	padding: 0 20px 15px 20px;
 	width: 100%;
 `

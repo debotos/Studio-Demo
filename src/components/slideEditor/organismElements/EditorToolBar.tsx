@@ -90,14 +90,13 @@ const Container: any = styled.div`
 	align-items: center;
 	background-color: #fff;
 	border-bottom: 2px solid #eee;
-	border-top: 2px solid #eee;
 	display: flex;
 	flex-wrap: wrap;
 	height: ${editorToolBarHeight + 'px'};
 	${(props: any) =>
-		props.affixed === 'true' &&
+		props.affixed !== 'true' &&
 		css`
-			border-top-color: transparent;
+			border-top: 2px solid #eee;
 		`}
 `
 const LeftContent = styled.div`

@@ -1,7 +1,10 @@
 import React, { useEffect, useState } from 'react'
 import { message } from 'antd'
+import styled from 'styled-components'
 import { matchPath } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
+import { FullScreen, useFullScreenHandle } from 'react-full-screen'
+import { GoScreenFull, GoScreenNormal } from 'react-icons/go'
 
 import { AppDispatch, RootState } from '../../redux/store'
 import { setActiveItems } from '../../redux/slices/activeItemsSlice'
@@ -31,7 +34,9 @@ export default function (props: any) {
 	const lessons = useSelector((state: RootState) => state.treeData[genTreeKey('unit', unitID)])
 	const slides = useSelector((state: RootState) => state.treeData[genTreeKey('lesson', lessonID)])
 	const dispatch: AppDispatch = useDispatch()
+	const fullScreenHandler = useFullScreenHandle()
 	const [loadingData, setLoadingData] = useState(true)
+	const [fullScreenBtnAlreadyClicked, setFullScreenBtnAlreadyClicked] = useState(false)
 
 	if (isEmpty(subjectID) || isEmpty(levelID) || isEmpty(unitID) || isEmpty(lessonID) || isEmpty(slideID)) {
 		message.error('Invalid slide chosen. Please select a valid slide!')
@@ -104,6 +109,15 @@ export default function (props: any) {
 		setLoadingData(false)
 	}
 
+	const handleFullScreenViewer = () => {
+		setFullScreenBtnAlreadyClicked(true)
+		if (fullScreenHandler.active) {
+			fullScreenHandler.exit()
+		} else {
+			fullScreenHandler.enter()
+		}
+	}
+
 	if (loadingData) {
 		return <LoadingCenter msg='Data loading...' />
 	}
@@ -123,5 +137,43 @@ export default function (props: any) {
 
 	const ids = { subjectID, levelID, unitID, lessonID, slideID }
 
-	return <SlideEditor breadcrumbItems={breadcrumbItems} ids={ids} slides={slides} activeSlideInfo={activeSlideInfo} />
+	return (
+		<>
+			<FullScreen handle={fullScreenHandler}>
+				<SlideEditor
+					breadcrumbItems={breadcrumbItems}
+					ids={ids}
+					slides={slides}
+					activeSlideInfo={activeSlideInfo}
+					isFullScreen={fullScreenHandler.active}
+					fullScreenBtnAlreadyClicked={fullScreenBtnAlreadyClicked}
+				/>
+				<FloatingButton className='app-box-shadow' onClick={handleFullScreenViewer}>
+					{fullScreenHandler.active ? <GoScreenNormal size={25} /> : <GoScreenFull size={25} />}
+				</FloatingButton>
+			</FullScreen>
+		</>
+	)
 }
+
+const FloatingButton = styled.div`
+	align-items: center;
+	background-color: #fff;
+	border-radius: 100%;
+	bottom: 15px;
+	cursor: pointer;
+	color: #929eaa;
+	display: flex;
+	height: 40px;
+	justify-content: space-evenly;
+	right: 20px;
+	position: fixed;
+	padding: 0 10px;
+	width: 40px;
+	z-index: 99;
+	&:hover {
+		svg {
+			opacity: 0.7;
+		}
+	}
+`

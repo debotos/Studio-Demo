@@ -1,5 +1,5 @@
 import React from 'react'
-import styled from 'styled-components'
+import styled, { css } from 'styled-components'
 import { Affix, Tooltip } from 'antd'
 import { AiOutlineEyeInvisible, AiOutlineEye } from 'react-icons/ai'
 import { useSelector, useDispatch } from 'react-redux'
@@ -11,27 +11,37 @@ import EditorSideBar from './EditorSideBar'
 import EditingArea from './EditingArea'
 import vars from '../../../config/vars'
 
+interface CPropsType extends EditorPropsType {
+	bodyElementRef: any
+}
+
 const { headerHeight, editorToolBarHeight, editorActiveColor } = vars
 
-export function EditorBody(props: EditorPropsType) {
+export function EditorBody(props: CPropsType) {
+	const { isFullScreen, bodyElementRef } = props
 	const dispatch: AppDispatch = useDispatch()
 	const { showEditorSideBar, showSlidesListUI, showEditorSideBarAssetCategoryUI, showEditorSideBarAssetViewerUI } = useSelector(
 		(state: RootState) => state.slideEditorState
 	)
 	const hideSideBar =
 		!showEditorSideBar || (!showSlidesListUI && !showEditorSideBarAssetCategoryUI && !showEditorSideBarAssetViewerUI)
+	const hideLeftContentBorder =
+		(showEditorSideBarAssetCategoryUI && !showSlidesListUI && !showEditorSideBarAssetViewerUI) ||
+		(showEditorSideBarAssetCategoryUI && showSlidesListUI && !showEditorSideBarAssetViewerUI)
 
 	const showIcon = <AiOutlineEye size={25} color={editorActiveColor} />
 	const hideIcon = <AiOutlineEyeInvisible size={25} />
 
+	const leftContent = (
+		<LeftContent hideBorder={hideLeftContentBorder.toString()}>
+			<EditorSideBar {...props} />
+		</LeftContent>
+	)
+
 	return (
-		<Container>
+		<Container ref={bodyElementRef}>
 			{!hideSideBar && (
-				<Affix offsetTop={headerHeight + editorToolBarHeight - 2}>
-					<LeftContent>
-						<EditorSideBar {...props} />
-					</LeftContent>
-				</Affix>
+				<>{isFullScreen ? leftContent : <Affix offsetTop={headerHeight + editorToolBarHeight - 2}>{leftContent}</Affix>}</>
 			)}
 			<RightContent>
 				<EditingArea {...props} />
@@ -86,13 +96,18 @@ const Container = styled.div`
 	display: flex;
 	height: 100%;
 `
-const LeftContent = styled.div`
+const LeftContent: any = styled.div`
 	border-right: 2px solid #eee;
 	display: flex;
 	height: 100%;
 	padding-left: ${vars.editorSideNavPaddingLeft + 'px'};
 	width: max-content;
 	max-width: ${vars.editorSideNavWidth + 'px'};
+	${(props: any) =>
+		props.hideBorder === 'true' &&
+		css`
+			border-right-color: transparent;
+		`}
 `
 const RightContent = styled.div`
 	display: flex;
