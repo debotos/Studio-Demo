@@ -40,5 +40,5 @@ export const getLessonsByParentID = (unitID: string | number): any[] => {
 export const getSlides = () => slides
 export const findSlideByID = (id: string | number) => slides.find((slide: any) => slide.id === id)
 export const getSlidesByParentID = (lessonID: string | number): any[] => {
-	return slides.filter((slide: any) => slide.lessonID === lessonID)
+	return slides.filter((slide: any) => slide.lessonID === lessonID).map((x: any, i: number) => ({ index: i, ...x }))
 }

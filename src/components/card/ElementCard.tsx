@@ -22,11 +22,13 @@ interface CProps {
 		thumbnail?: string
 	}
 	variation?: 'slide' | 'normal'
+	provided?: any
 }
 
 export function ElementCard(props: CProps) {
 	const dispatch: AppDispatch = useDispatch()
-	const { data, variation = 'normal' } = props
+	const { data, variation = 'normal', provided = {} } = props
+	const { innerRef, draggableProps = {}, dragHandleProps = {} } = provided
 	const { viewRoute, editRoute } = getElementCardRoute(data)
 	const { id, type, title, thumbnail } = data
 
@@ -92,7 +94,7 @@ export function ElementCard(props: CProps) {
 
 	if (variation === 'slide') {
 		return (
-			<SlideCardWrapper onClick={(e: any) => handleClick(e, 'navigate')}>
+			<SlideCardWrapper ref={innerRef} {...draggableProps} {...dragHandleProps} onClick={(e: any) => handleClick(e, 'navigate')}>
 				<SlideCardImageContainer>
 					<SlideCardActionsWrapper>{cardActions}</SlideCardActionsWrapper>
 					<SlideImage src={thumbnail} alt={title} />
@@ -108,7 +110,7 @@ export function ElementCard(props: CProps) {
 
 	return (
 		<>
-			<Container onClick={(e: any) => handleClick(e, 'navigate')}>
+			<Container ref={innerRef} {...draggableProps} {...dragHandleProps} onClick={(e: any) => handleClick(e, 'navigate')}>
 				{cardActions}
 				<div>
 					<Avatar icon={<FileImageOutlined />} size={100} src={thumbnail} style={{ border: '1px solid #eee' }} />
@@ -123,10 +125,11 @@ export function ElementCard(props: CProps) {
 	)
 }
 
-export default ElementCard
+export default React.memo(ElementCard)
 
 const Container = styled.div`
 	align-items: center;
+	background: #fff;
 	border: 2px solid #eee;
 	border-radius: 3px;
 	cursor: pointer;
@@ -144,6 +147,7 @@ const Container = styled.div`
 `
 const SlideCardWrapper = styled.div`
 	align-items: center;
+	background: #fff;
 	cursor: pointer;
 	display: flex;
 	flex-direction: column;

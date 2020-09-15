@@ -1,17 +1,18 @@
 import React, { useEffect, useState } from 'react'
 import { message, Typography, Row, Empty, Button } from 'antd'
 import { useSelector, useDispatch } from 'react-redux'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
-import { AppDispatch, RootState } from '../../redux/store'
-import { setActiveItems } from '../../redux/slices/activeItemsSlice'
-import { setTreeData } from '../../redux/slices/treeDataSlice'
-import * as dummyDataProvider from '../../utils/dummyData'
-import ElementCard, { AddElementCard } from '../../components/card/ElementCard'
-import { genTreeKey, isEmpty } from '../../utils/helpers'
-import { routeHistory } from '../../app/App'
 import keys from '../../config/keys'
-import { LoadingCenter } from '../../components/loading/Loading'
+import { routeHistory } from '../../app/App'
+import { genTreeKey, isEmpty, sortByIndex } from '../../utils/helpers'
+import { AppDispatch, RootState } from '../../redux/store'
+import * as dummyDataProvider from '../../utils/dummyData'
+import { setTreeData } from '../../redux/slices/treeDataSlice'
 import Breadcrumb from '../../components/breadcrumb/Breadcrumb'
+import { LoadingCenter } from '../../components/loading/Loading'
+import { setActiveItems } from '../../redux/slices/activeItemsSlice'
+import ElementCard, { AddElementCard } from '../../components/card/ElementCard'
 
 /* View specific lesson means list of slides under it */
 export default function (props: any) {
@@ -79,9 +80,27 @@ export default function (props: any) {
 		}
 		if (isEmpty(slides)) {
 			// TODO: Get all the slides under this specific unit via ajax
-			dispatch(setTreeData({ id: lessonID, type: 'lesson', data: dummyDataProvider.getSlidesByParentID(lessonID) }))
+			dispatch(setTreeData({ id: lessonID, type: 'lesson', data: sortByIndex(dummyDataProvider.getSlidesByParentID(lessonID)) }))
 		}
 		setLoadingData(false)
+	}
+
+	const onDragEnd = (result: any) => {
+		const { source, destination, draggableId } = result
+		if (!destination) return
+		if (destination.droppableId === source.droppableId && destination.index === source.index) return
+		const itemUpdated = slides.find(({ id }: any) => id === draggableId)
+		const itemAffected = slides.find(({ index }: any) => index === destination.index)
+		if (!itemUpdated || !itemAffected) return
+
+		// Update state
+		const updatedSlides = slides.map((slide: any) => {
+			if (slide.id === itemUpdated.id) return { ...itemUpdated, index: destination.index }
+			if (slide.id === itemAffected.id) return { ...itemAffected, index: source.index }
+			return slide
+		})
+		dispatch(setTreeData({ id: lessonID, type: 'lesson', data: sortByIndex(updatedSlides) }))
+		// TODO: Ajax req to save in server
 	}
 
 	if (loadingData) {
@@ -136,12 +155,24 @@ export default function (props: any) {
 					</>
 				)}
 				<Typography.Title level={2}>List of slides</Typography.Title>
-				<Row>
-					<AddElementCard type={'slide'} routeSuffix={addRouteSuffix} />
-					{slides.map((item: any, index: number) => {
-						return <ElementCard key={index} data={item} variation='slide' />
-					})}
-				</Row>
+				<DragDropContext onDragEnd={onDragEnd}>
+					<Droppable droppableId={`slides-in-lesson-${lessonID}`}>
+						{(provided) => (
+							<Row ref={provided.innerRef} {...provided.droppableProps}>
+								<AddElementCard type={'slide'} routeSuffix={addRouteSuffix} />
+								{slides.map((item: any) => {
+									const { index, id } = item
+									return (
+										<Draggable key={id} draggableId={id} index={index}>
+											{(provided) => <ElementCard data={item} variation='slide' provided={provided} />}
+										</Draggable>
+									)
+								})}
+								{provided.placeholder}
+							</Row>
+						)}
+					</Droppable>
+				</DragDropContext>
 			</div>
 		</>
 	)

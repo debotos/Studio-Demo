@@ -122,3 +122,4 @@ export const getAllQueryVariables = function (search?: string) {
 }
 
 export const getContainer = (node: HTMLElement): HTMLElement => node.parentElement ?? document.body
+export const sortByIndex = (array: any[] = []) => array.sort((a, b) => a.index - b.index)

@@ -1,16 +1,18 @@
 import React from 'react'
+import { Image } from 'antd'
 import { useDispatch } from 'react-redux'
 import styled, { css } from 'styled-components'
+import { DragDropContext, Droppable, Draggable } from 'react-beautiful-dnd'
 
 import { setActiveItems } from '../../../redux/slices/activeItemsSlice'
+import { setTreeData } from '../../../redux/slices/treeDataSlice'
+import { sortByIndex, truncate } from '../../../utils/helpers'
 import FallbackImage from '../../../assets/fallback.png'
-import { EditorPropsType } from '../SlideEditor'
-import { truncate } from '../../../utils/helpers'
-import { routeHistory } from '../../../app/App'
 import { AppDispatch } from '../../../redux/store'
+import { EditorPropsType } from '../SlideEditor'
+import { routeHistory } from '../../../app/App'
 import vars from '../../../config/vars'
 import keys from '../../../config/keys'
-import { Image } from 'antd'
 
 export function EditorSlidesList(props: EditorPropsType) {
 	const { slides, ids } = props
@@ -24,35 +26,78 @@ export function EditorSlidesList(props: EditorPropsType) {
 		routeHistory.push(`/editor/${subjectID}/${levelID}/${unitID}/${lessonID}/${type}s/${keys.viewAction}/${id}`)
 	}
 
+	const onDragEnd = (result: any) => {
+		const { source, destination, draggableId } = result
+		if (!destination) return
+		if (destination.droppableId === source.droppableId && destination.index === source.index) return
+		const itemUpdated = slides.find(({ id }: any) => id === draggableId)
+		const itemAffected = slides.find(({ index }: any) => index === destination.index)
+		if (!itemUpdated || !itemAffected) return
+
+		// Update state
+		const updatedSlides = slides.map((slide: any) => {
+			if (slide.id === itemUpdated.id) return { ...itemUpdated, index: destination.index }
+			if (slide.id === itemAffected.id) return { ...itemAffected, index: source.index }
+			return slide
+		})
+		dispatch(setTreeData({ id: lessonID, type: 'lesson', data: sortByIndex(updatedSlides) }))
+		// TODO: Ajax req to save in server
+	}
+
 	return (
-		<>
-			{/* Don't enclose it with parent element like 'div' for scrolling purpose */}
-			{slides.map((slide, index) => {
-				const serial = (index + 1 + '').padStart(2, '0')
-				const { id, title, thumbnail } = slide
-				const active = id === slideID
-				return (
-					<SlideItem active={active.toString()} key={index} onClick={() => handleSlideClick(slide)}>
-						<Serial>{serial}</Serial>
-						<SlideDetails>
-							<ImageContainer active={active.toString()}>
-								<Img src={thumbnail} alt={title} fallback={FallbackImage} preview={false} />
-							</ImageContainer>
-							<Title>{truncate(title, 40)}</Title>
-						</SlideDetails>
-					</SlideItem>
-				)
-			})}
-		</>
+		<DragDropContext onDragEnd={onDragEnd}>
+			<Droppable droppableId={`editor-slides-in-lesson-${lessonID}`}>
+				{(provided) => (
+					<Container ref={provided.innerRef} {...provided.droppableProps}>
+						{slides.map((slide, i) => {
+							const serial = (i + 1 + '').padStart(2, '0')
+							const { id, title, thumbnail, index } = slide
+							const active = id === slideID
+							return (
+								<Draggable key={id} draggableId={id} index={index}>
+									{(provided) => (
+										<SlideItem
+											ref={provided.innerRef}
+											{...provided.draggableProps}
+											{...provided.dragHandleProps}
+											active={active.toString()}
+											onClick={() => handleSlideClick(slide)}
+										>
+											<Serial>{serial}</Serial>
+											<SlideDetails>
+												<ImageContainer active={active.toString()}>
+													<Img src={thumbnail} alt={title} fallback={FallbackImage} preview={false} />
+												</ImageContainer>
+												<Title>{truncate(title, 40)}</Title>
+											</SlideDetails>
+										</SlideItem>
+									)}
+								</Draggable>
+							)
+						})}
+						{provided.placeholder}
+					</Container>
+				)}
+			</Droppable>
+		</DragDropContext>
 	)
 }
 
+const Container: any = styled.div`
+	height: 100%;
+	width: 100%;
+`
 const SlideItem: any = styled.div`
 	align-items: center;
 	cursor: pointer;
 	display: flex;
-	margin-bottom: 15px;
-	transition: all 0.2s ease-in;
+	margin-bottom: 10px;
+	transition: font-weight 0.2s ease-in-out;
+	&:hover {
+		p {
+			text-decoration: underline;
+		}
+	}
 	${(props: any) =>
 		props.active === 'true' &&
 		css`
@@ -74,7 +119,7 @@ const ImageContainer: any = styled.div`
 	max-width: 100%;
 	height: ${vars.editorSlidesListImageHeight + 'px'};
 	position: relative;
-	transition: all 0.2s ease-in;
+	transition: border 0.2s ease-in-out;
 	&:hover {
 		border-color: ${vars.editorActiveColor};
 	}
@@ -94,6 +139,8 @@ export const Img: any = styled(Image)`
 	}
 `
 const Title = styled.p`
+	cursor: pointer !important;
+	height: 36px;
 	margin: 5px 0 0 0;
 	text-align: center;
 `
