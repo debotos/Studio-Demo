@@ -120,3 +120,5 @@ export const getAllQueryVariables = function (search?: string) {
 	console.log('Query variables: ', paramObj)
 	return paramObj
 }
+
+export const getContainer = (node: HTMLElement): HTMLElement => node.parentElement ?? document.body

@@ -8,6 +8,7 @@ import { FiColumns } from 'react-icons/fi'
 
 import { setSlideEditorState } from '../../../redux/slices/slideEditorStateSlice'
 import { AppDispatch, RootState } from '../../../redux/store'
+import { getContainer } from '../../../utils/helpers'
 import FallbackImage from '../../../assets/fallback.png'
 import { EditorPropsType } from '../SlideEditor'
 import { Img } from './EditorSlidesList'
@@ -41,19 +42,24 @@ export function EditorAssetsArea(props: EditorPropsType) {
 			{/* Don't enclose it with parent element like 'div' for scrolling purpose */}
 			<Row justify='end' align='middle' style={{ marginBottom: 5 }}>
 				<span style={{ fontWeight: 'bold', opacity: 0.7 }}>View:</span>
-				<Tooltip color={vars.appPrimaryColor} placement='top' title={'One column'}>
+				<Tooltip color={vars.appPrimaryColor} getPopupContainer={getContainer} placement='top' title={'One column'}>
 					<IconBtn style={{ margin: '0 7px' }} active={(col === 'one').toString()} onClick={() => setCol('one')}>
 						<AiOutlineColumnWidth size={20} />
 					</IconBtn>
 				</Tooltip>
-				<Tooltip color={vars.appPrimaryColor} placement='top' title={'Two column'}>
+				<Tooltip color={vars.appPrimaryColor} getPopupContainer={getContainer} placement='top' title={'Two column'}>
 					<IconBtn active={(col === 'two').toString()} onClick={() => setCol('two')}>
 						<FiColumns size={20} />
 					</IconBtn>
 				</Tooltip>
 			</Row>
 			<Search placeholder='Search' onSearch={handleSearch} />
-			<Select onChange={handleSelect} value={activeAssetSubCategoryKey} style={{ width: '100%', margin: '10px 0' }}>
+			<Select
+				getPopupContainer={getContainer}
+				onChange={handleSelect}
+				value={activeAssetSubCategoryKey}
+				style={{ width: '100%', margin: '10px 0' }}
+			>
 				{subCategories.map((item, index) => {
 					const { label, value } = item
 					return (

@@ -129,7 +129,7 @@ export default function (props: any) {
 						<Typography.Title level={2}>Recently updated slides...</Typography.Title>
 						<Row>
 							{slides.slice(0, 2).map((item: any, index: number) => {
-								return <ElementCard key={index} data={item} />
+								return <ElementCard key={index} data={item} variation='slide' />
 							})}
 						</Row>
 						<br />
@@ -139,7 +139,7 @@ export default function (props: any) {
 				<Row>
 					<AddElementCard type={'slide'} routeSuffix={addRouteSuffix} />
 					{slides.map((item: any, index: number) => {
-						return <ElementCard key={index} data={item} />
+						return <ElementCard key={index} data={item} variation='slide' />
 					})}
 				</Row>
 			</div>

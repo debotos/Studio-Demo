@@ -12,6 +12,7 @@ import keys from '../../config/keys'
 import { AppDispatch } from '../../redux/store'
 import { capitalize, getElementCardRoute } from '../../utils/helpers'
 import { setActiveItems } from '../../redux/slices/activeItemsSlice'
+import vars from '../../config/vars'
 
 interface CProps {
 	data: {
@@ -20,11 +21,12 @@ interface CProps {
 		title: string
 		thumbnail?: string
 	}
+	variation?: 'slide' | 'normal'
 }
 
 export function ElementCard(props: CProps) {
 	const dispatch: AppDispatch = useDispatch()
-	const { data } = props
+	const { data, variation = 'normal' } = props
 	const { viewRoute, editRoute } = getElementCardRoute(data)
 	const { id, type, title, thumbnail } = data
 
@@ -62,37 +64,55 @@ export function ElementCard(props: CProps) {
 		}
 	}
 
+	const cardActions = (
+		<ActionsContainer justify='end' className={`app-element-card-actions-container${showActions ? ' active' : ''}`}>
+			{showActions ? (
+				<ActionsWrapper>
+					<ActionItem>
+						<RiFileCopyLine size={25} onClick={(e) => handleClick(e, 'copy')} />
+					</ActionItem>
+					<ActionItem>
+						<RiShareBoxFill size={25} onClick={(e) => handleClick(e, 'share')} />
+					</ActionItem>
+					<ActionItem>
+						<RiPencilLine size={25} onClick={(e) => handleClick(e, 'edit')} />
+					</ActionItem>
+					<ActionItem>
+						<RiDeleteBinLine size={25} onClick={(e) => handleClick(e, 'delete')} />
+					</ActionItem>
+					<ActionItem>
+						<RiCloseCircleLine size={25} onClick={(e) => handleClick(e, 'toggle')} />
+					</ActionItem>
+				</ActionsWrapper>
+			) : (
+				<MoreButton onClick={(e) => handleClick(e, 'toggle')} size={30} className='app-element-card-actions-more' />
+			)}
+		</ActionsContainer>
+	)
+
+	if (variation === 'slide') {
+		return (
+			<SlideCardWrapper onClick={(e: any) => handleClick(e, 'navigate')}>
+				<SlideCardImageContainer>
+					<SlideCardActionsWrapper>{cardActions}</SlideCardActionsWrapper>
+					<SlideImage src={thumbnail} alt={title} />
+				</SlideCardImageContainer>
+				<Row align='middle' justify='center' style={{ height: 35 }}>
+					<Title level={4} ellipsis={{ rows: 2 }}>
+						<span onClick={(e) => handleClick(e, 'navigate')}>{title}</span>
+					</Title>
+				</Row>
+			</SlideCardWrapper>
+		)
+	}
+
 	return (
 		<>
-			<Container onClick={(e) => handleClick(e, 'navigate')}>
-				<ActionsContainer justify='end'>
-					{showActions ? (
-						<ActionsWrapper>
-							<ActionItem>
-								<RiFileCopyLine size={25} onClick={(e) => handleClick(e, 'copy')} />
-							</ActionItem>
-							<ActionItem>
-								<RiShareBoxFill size={25} onClick={(e) => handleClick(e, 'share')} />
-							</ActionItem>
-							<ActionItem>
-								<RiPencilLine size={25} onClick={(e) => handleClick(e, 'edit')} />
-							</ActionItem>
-							<ActionItem>
-								<RiDeleteBinLine size={25} onClick={(e) => handleClick(e, 'delete')} />
-							</ActionItem>
-							<ActionItem>
-								<RiCloseCircleLine size={25} onClick={(e) => handleClick(e, 'toggle')} />
-							</ActionItem>
-						</ActionsWrapper>
-					) : (
-						<MoreButton onClick={(e) => handleClick(e, 'toggle')} size={30} />
-					)}
-				</ActionsContainer>
-
+			<Container onClick={(e: any) => handleClick(e, 'navigate')}>
+				{cardActions}
 				<div>
 					<Avatar icon={<FileImageOutlined />} size={100} src={thumbnail} style={{ border: '1px solid #eee' }} />
 				</div>
-
 				<Row align='middle' justify='center' style={{ height: 55 }}>
 					<Title level={4} ellipsis={{ rows: 2 }}>
 						<span onClick={(e) => handleClick(e, 'navigate')}>{title}</span>
@@ -112,14 +132,70 @@ const Container = styled.div`
 	cursor: pointer;
 	display: flex;
 	flex-direction: column;
-	height: 260px;
+	height: ${vars.elementCardHeight + 'px'};
 	justify-content: space-between;
 	margin-right: 30px;
 	margin-bottom: 30px;
 	padding: 15px;
-	width: 260px;
+	width: ${vars.elementCardWidth + 'px'};
 	&:hover {
-		box-shadow: 0 3px 6px -4px rgba(0, 0, 0, 0.12), 0 6px 16px 0 rgba(0, 0, 0, 0.08), 0 9px 28px 8px rgba(0, 0, 0, 0.05);
+		box-shadow: ${vars.appBoxShadow};
+	}
+`
+const SlideCardWrapper = styled.div`
+	align-items: center;
+	cursor: pointer;
+	display: flex;
+	flex-direction: column;
+	margin-right: 30px;
+	margin-bottom: 15px;
+	min-width: ${vars.slideCardWidth + 'px'};
+	max-width: ${vars.slideCardWidth + 'px'};
+	h4 {
+		margin-top: 5px;
+		font-size: 12px;
+		font-weight: 500;
+		opacity: 0.8;
+	}
+	&:hover {
+		text-decoration: underline;
+	}
+`
+const SlideCardImageContainer = styled.div`
+	min-height: ${vars.slideCardImageHeight + 'px'};
+	max-height: ${vars.slideCardImageHeight + 'px'};
+	position: relative;
+	width: 100%;
+	&:hover {
+		box-shadow: ${vars.appBoxShadow};
+	}
+`
+const SlideImage = styled.img`
+	width: 100%;
+	height: 100%;
+	object-fit: fill;
+`
+const SlideCardActionsWrapper = styled.div`
+	position: absolute;
+	height: 100%;
+	width: 100%;
+	.app-element-card-actions-container {
+		color: #fff;
+		height: 100%;
+		padding: 10px;
+		width: 100%;
+		transition: all 0.3s ease-in-out;
+		.app-element-card-actions-more {
+			background: #47525dcf;
+			border-radius: 100%;
+			box-shadow: ${vars.appBoxShadow};
+			margin-top: -5px;
+			margin-right: -4px;
+			padding: 2px;
+		}
+	}
+	.app-element-card-actions-container.active {
+		background: #47525dba;
 	}
 `
 const MoreButton = styled(FiMoreHorizontal)`
@@ -158,14 +234,38 @@ const Title = styled(Typography.Title)`
 
 export function AddElementCard(props: { type: string; routeSuffix?: string }) {
 	const { type, routeSuffix = '' } = props
-	return (
-		<Container onClick={() => routeHistory.push(`/editor/${type}/${keys.createAction}${routeSuffix}`)}>
-			<Row align='middle' justify='center' style={{ height: '100%' }}>
-				<GoPlus size={100} />
-				<Title level={3} ellipsis={{ rows: 2 }}>
-					Create New {capitalize(type)}
-				</Title>
-			</Row>
-		</Container>
+
+	const handleClick = () => routeHistory.push(`/editor/${type}/${keys.createAction}${routeSuffix}`)
+
+	const getContent = (level: 3 | 5 | 1 | 2 | 4 | undefined = 3, iconSize = 130, rows = 2) => (
+		<AddElementCardContent>
+			<div>
+				<GoPlus size={iconSize} />
+			</div>
+			<Title level={level} ellipsis={{ rows }}>
+				Create New {capitalize(type)}
+			</Title>
+		</AddElementCardContent>
 	)
+
+	if (type === 'slide') {
+		return <SlideAddElementCard onClick={handleClick}>{getContent(5, 70)}</SlideAddElementCard>
+	}
+	return <Container onClick={handleClick}>{getContent()}</Container>
 }
+
+const SlideAddElementCard = styled(SlideCardWrapper)`
+	border: 2px solid #eee;
+	min-height: ${vars.slideCardImageHeight + 'px'};
+	max-height: ${vars.slideCardImageHeight + 'px'};
+	&:hover {
+		box-shadow: ${vars.appBoxShadow};
+	}
+`
+const AddElementCardContent = styled.div`
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: 100%;
+	justify-content: space-around;
+`

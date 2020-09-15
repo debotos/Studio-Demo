@@ -6,6 +6,7 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { setSlideEditorState } from '../../../redux/slices/slideEditorStateSlice'
 import { AppDispatch, RootState } from '../../../redux/store'
+import { getContainer } from '../../../utils/helpers'
 import { EditorPropsType } from '../SlideEditor'
 import EditorSideBar from './EditorSideBar'
 import EditingArea from './EditingArea'
@@ -49,22 +50,33 @@ export function EditorBody(props: CPropsType) {
 
 			{/* Hide/Show Controls */}
 			<FloatingContainer className='app-box-shadow'>
-				<Tooltip color={editorActiveColor} placement='topLeft' title={showEditorSideBar ? 'Hide sidebar' : 'Show sidebar'}>
+				<Tooltip
+					color={editorActiveColor}
+					getPopupContainer={getContainer}
+					placement='topLeft'
+					title={showEditorSideBar ? 'Hide sidebar' : 'Show sidebar'}
+				>
 					<IconBtn onClick={() => dispatch(setSlideEditorState({ showEditorSideBar: !showEditorSideBar }))}>
 						{showEditorSideBar ? showIcon : hideIcon}
 					</IconBtn>
 				</Tooltip>
 				{showEditorSideBar && (
 					<>
-						<Tooltip color={editorActiveColor} placement='top' title={showSlidesListUI ? 'Hide slides' : 'Show slides'}>
+						<Tooltip
+							color={editorActiveColor}
+							getPopupContainer={getContainer}
+							placement='top'
+							title={showSlidesListUI ? 'Hide slides' : 'Show slides'}
+						>
 							<IconBtn onClick={() => dispatch(setSlideEditorState({ showSlidesListUI: !showSlidesListUI }))}>
 								{showSlidesListUI ? showIcon : hideIcon}
 							</IconBtn>
 						</Tooltip>
 						<Tooltip
 							color={editorActiveColor}
+							getPopupContainer={getContainer}
 							placement='top'
-							title={showEditorSideBarAssetCategoryUI ? 'Hide asset categories' : 'Show asset categories'}
+							title={showEditorSideBarAssetCategoryUI ? 'Hide categories' : 'Show categories'}
 						>
 							<IconBtn
 								onClick={() =>
@@ -76,6 +88,7 @@ export function EditorBody(props: CPropsType) {
 						</Tooltip>
 						<Tooltip
 							color={editorActiveColor}
+							getPopupContainer={getContainer}
 							placement='topRight'
 							title={showEditorSideBarAssetViewerUI ? 'Hide assets' : 'Show assets'}
 						>
