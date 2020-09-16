@@ -3,18 +3,22 @@ import styled, { css } from 'styled-components'
 import { BsReverseLayoutTextWindowReverse, BsTextareaT, BsThreeDots } from 'react-icons/bs'
 import { RiArrowDownSLine, RiVolumeUpLine, RiFileCopyLine, RiShareBoxLine } from 'react-icons/ri'
 import { FiVideo, FiTrash2 } from 'react-icons/fi'
-import { CgImage, CgStack, CgCheckO, CgMathPlus } from 'react-icons/cg'
-import { MdMultilineChart } from 'react-icons/md'
+import { ImImage } from 'react-icons/im'
+import { CgStack, CgCheckO, CgMathPlus } from 'react-icons/cg'
+import { MdMultilineChart, MdWallpaper } from 'react-icons/md'
 import { BiRectangle, BiPaint } from 'react-icons/bi'
 import { Popover, Row as AntRow, Switch, Tooltip } from 'antd'
 import { TooltipPlacement } from 'antd/lib/tooltip'
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons'
+import { useSelector, useDispatch } from 'react-redux'
 
+import { setSlideEditorState } from '../../../redux/slices/slideEditorStateSlice'
+import { AppDispatch, RootState } from '../../../redux/store'
 import vars from '../../../config/vars'
 import { EditorPropsType } from '../SlideEditor'
 import { getContainer } from '../../../utils/helpers'
 
-const { editorSideNavWidth, editorToolBarHeight, editorActiveColor } = vars
+const { editorSideNavWidth, editorToolBarHeight, appPrimaryColor, editorActiveColor } = vars
 
 interface CProps extends EditorPropsType {
 	toolbarAffixed: boolean
@@ -22,6 +26,8 @@ interface CProps extends EditorPropsType {
 
 export function EditorToolBar(props: CProps) {
 	const { toolbarAffixed, isFullScreen } = props
+	const dispatch: AppDispatch = useDispatch()
+	const { showCurrentlyUsedAssetsUI } = useSelector((state: RootState) => state.slideEditorState)
 	const toolBarContainerElement = useRef<any>(null)
 
 	const getLocalContainer = (node: HTMLElement) => getContainer(node.parentElement)
@@ -31,12 +37,12 @@ export function EditorToolBar(props: CProps) {
 
 	const morePopupContent = (
 		<MorePopupContainer>
-			<Tooltip color={editorActiveColor} getPopupContainer={getLocalContainer} placement='left' title={'Share'}>
+			<Tooltip color={appPrimaryColor} getPopupContainer={getLocalContainer} placement='left' title={'Share'}>
 				<IconBtn popup>
 					<RiShareBoxLine size={25} />
 				</IconBtn>
 			</Tooltip>
-			<Tooltip color={editorActiveColor} getPopupContainer={getLocalContainer} placement='left' title={'Delete slide'}>
+			<Tooltip color={appPrimaryColor} getPopupContainer={getLocalContainer} placement='left' title={'Delete slide'}>
 				<IconBtn popup>
 					<FiTrash2 size={25} />
 				</IconBtn>
@@ -47,7 +53,7 @@ export function EditorToolBar(props: CProps) {
 	return (
 		<Container affixed={toolbarAffixed.toString()} ref={toolBarContainerElement}>
 			<LeftContent>
-				<IconBtn style={{ marginLeft: 0, marginRight: 5 }}>
+				<IconBtn style={{ marginLeft: 0, marginRight: 0 }}>
 					<BsReverseLayoutTextWindowReverse size={25} />
 					<RiArrowDownSLine size={15} />
 				</IconBtn>
@@ -58,10 +64,10 @@ export function EditorToolBar(props: CProps) {
 					<FiVideo size={25} />
 				</IconBtn>
 				<IconBtn>
-					<SVGIcon>SVG</SVGIcon>
+					<MdWallpaper size={25} />
 				</IconBtn>
 				<IconBtn>
-					<CgImage size={25} />
+					<ImImage size={24} />
 				</IconBtn>
 				<IconBtn>
 					<BiPaint size={25} />
@@ -80,12 +86,17 @@ export function EditorToolBar(props: CProps) {
 				<Row justify='space-between' align='middle' style={{ width: '100%' }}>
 					<Row align='middle'>
 						<Tooltip
-							color={editorActiveColor}
+							color={appPrimaryColor}
 							getPopupContainer={getToolBarTooltipContainer}
 							placement={getTooltipPlacement()}
 							title={'Assets'}
 						>
-							<IconBtn style={{ marginLeft: 0, marginRight: 10 }}>
+							<IconBtn
+								style={{ marginLeft: 0, marginRight: 10, color: showCurrentlyUsedAssetsUI && editorActiveColor }}
+								onClick={() => {
+									dispatch(setSlideEditorState({ showCurrentlyUsedAssetsUI: !showCurrentlyUsedAssetsUI }))
+								}}
+							>
 								<CgStack size={25} />
 							</IconBtn>
 						</Tooltip>
@@ -163,20 +174,28 @@ export const IconBtn: any = styled.span`
 	justify-content: center;
 	padding: 0 10px;
 	opacity: 0.7;
+	transition: background-color 0.2s ease-in-out;
 	&:hover {
 		opacity: 1;
 		background-color: #0000001f;
 	}
 	${(props: any) =>
+		props.hasOwnProperty('simple') &&
+		css`
+			&:hover {
+				background-color: #fff;
+			}
+		`}
+	${(props: any) =>
 		props.hasOwnProperty('popup') &&
 		css`
 			&:hover {
 				background-color: #fff;
-				padding: 0;
+				padding: 0 5px;
 			}
 		`}
 `
-const SVGIcon = styled.span`
+export const SVGIcon = styled.span`
 	border: 2px solid #929eaa;
 	border-radius: 3px;
 	cursor: pointer;
@@ -196,7 +215,7 @@ const MorePopupContainer = styled.div`
 	display: flex;
 	flex-direction: column;
 	height: max-content;
-	justify-content: center;
+	justify-content: space-between;
 	min-height: 60px;
 	width: 30px;
 	& {

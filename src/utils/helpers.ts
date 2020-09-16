@@ -123,3 +123,4 @@ export const getAllQueryVariables = function (search?: string) {
 
 export const getContainer = (node: any, property: string = 'parentElement'): HTMLElement => node[property] ?? document.body
 export const sortByIndex = (array: any[] = []) => array.sort((a, b) => a.index - b.index)
+export const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))

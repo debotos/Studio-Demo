@@ -1,5 +1,5 @@
 import React from 'react'
-import { Skeleton, Spin } from 'antd'
+import { Col, Row, Skeleton, Spin } from 'antd'
 
 import LoadingSVG from '../../assets/loading.svg'
 
@@ -79,14 +79,28 @@ export function LoadingOverlay(props: LoadingProps) {
 	)
 }
 
-export function LoadingSkeleton({ number = 1 }) {
+export function LoadingSkeleton({ number = 1, ...rest }) {
 	return (
 		<>
 			{Array(number)
 				.fill(0)
 				.map((item, index) => (
-					<Skeleton active key={index} />
+					<Skeleton active key={index} {...rest} />
 				))}
 		</>
+	)
+}
+
+export function LoadingImagesSkeleton({ number = 1, gutter = [5, 5], span = 12, size = 100 }) {
+	return (
+		<Row gutter={gutter as [number, number]}>
+			{Array(number)
+				.fill(0)
+				.map((item, index) => (
+					<Col span={span} key={index}>
+						<Skeleton.Avatar active shape='square' size={span === 24 ? size * 2 : size} />
+					</Col>
+				))}
+		</Row>
 	)
 }

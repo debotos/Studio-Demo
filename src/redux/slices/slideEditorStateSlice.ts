@@ -7,7 +7,9 @@ import {
 import {
 	slideEditorAssetSubCategoryType,
 	slideEditorAssetSubCategories,
-} from '../../components/slideEditor/molecularElements/EditorAssetsArea'
+} from '../../components/slideEditor/molecularElements/editorAssetsArea/EditorAssetsPickupArea'
+
+type AllAssets = { [key: string]: any[] }
 
 type SliceState = {
 	showEditorSideBar: boolean
@@ -15,11 +17,13 @@ type SliceState = {
 	showEditorSideBarAssetCategoryUI: boolean
 	showEditorSideBarAssetViewerUI: boolean
 	showToolbarTopBorder: boolean
+	showCurrentlyUsedAssetsUI: boolean
 	assetCategories: slideEditorAssetCategoryType[]
 	activeAssetCategoryKey: string
 	assetSubCategories: slideEditorAssetSubCategoryType[]
 	activeAssetSubCategoryKey: string
-	assets: any[]
+	assets: AllAssets
+	currentlyUsedAssets: any[]
 }
 
 const initialState: SliceState = {
@@ -28,13 +32,13 @@ const initialState: SliceState = {
 	showEditorSideBarAssetCategoryUI: true,
 	showEditorSideBarAssetViewerUI: true,
 	showToolbarTopBorder: false,
+	showCurrentlyUsedAssetsUI: false,
 	assetCategories: slideEditorAssetCategories,
 	activeAssetCategoryKey: slideEditorAssetCategories[0].key,
 	assetSubCategories: slideEditorAssetSubCategories,
 	activeAssetSubCategoryKey: slideEditorAssetSubCategories[0].key,
-	assets: Array(50)
-		.fill(0)
-		.map((x, i) => ({ id: i, name: `Asset ${i}`, url: 'https://picsum.photos/100/100' })),
+	assets: {},
+	currentlyUsedAssets: [],
 }
 
 /* Central State for slide editor */

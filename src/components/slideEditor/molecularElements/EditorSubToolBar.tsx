@@ -22,23 +22,23 @@ export function EditorSubToolBar(props: EditorPropsType) {
 				</Col>
 				<Col>
 					<Row>
-						<IconBtn>
+						<IconBtn simple>
 							<RiArrowGoBackLine size={25} />
 						</IconBtn>
-						<IconBtn>
+						<IconBtn simple>
 							<RiArrowGoForwardLine size={25} />
 						</IconBtn>
-						<IconBtn>
+						<IconBtn simple>
 							<BiMessageDetail size={25} />
 						</IconBtn>
-						<IconBtn>
+						<IconBtn simple>
 							<RiSlideshow3Line size={25} />
 						</IconBtn>
-						<IconBtn>
+						<IconBtn simple>
 							<BiMinus size={25} />
 						</IconBtn>
 						<Percentage>80%</Percentage>
-						<IconBtn>
+						<IconBtn simple>
 							<BiPlus size={25} />
 						</IconBtn>
 					</Row>

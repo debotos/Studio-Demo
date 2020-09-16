@@ -16,7 +16,7 @@ interface CPropsType extends EditorPropsType {
 	bodyElementRef: any
 }
 
-const { headerHeight, editorToolBarHeight, editorActiveColor } = vars
+const { headerHeight, editorToolBarHeight, editorActiveColor, appPrimaryColor } = vars
 
 export function EditorBody(props: CPropsType) {
 	const { isFullScreen, bodyElementRef } = props
@@ -51,7 +51,7 @@ export function EditorBody(props: CPropsType) {
 			{/* Hide/Show Controls */}
 			<FloatingContainer className='app-box-shadow'>
 				<Tooltip
-					color={editorActiveColor}
+					color={appPrimaryColor}
 					getPopupContainer={getContainer}
 					placement='topLeft'
 					title={showEditorSideBar ? 'Hide sidebar' : 'Show sidebar'}
@@ -63,7 +63,7 @@ export function EditorBody(props: CPropsType) {
 				{showEditorSideBar && (
 					<>
 						<Tooltip
-							color={editorActiveColor}
+							color={appPrimaryColor}
 							getPopupContainer={getContainer}
 							placement='top'
 							title={showSlidesListUI ? 'Hide slides' : 'Show slides'}
@@ -73,7 +73,7 @@ export function EditorBody(props: CPropsType) {
 							</IconBtn>
 						</Tooltip>
 						<Tooltip
-							color={editorActiveColor}
+							color={appPrimaryColor}
 							getPopupContainer={getContainer}
 							placement='top'
 							title={showEditorSideBarAssetCategoryUI ? 'Hide categories' : 'Show categories'}
@@ -87,7 +87,7 @@ export function EditorBody(props: CPropsType) {
 							</IconBtn>
 						</Tooltip>
 						<Tooltip
-							color={editorActiveColor}
+							color={appPrimaryColor}
 							getPopupContainer={getContainer}
 							placement='topRight'
 							title={showEditorSideBarAssetViewerUI ? 'Hide assets' : 'Show assets'}

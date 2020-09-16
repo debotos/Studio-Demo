@@ -6,7 +6,7 @@ import vars from '../../../config/vars'
 import { EditorPropsType } from '../SlideEditor'
 import { RootState } from '../../../redux/store'
 import { EditorSlidesList } from '../molecularElements/EditorSlidesList'
-import { EditorAssetsArea } from '../molecularElements/EditorAssetsArea'
+import { EditorAssetsArea } from '../molecularElements/editorAssetsArea/EditorAssetsArea'
 import { EditorAssetsCategoryList } from '../molecularElements/EditorAssetsCategoryList'
 
 export default function EditorSideBar(props: EditorPropsType) {
