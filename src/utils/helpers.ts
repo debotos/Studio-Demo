@@ -121,5 +121,5 @@ export const getAllQueryVariables = function (search?: string) {
 	return paramObj
 }
 
-export const getContainer = (node: HTMLElement): HTMLElement => node.parentElement ?? document.body
+export const getContainer = (node: any, property: string = 'parentElement'): HTMLElement => node[property] ?? document.body
 export const sortByIndex = (array: any[] = []) => array.sort((a, b) => a.index - b.index)

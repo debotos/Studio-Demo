@@ -1,27 +1,51 @@
-import React from 'react'
+import React, { useRef } from 'react'
 import styled, { css } from 'styled-components'
 import { BsReverseLayoutTextWindowReverse, BsTextareaT, BsThreeDots } from 'react-icons/bs'
-import { RiArrowDownSLine, RiVolumeUpLine, RiFileCopyLine } from 'react-icons/ri'
-import { FiVideo } from 'react-icons/fi'
+import { RiArrowDownSLine, RiVolumeUpLine, RiFileCopyLine, RiShareBoxLine } from 'react-icons/ri'
+import { FiVideo, FiTrash2 } from 'react-icons/fi'
 import { CgImage, CgStack, CgCheckO, CgMathPlus } from 'react-icons/cg'
 import { MdMultilineChart } from 'react-icons/md'
 import { BiRectangle, BiPaint } from 'react-icons/bi'
-import { Row as AntRow, Switch } from 'antd'
+import { Popover, Row as AntRow, Switch, Tooltip } from 'antd'
+import { TooltipPlacement } from 'antd/lib/tooltip'
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons'
 
 import vars from '../../../config/vars'
 import { EditorPropsType } from '../SlideEditor'
+import { getContainer } from '../../../utils/helpers'
 
-const { editorSideNavWidth, editorToolBarHeight } = vars
+const { editorSideNavWidth, editorToolBarHeight, editorActiveColor } = vars
 
 interface CProps extends EditorPropsType {
 	toolbarAffixed: boolean
 }
 
 export function EditorToolBar(props: CProps) {
-	const { toolbarAffixed } = props
+	const { toolbarAffixed, isFullScreen } = props
+	const toolBarContainerElement = useRef<any>(null)
+
+	const getLocalContainer = (node: HTMLElement) => getContainer(node.parentElement)
+	const getToolBarTooltipContainer = (node: HTMLElement) =>
+		isFullScreen ? getContainer(node.parentElement) : getContainer(toolBarContainerElement)
+	const getTooltipPlacement = (): TooltipPlacement => (isFullScreen ? 'bottom' : 'top')
+
+	const morePopupContent = (
+		<MorePopupContainer>
+			<Tooltip color={editorActiveColor} getPopupContainer={getLocalContainer} placement='left' title={'Share'}>
+				<IconBtn popup>
+					<RiShareBoxLine size={25} />
+				</IconBtn>
+			</Tooltip>
+			<Tooltip color={editorActiveColor} getPopupContainer={getLocalContainer} placement='left' title={'Delete slide'}>
+				<IconBtn popup>
+					<FiTrash2 size={25} />
+				</IconBtn>
+			</Tooltip>
+		</MorePopupContainer>
+	)
+
 	return (
-		<Container affixed={toolbarAffixed.toString()}>
+		<Container affixed={toolbarAffixed.toString()} ref={toolBarContainerElement}>
 			<LeftContent>
 				<IconBtn style={{ marginLeft: 0, marginRight: 5 }}>
 					<BsReverseLayoutTextWindowReverse size={25} />
@@ -55,9 +79,16 @@ export function EditorToolBar(props: CProps) {
 			<RightContent>
 				<Row justify='space-between' align='middle' style={{ width: '100%' }}>
 					<Row align='middle'>
-						<IconBtn style={{ marginLeft: 0, marginRight: 10 }}>
-							<CgStack size={25} />
-						</IconBtn>
+						<Tooltip
+							color={editorActiveColor}
+							getPopupContainer={getToolBarTooltipContainer}
+							placement={getTooltipPlacement()}
+							title={'Assets'}
+						>
+							<IconBtn style={{ marginLeft: 0, marginRight: 10 }}>
+								<CgStack size={25} />
+							</IconBtn>
+						</Tooltip>
 						<Row align='middle'>
 							<Label>My Items</Label>&nbsp;&nbsp;
 							<Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />
@@ -73,9 +104,17 @@ export function EditorToolBar(props: CProps) {
 						<IconBtn>
 							<RiFileCopyLine size={25} />
 						</IconBtn>
-						<IconBtn style={{ marginRight: 0 }}>
-							<BsThreeDots size={25} />
-						</IconBtn>
+						<Popover
+							overlayClassName='slide-editor-toolbar-more-btn-popup'
+							content={morePopupContent}
+							getPopupContainer={getContainer}
+							placement='bottom'
+							trigger='click'
+						>
+							<IconBtn style={{ marginRight: 0 }}>
+								<BsThreeDots size={25} />
+							</IconBtn>
+						</Popover>
 					</Row>
 				</Row>
 			</RightContent>
@@ -115,18 +154,27 @@ const RightContent = styled.div`
 	padding-left: 15px;
 	padding-right: 30px;
 `
-export const IconBtn = styled.span`
+export const IconBtn: any = styled.span`
 	align-items: center;
 	cursor: pointer;
 	display: flex;
 	font-size: 15px;
 	height: 100%;
 	justify-content: center;
-	margin: 0 10px;
+	padding: 0 10px;
 	opacity: 0.7;
 	&:hover {
 		opacity: 1;
+		background-color: #0000001f;
 	}
+	${(props: any) =>
+		props.hasOwnProperty('popup') &&
+		css`
+			&:hover {
+				background-color: #fff;
+				padding: 0;
+			}
+		`}
 `
 const SVGIcon = styled.span`
 	border: 2px solid #929eaa;
@@ -142,4 +190,21 @@ const Label = styled.span`
 	font-size: 15px;
 	font-weight: 500;
 	margin-top: -2px;
+`
+const MorePopupContainer = styled.div`
+	align-items: center;
+	display: flex;
+	flex-direction: column;
+	height: max-content;
+	justify-content: center;
+	min-height: 60px;
+	width: 30px;
+	& {
+		span {
+			margin: 0;
+		}
+		span:not(:last-child) {
+			margin-bottom: 10px;
+		}
+	}
 `
