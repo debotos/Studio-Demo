@@ -1,7 +1,9 @@
 import { createSlice } from '@reduxjs/toolkit'
 
 import {
-	slideEditorAssetCategoryType,
+	slideEditorAssetCategoryItemPrimaryType,
+	slideEditorAssetsPrimaryTypes,
+	slideEditorAssetCategoriesType,
 	slideEditorAssetCategories,
 } from '../../components/slideEditor/molecularElements/EditorAssetsCategoryList'
 import {
@@ -9,7 +11,7 @@ import {
 	slideEditorAssetSubCategories,
 } from '../../components/slideEditor/molecularElements/editorAssetsArea/EditorAssetsPickupArea'
 
-type AllAssets = { [key: string]: any[] }
+type AllAssets = Record<slideEditorAssetCategoryItemPrimaryType, Record<string, any[]>>
 
 type SliceState = {
 	showEditorSideBar: boolean
@@ -18,13 +20,19 @@ type SliceState = {
 	showEditorSideBarAssetViewerUI: boolean
 	showToolbarTopBorder: boolean
 	showCurrentlyUsedAssetsUI: boolean
-	assetCategories: slideEditorAssetCategoryType[]
+	assetCategories: slideEditorAssetCategoriesType
+	activePrimaryAssetType: slideEditorAssetCategoryItemPrimaryType
 	activeAssetCategoryKey: string
 	assetSubCategories: slideEditorAssetSubCategoryType[]
 	activeAssetSubCategoryKey: string
-	assets: AllAssets
+	allAssets: AllAssets
 	currentlyUsedAssets: any[]
 }
+
+const activePrimaryAssetType: slideEditorAssetCategoryItemPrimaryType = slideEditorAssetsPrimaryTypes[0]
+const allAssetsSkeleton: any = {}
+slideEditorAssetsPrimaryTypes.forEach((type: slideEditorAssetCategoryItemPrimaryType) => (allAssetsSkeleton[type] = []))
+const allAssets: AllAssets = allAssetsSkeleton
 
 const initialState: SliceState = {
 	showEditorSideBar: true,
@@ -34,10 +42,11 @@ const initialState: SliceState = {
 	showToolbarTopBorder: false,
 	showCurrentlyUsedAssetsUI: false,
 	assetCategories: slideEditorAssetCategories,
-	activeAssetCategoryKey: slideEditorAssetCategories[0].key,
+	activePrimaryAssetType,
+	activeAssetCategoryKey: slideEditorAssetCategories[activePrimaryAssetType]?.[0]?.key,
 	assetSubCategories: slideEditorAssetSubCategories,
 	activeAssetSubCategoryKey: slideEditorAssetSubCategories[0].key,
-	assets: {},
+	allAssets,
 	currentlyUsedAssets: [],
 }
 

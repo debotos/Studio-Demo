@@ -7,14 +7,15 @@ import { AiOutlineColumnWidth } from 'react-icons/ai'
 import { FiColumns } from 'react-icons/fi'
 
 import { setSlideEditorState } from '../../../../redux/slices/slideEditorStateSlice'
+import { LoadingSkeleton, LoadingImagesSkeleton } from '../../../loading/Loading'
+import { slideEditorAssetCategoryItemType } from '../EditorAssetsCategoryList'
+import { getContainer, isEmpty, sleep } from '../../../../utils/helpers'
 import ImageLoadingGIF from '../../../../assets/image-loading.svg'
 import { AppDispatch, RootState } from '../../../../redux/store'
-import { getContainer, isEmpty, sleep } from '../../../../utils/helpers'
 import FallbackImage from '../../../../assets/fallback.png'
-import { LoadingSkeleton, LoadingImagesSkeleton } from '../../../loading/Loading'
 import { EditorPropsType } from '../../SlideEditor'
-import { Img } from '../EditorSlidesList'
 import vars from '../../../../config/vars'
+import { Img } from '../EditorSlidesList'
 
 type ColType = 'one' | 'two'
 export type slideEditorAssetSubCategoryType = { key: string; label: string; value: string }
@@ -25,10 +26,11 @@ export const slideEditorAssetSubCategories: slideEditorAssetSubCategoryType[] = 
 
 export function EditorAssetsPickupArea(props: EditorPropsType) {
 	const dispatch: AppDispatch = useDispatch()
-	const { assets: allAssets, activeAssetCategoryKey, assetSubCategories: subCategories, activeAssetSubCategoryKey } = useSelector(
-		(state: RootState) => state.slideEditorState
-	)
-	const currentAssets = allAssets[activeAssetCategoryKey]
+	const { assetCategories, activePrimaryAssetType } = useSelector((state: RootState) => state.slideEditorState)
+	const categories: slideEditorAssetCategoryItemType[] = assetCategories[activePrimaryAssetType]
+	const { allAssets, activeAssetCategoryKey } = useSelector((state: RootState) => state.slideEditorState)
+	const currentCategories = allAssets?.[activePrimaryAssetType] || {}
+	const currentAssets = currentCategories?.[activeAssetCategoryKey] || []
 	const [col, setCol] = useState<ColType>('two')
 	const [loading, setLoading] = useState(false)
 
@@ -50,7 +52,11 @@ export function EditorAssetsPickupArea(props: EditorPropsType) {
 				url: `https://picsum.photos/${i * 10 * activeAssetCategoryKey.length}/${i * 10 * activeAssetCategoryKey.length}`,
 			}))
 		await sleep(2000)
-		dispatch(setSlideEditorState({ assets: { ...allAssets, [activeAssetCategoryKey]: dummyData } }))
+		dispatch(
+			setSlideEditorState({
+				allAssets: { ...allAssets, [activePrimaryAssetType]: { ...currentCategories, [activeAssetCategoryKey]: dummyData } },
+			})
+		)
 		setLoading(false)
 	}
 
@@ -60,7 +66,7 @@ export function EditorAssetsPickupArea(props: EditorPropsType) {
 
 	const handleSelect = (value: any) => {
 		console.log(value)
-		dispatch(setSlideEditorState({ activeAssetSubCategoryKey: value }))
+		dispatch(setSlideEditorState({ activeAssetCategoryKey: value }))
 	}
 
 	const colSpan = col === 'one' ? 24 : 12
@@ -94,13 +100,13 @@ export function EditorAssetsPickupArea(props: EditorPropsType) {
 			<Select
 				getPopupContainer={getContainer}
 				onChange={handleSelect}
-				value={activeAssetSubCategoryKey}
+				value={activeAssetCategoryKey}
 				style={{ width: '100%', margin: '10px 0' }}
 			>
-				{subCategories.map((item, index) => {
-					const { label, value } = item
+				{categories.map((item, index) => {
+					const { key, label } = item
 					return (
-						<Select.Option key={index} value={value}>
+						<Select.Option key={key} value={key}>
 							{label}
 						</Select.Option>
 					)
