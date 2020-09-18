@@ -1,15 +1,18 @@
 import React from 'react'
 import styled from 'styled-components'
 
-import { EditorPropsType } from '../SlideEditor'
 import { EditorSubToolBar } from '../molecularElements/EditorSubToolBar'
+import EditorNoteArea from '../molecularElements/EditorNoteArea'
+import { EditorPropsType } from '../SlideEditor'
 import vars from '../../../config/vars'
+
+const { headerHeight, editorSubToolBarHeight, editorToolBarHeight, editorNoteAreaHeight } = vars
 
 export default function EditingArea(props: EditorPropsType) {
 	const { isFullScreen } = props
 	const offsetTop = isFullScreen
-		? vars.editorToolBarHeight + vars.editorSubToolBarHeight
-		: vars.headerHeight + vars.editorToolBarHeight + vars.editorSubToolBarHeight
+		? editorToolBarHeight + editorSubToolBarHeight + editorNoteAreaHeight
+		: headerHeight + editorToolBarHeight + editorSubToolBarHeight + editorNoteAreaHeight
 
 	return (
 		<Wrapper className='hide-native-scrollbar'>
@@ -22,6 +25,7 @@ export default function EditingArea(props: EditorPropsType) {
 					src='https://ezilmdev.s3.amazonaws.com/AR/L1/U99/E60/S001/AR_L1_U99_E60_S001-image1.png'
 				/>
 			</Container>
+			<EditorNoteArea />
 		</Wrapper>
 	)
 }

@@ -8,17 +8,18 @@ import { setSlideEditorState } from '../../../redux/slices/slideEditorStateSlice
 import { AppDispatch, RootState } from '../../../redux/store'
 import { getContainer } from '../../../utils/helpers'
 import { EditorPropsType } from '../SlideEditor'
+import EditorExtraArea from './editorExtraArea/EditorExtraArea'
 import EditorSideBar from './EditorSideBar'
 import EditingArea from './EditingArea'
 import vars from '../../../config/vars'
 
-interface CPropsType extends EditorPropsType {
+export interface EditorBodyPropsType extends EditorPropsType {
 	bodyElementRef: any
 }
 
 const { headerHeight, editorToolBarHeight, editorActiveColor, appPrimaryColor } = vars
 
-export function EditorBody(props: CPropsType) {
+export function EditorBody(props: EditorBodyPropsType) {
 	const { isFullScreen, bodyElementRef } = props
 	const dispatch: AppDispatch = useDispatch()
 	const { showEditorSideBar, showSlidesListUI, showEditorSideBarAssetCategoryUI, showEditorSideBarAssetViewerUI } = useSelector(
@@ -46,6 +47,7 @@ export function EditorBody(props: CPropsType) {
 			)}
 			<RightContent>
 				<EditingArea {...props} />
+				<EditorExtraArea {...props} />
 			</RightContent>
 
 			{/* Hide/Show Controls */}
@@ -128,6 +130,7 @@ const RightContent = styled.div`
 	height: 100%;
 	padding: 0;
 `
+
 const FloatingContainer = styled.div`
 	align-items: center;
 	background-color: #fff;

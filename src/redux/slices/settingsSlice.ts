@@ -4,7 +4,7 @@ import keys from '../../config/keys'
 
 type SliceState = { sideNav: 'pinned' | boolean; breadcrumb: boolean; bodyPadding: number; slideEditor: boolean }
 
-const getSideNavInitValue = () => {
+export const getSideNavInitValue = () => {
 	const val = localStorage.getItem(keys.sideNav)
 	if (!val) return false
 	if (val === 'pinned') {

@@ -1,6 +1,6 @@
 import { useMediaQuery } from 'react-responsive'
 
-const hideSlideEditorAt = 1224
+const hideSlideEditorAt = 1405
 
 const Desktop = ({ children, editor }: any) => {
 	const isDesktop = useMediaQuery({ minWidth: editor ? hideSlideEditorAt : 992 })

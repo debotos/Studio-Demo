@@ -12,11 +12,15 @@ import { TooltipPlacement } from 'antd/lib/tooltip'
 import { CloseOutlined, CheckOutlined } from '@ant-design/icons'
 import { useSelector, useDispatch } from 'react-redux'
 
+import {
+	slideEditorAssetCategories,
+	slideEditorAssetCategoryItemPrimaryType,
+} from '../molecularElements/EditorAssetsCategoryList'
 import { setSlideEditorState } from '../../../redux/slices/slideEditorStateSlice'
 import { AppDispatch, RootState } from '../../../redux/store'
-import vars from '../../../config/vars'
-import { EditorPropsType } from '../SlideEditor'
 import { getContainer } from '../../../utils/helpers'
+import { EditorPropsType } from '../SlideEditor'
+import vars from '../../../config/vars'
 
 const { editorSideNavWidth, editorToolBarHeight, appPrimaryColor, editorActiveColor } = vars
 
@@ -27,13 +31,17 @@ interface CProps extends EditorPropsType {
 export function EditorToolBar(props: CProps) {
 	const { toolbarAffixed, isFullScreen } = props
 	const dispatch: AppDispatch = useDispatch()
-	const { showCurrentlyUsedAssetsUI } = useSelector((state: RootState) => state.slideEditorState)
+	const { showCurrentlyUsedAssetsUI, activePrimaryAssetType } = useSelector((state: RootState) => state.slideEditorState)
 	const toolBarContainerElement = useRef<any>(null)
 
 	const getLocalContainer = (node: HTMLElement) => getContainer(node.parentElement)
 	const getToolBarTooltipContainer = (node: HTMLElement) =>
 		isFullScreen ? getContainer(node.parentElement) : getContainer(toolBarContainerElement)
 	const getTooltipPlacement = (): TooltipPlacement => (isFullScreen ? 'bottom' : 'top')
+	const setActivePrimaryType = (type: slideEditorAssetCategoryItemPrimaryType) => {
+		dispatch(setSlideEditorState({ activePrimaryAssetType: type }))
+		dispatch(setSlideEditorState({ activeAssetCategoryKey: slideEditorAssetCategories[type]?.[0]?.key }))
+	}
 
 	const morePopupContent = (
 		<MorePopupContainer>
@@ -57,16 +65,28 @@ export function EditorToolBar(props: CProps) {
 					<BsReverseLayoutTextWindowReverse size={25} />
 					<RiArrowDownSLine size={15} />
 				</IconBtn>
-				<IconBtn>
+				<IconBtn
+					onClick={() => setActivePrimaryType('audio')}
+					style={{ color: activePrimaryAssetType === 'audio' && editorActiveColor }}
+				>
 					<RiVolumeUpLine size={25} />
 				</IconBtn>
-				<IconBtn>
+				<IconBtn
+					onClick={() => setActivePrimaryType('video')}
+					style={{ color: activePrimaryAssetType === 'video' && editorActiveColor }}
+				>
 					<FiVideo size={25} />
 				</IconBtn>
-				<IconBtn>
+				<IconBtn
+					onClick={() => setActivePrimaryType('svg')}
+					style={{ color: activePrimaryAssetType === 'svg' && editorActiveColor }}
+				>
 					<MdWallpaper size={25} />
 				</IconBtn>
-				<IconBtn>
+				<IconBtn
+					onClick={() => setActivePrimaryType('image')}
+					style={{ color: activePrimaryAssetType === 'image' && editorActiveColor }}
+				>
 					<ImImage size={24} />
 				</IconBtn>
 				<IconBtn>
@@ -78,18 +98,26 @@ export function EditorToolBar(props: CProps) {
 				<IconBtn>
 					<BiRectangle size={25} />
 				</IconBtn>
-				<IconBtn style={{ marginRight: 0 }}>
+				<IconBtn
+					onClick={() => setActivePrimaryType('text')}
+					style={{ color: activePrimaryAssetType === 'text' && editorActiveColor, marginRight: 0 }}
+				>
 					<BsTextareaT size={25} />
 				</IconBtn>
 			</LeftContent>
 			<RightContent>
-				<Row justify='space-between' align='middle' style={{ width: '100%' }}>
-					<Row align='middle'>
+				<Row
+					align='middle'
+					className='hide-native-scrollbar'
+					justify='space-between'
+					style={{ minWidth: '180px', width: '100%', flexWrap: 'nowrap', overflowX: 'scroll' }}
+				>
+					<Row align='middle' className='hide-native-scrollbar' style={{ flexWrap: 'nowrap', overflowX: 'scroll' }}>
 						<Tooltip
 							color={appPrimaryColor}
 							getPopupContainer={getToolBarTooltipContainer}
 							placement={getTooltipPlacement()}
-							title={'Assets'}
+							title={'Currently used assets'}
 						>
 							<IconBtn
 								style={{ marginLeft: 0, marginRight: 10, color: showCurrentlyUsedAssetsUI && editorActiveColor }}
@@ -100,13 +128,17 @@ export function EditorToolBar(props: CProps) {
 								<CgStack size={25} />
 							</IconBtn>
 						</Tooltip>
-						<Row align='middle'>
+						<Row align='middle' style={{ flexWrap: 'nowrap' }}>
 							<Label>My Items</Label>&nbsp;&nbsp;
 							<Switch checkedChildren={<CheckOutlined />} unCheckedChildren={<CloseOutlined />} />
 						</Row>
 					</Row>
-					<Row align='middle'>
-						<Row align='middle' style={{ color: '#52c41a', marginRight: 10 }}>
+					<Row
+						align='middle'
+						className='hide-native-scrollbar'
+						style={{ flexWrap: 'nowrap', overflowX: 'scroll', paddingLeft: 10 }}
+					>
+						<Row align='middle' style={{ color: '#52c41a', flexWrap: 'nowrap', marginRight: 10, minWidth: 100 }}>
 							<CgCheckO size={25} /> &nbsp;&nbsp; <Label>Saved</Label>
 						</Row>
 						<IconBtn>
@@ -155,7 +187,7 @@ const LeftContent = styled.div`
 	display: flex;
 	height: 100%;
 	justify-content: flex-start;
-	padding-left: 30px;
+	padding-left: 20px;
 	padding-right: 15px;
 	width: ${editorSideNavWidth + 'px'};
 `
@@ -163,7 +195,8 @@ const RightContent = styled.div`
 	flex: 1;
 	height: 100%;
 	padding-left: 15px;
-	padding-right: 30px;
+	padding-right: 20px;
+	overflow-x: scroll;
 `
 export const IconBtn: any = styled.span`
 	align-items: center;
@@ -209,6 +242,7 @@ const Label = styled.span`
 	font-size: 15px;
 	font-weight: 500;
 	margin-top: -2px;
+	min-width: 65px;
 `
 const MorePopupContainer = styled.div`
 	align-items: center;

@@ -8,6 +8,7 @@ import store from '../redux/store'
 import AppHeader from '../components/header/Header'
 import AppBody from '../components/containers/AppBody'
 import AppMain from '../components/containers/AppMain'
+import ErrorBoundary from '../components/errorBoundary/ErrorBoundary'
 import SideNavigation from '../components/sideNavigation/SideNavigation'
 
 export const routeHistory = createBrowserHistory()
@@ -15,15 +16,17 @@ export const routeHistory = createBrowserHistory()
 function App() {
 	return (
 		<>
-			<Provider store={store}>
-				<Router history={routeHistory}>
-					<AppHeader />
-					<AppMain>
-						<SideNavigation />
-						<AppBody />
-					</AppMain>
-				</Router>
-			</Provider>
+			<ErrorBoundary>
+				<Provider store={store}>
+					<Router history={routeHistory}>
+						<AppHeader />
+						<AppMain>
+							<SideNavigation />
+							<AppBody />
+						</AppMain>
+					</Router>
+				</Provider>
+			</ErrorBoundary>
 		</>
 	)
 }

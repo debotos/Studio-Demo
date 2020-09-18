@@ -112,7 +112,7 @@ const NavigationDrawerBody: any = styled.div`
 /* Side Navigation Head */
 export function NavigationDrawerHead(props: any) {
 	const dispatch: AppDispatch = useDispatch()
-	const nav = useSelector((state: RootState) => state.settings.sideNav)
+	const { sideNav: nav, slideEditor: slideEditorOpen } = useSelector((state: RootState) => state.settings)
 
 	const handlePinning = () => {
 		if (nav === 'pinned') {
@@ -134,9 +134,11 @@ export function NavigationDrawerHead(props: any) {
 				<Title onClick={goHome}>EZILM Studio</Title>
 			</Row>
 			<Row align='middle'>
-				<PinAction onClick={handlePinning} pinned={nav.toString()}>
-					{nav === 'pinned' ? <PushpinTwoTone /> : <PushpinOutlined />}
-				</PinAction>
+				{!slideEditorOpen && ( // Give pin option if user is not inside editor
+					<PinAction onClick={handlePinning} pinned={nav.toString()}>
+						{nav === 'pinned' ? <PushpinTwoTone /> : <PushpinOutlined />}
+					</PinAction>
+				)}
 			</Row>
 		</NavigationDrawerHeadContainer>
 	)

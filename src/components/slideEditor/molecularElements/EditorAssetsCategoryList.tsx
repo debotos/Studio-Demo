@@ -4,9 +4,10 @@ import { useSelector, useDispatch } from 'react-redux'
 
 import { setSlideEditorState } from '../../../redux/slices/slideEditorStateSlice'
 import { AppDispatch, RootState } from '../../../redux/store'
+import { getReactIcon } from '../../../utils/getReactIcon'
+import { truncate } from '../../../utils/helpers'
 import { EditorPropsType } from '../SlideEditor'
 import vars from '../../../config/vars'
-import { getReactIcon } from '../../../utils/getReactIcon'
 
 export type slideEditorAssetCategoryItemPrimaryType = 'image' | 'audio' | 'video' | 'svg' | 'text'
 export type slideEditorAssetCategoryItemType = { key: string; label: string; icon: string }
@@ -24,26 +25,26 @@ export const slideEditorAssetCategories: slideEditorAssetCategoriesType = {
 		{ key: 'upload', label: 'Upload', icon: 'bs/BsUpload' },
 	],
 	audio: [
-		{ key: 'all', label: 'All', icon: 'im/RiVolumeUpLine' },
-		{ key: 'arabic', label: 'Arabic', icon: 'bs/RiVolumeUpLine' },
-		{ key: 'english', label: 'English', icon: 'bi/RiVolumeUpLine' },
-		{ key: 'tune', label: 'Tune', icon: 'bi/RiVolumeUpLine' },
+		{ key: 'all', label: 'All', icon: 'ri/RiVolumeUpLine' },
+		{ key: 'arabic', label: 'Arabic', icon: 'ri/RiVolumeUpLine' },
+		{ key: 'english', label: 'English', icon: 'ri/RiVolumeUpLine' },
+		{ key: 'tune', label: 'Tune', icon: 'ri/RiVolumeUpLine' },
 	],
 	video: [
-		{ key: 'all', label: 'All', icon: 'im/FiVideo' },
-		{ key: 'arabic', label: 'Arabic', icon: 'bs/FiVideo' },
-		{ key: 'english', label: 'English', icon: 'bi/FiVideo' },
+		{ key: 'all', label: 'All', icon: 'fi/FiVideo' },
+		{ key: 'arabic', label: 'Arabic', icon: 'fi/FiVideo' },
+		{ key: 'english', label: 'English', icon: 'fi/FiVideo' },
 	],
 	svg: [
-		{ key: 'all', label: 'All', icon: 'im/MdWallpaper' },
-		{ key: 'transparent', label: 'Transparent', icon: 'bs/MdWallpaper' },
-		{ key: 'cartoon', label: 'Cartoon', icon: 'bi/MdWallpaper' },
+		{ key: 'all', label: 'All', icon: 'md/MdWallpaper' },
+		{ key: 'transparent', label: 'Transparent', icon: 'md/MdWallpaper' },
+		{ key: 'cartoon', label: 'Cartoon', icon: 'md/MdWallpaper' },
 	],
 	text: [
-		{ key: 'all', label: 'All', icon: 'im/BsTextareaT' },
+		{ key: 'all', label: 'All', icon: 'bs/BsTextareaT' },
 		{ key: 'arabic', label: 'Arabic', icon: 'bs/BsTextareaT' },
-		{ key: 'english', label: 'English', icon: 'bi/BsTextareaT' },
-		{ key: 'quran', label: 'Quran', icon: 'bi/BsTextareaT' },
+		{ key: 'english', label: 'English', icon: 'bs/BsTextareaT' },
+		{ key: 'quran', label: 'Quran', icon: 'bs/BsTextareaT' },
 	],
 }
 
@@ -81,7 +82,7 @@ function Category(props: { data: slideEditorAssetCategoryItemType }) {
 	return (
 		<CategoryItem active={active.toString()} onClick={handleClick}>
 			{getReactIcon(icon, 25)}
-			<span>{label}</span>
+			<span>{truncate(label, 7)}</span>
 		</CategoryItem>
 	)
 }

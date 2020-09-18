@@ -6,10 +6,6 @@ import {
 	slideEditorAssetCategoriesType,
 	slideEditorAssetCategories,
 } from '../../components/slideEditor/molecularElements/EditorAssetsCategoryList'
-import {
-	slideEditorAssetSubCategoryType,
-	slideEditorAssetSubCategories,
-} from '../../components/slideEditor/molecularElements/editorAssetsArea/EditorAssetsPickupArea'
 
 type AllAssets = Record<slideEditorAssetCategoryItemPrimaryType, Record<string, any[]>>
 
@@ -23,10 +19,9 @@ type SliceState = {
 	assetCategories: slideEditorAssetCategoriesType
 	activePrimaryAssetType: slideEditorAssetCategoryItemPrimaryType
 	activeAssetCategoryKey: string
-	assetSubCategories: slideEditorAssetSubCategoryType[]
-	activeAssetSubCategoryKey: string
 	allAssets: AllAssets
 	currentlyUsedAssets: any[]
+	editorExtraAreaActiveTemplate: 'comment' | 'image-properties' | 'text-properties' | 'template-properties' | 'animation' | null
 }
 
 const activePrimaryAssetType: slideEditorAssetCategoryItemPrimaryType = slideEditorAssetsPrimaryTypes[0]
@@ -44,10 +39,9 @@ const initialState: SliceState = {
 	assetCategories: slideEditorAssetCategories,
 	activePrimaryAssetType,
 	activeAssetCategoryKey: slideEditorAssetCategories[activePrimaryAssetType]?.[0]?.key,
-	assetSubCategories: slideEditorAssetSubCategories,
-	activeAssetSubCategoryKey: slideEditorAssetSubCategories[0].key,
 	allAssets,
 	currentlyUsedAssets: [],
+	editorExtraAreaActiveTemplate: null,
 }
 
 /* Central State for slide editor */

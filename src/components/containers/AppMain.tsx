@@ -12,6 +12,10 @@ export function AppMain({ children }: any) {
 export default AppMain
 
 const Main: any = styled.div`
+	height: 100%;
+	min-height: 100vh;
+	min-width: 100vw;
+	width: 100%;
 	${(props: any) =>
 		props.nav === 'pinned' &&
 		css`

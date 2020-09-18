@@ -35,7 +35,7 @@ export function CurrentlyUsedAssetsArea(props: EditorPropsType) {
 								</Col>
 								<Col span={8}>
 									<Row justify='end' align='middle'>
-										<ShowHideBtn>{showIcon}</ShowHideBtn>
+										<ShowHideBtn>{true ? showIcon : hideIcon}</ShowHideBtn>
 									</Row>
 								</Col>
 							</AssetItem>

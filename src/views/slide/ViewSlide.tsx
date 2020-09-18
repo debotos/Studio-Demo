@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { message } from 'antd'
+import { message, Tooltip } from 'antd'
 import styled from 'styled-components'
 import { matchPath } from 'react-router'
 import { useSelector, useDispatch } from 'react-redux'
@@ -10,11 +10,12 @@ import { AppDispatch, RootState } from '../../redux/store'
 import { setActiveItems } from '../../redux/slices/activeItemsSlice'
 import { setTreeData } from '../../redux/slices/treeDataSlice'
 import * as dummyDataProvider from '../../utils/dummyData'
-import { genTreeKey, isEmpty } from '../../utils/helpers'
+import { genTreeKey, getContainer, isEmpty } from '../../utils/helpers'
 import { LoadingCenter } from '../../components/loading/Loading'
-import { setSettings } from '../../redux/slices/settingsSlice'
+import { setSettings, getSideNavInitValue } from '../../redux/slices/settingsSlice'
 import SlideEditor from '../../components/slideEditor/SlideEditor'
 import keys from '../../config/keys'
+import vars from '../../config/vars'
 
 /* View specific slide means open slide editor for it */
 export default function (props: any) {
@@ -44,10 +45,10 @@ export default function (props: any) {
 	}
 
 	useEffect(() => {
-		dispatch(setSettings({ slideEditor: true }))
+		dispatch(setSettings({ slideEditor: true, sideNav: false }))
 		getData()
 		return () => {
-			dispatch(setSettings({ slideEditor: false }))
+			dispatch(setSettings({ slideEditor: false, sideNav: getSideNavInitValue() }))
 			const match = matchPath(window.location.pathname, {
 				path: `/editor/:subjectID/:levelID/:unitID/:lessonID/slides/${keys.viewAction}/:id`,
 			})
@@ -148,9 +149,16 @@ export default function (props: any) {
 					isFullScreen={fullScreenHandler.active}
 					fullScreenBtnAlreadyClicked={fullScreenBtnAlreadyClicked}
 				/>
-				<FloatingButton className='app-box-shadow' onClick={handleFullScreenViewer}>
-					{fullScreenHandler.active ? <GoScreenNormal size={25} /> : <GoScreenFull size={25} />}
-				</FloatingButton>
+				<Tooltip
+					color={vars.appPrimaryColor}
+					getPopupContainer={getContainer}
+					placement='left'
+					title={fullScreenHandler.active ? 'Close full screen editor' : 'Open full screen editor'}
+				>
+					<FloatingButton className='app-box-shadow' onClick={handleFullScreenViewer}>
+						{fullScreenHandler.active ? <GoScreenNormal size={25} /> : <GoScreenFull size={25} />}
+					</FloatingButton>
+				</Tooltip>
 			</FullScreen>
 		</>
 	)

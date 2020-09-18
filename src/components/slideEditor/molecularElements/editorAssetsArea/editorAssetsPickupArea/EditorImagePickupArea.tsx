@@ -6,25 +6,22 @@ import { useSelector, useDispatch } from 'react-redux'
 import { AiOutlineColumnWidth } from 'react-icons/ai'
 import { FiColumns } from 'react-icons/fi'
 
-import { setSlideEditorState } from '../../../../redux/slices/slideEditorStateSlice'
-import { LoadingSkeleton, LoadingImagesSkeleton } from '../../../loading/Loading'
-import { slideEditorAssetCategoryItemType } from '../EditorAssetsCategoryList'
-import { getContainer, isEmpty, sleep } from '../../../../utils/helpers'
-import ImageLoadingGIF from '../../../../assets/image-loading.svg'
-import { AppDispatch, RootState } from '../../../../redux/store'
-import FallbackImage from '../../../../assets/fallback.png'
-import { EditorPropsType } from '../../SlideEditor'
-import vars from '../../../../config/vars'
-import { Img } from '../EditorSlidesList'
+import { setSlideEditorState } from '../../../../../redux/slices/slideEditorStateSlice'
+import { LoadingSkeleton, LoadingImagesSkeleton } from '../../../../loading/Loading'
+import { slideEditorAssetCategoryItemType } from '../../EditorAssetsCategoryList'
+import { getContainer, isEmpty, sleep } from '../../../../../utils/helpers'
+import ImageLoadingGIF from '../../../../../assets/image-loading.svg'
+import { AppDispatch, RootState } from '../../../../../redux/store'
+import FallbackImage from '../../../../../assets/fallback.png'
+import { EditorPropsType } from '../../../SlideEditor'
+import vars from '../../../../../config/vars'
+import { Img } from '../../EditorSlidesList'
 
 type ColType = 'one' | 'two'
 export type slideEditorAssetSubCategoryType = { key: string; label: string; value: string }
-export const slideEditorAssetSubCategories: slideEditorAssetSubCategoryType[] = [
-	{ key: 'all', label: 'All', value: 'all' },
-	{ key: 'transparent', label: 'Transparent', value: 'transparent' },
-]
 
-export function EditorAssetsPickupArea(props: EditorPropsType) {
+export function EditorImagePickupArea(props: EditorPropsType) {
+	const _isMounted = React.useRef(false)
 	const dispatch: AppDispatch = useDispatch()
 	const { assetCategories, activePrimaryAssetType } = useSelector((state: RootState) => state.slideEditorState)
 	const categories: slideEditorAssetCategoryItemType[] = assetCategories[activePrimaryAssetType]
@@ -35,11 +32,15 @@ export function EditorAssetsPickupArea(props: EditorPropsType) {
 	const [loading, setLoading] = useState(false)
 
 	useEffect(() => {
+		_isMounted.current = true
 		if (isEmpty(currentAssets)) {
 			getCurrentAssets()
 		}
+		return () => {
+			_isMounted.current = false
+		}
 		// eslint-disable-next-line react-hooks/exhaustive-deps
-	}, [activeAssetCategoryKey])
+	}, [activePrimaryAssetType, activeAssetCategoryKey])
 
 	const getCurrentAssets = async () => {
 		// TODO: Ajax to get the asset for current active category
@@ -57,7 +58,7 @@ export function EditorAssetsPickupArea(props: EditorPropsType) {
 				allAssets: { ...allAssets, [activePrimaryAssetType]: { ...currentCategories, [activeAssetCategoryKey]: dummyData } },
 			})
 		)
-		setLoading(false)
+		_isMounted.current && setLoading(false)
 	}
 
 	const handleSearch = (value: any) => {

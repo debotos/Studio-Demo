@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux'
 import { RootState } from '../../../../redux/store'
 import { EditorPropsType } from '../../SlideEditor'
 import { CurrentlyUsedAssetsArea } from './CurrentlyUsedAssetsArea'
-import { EditorAssetsPickupArea } from './EditorAssetsPickupArea'
+import { EditorAssetsPickupArea } from './editorAssetsPickupArea/EditorAssetsPickupArea'
 
 export function EditorAssetsArea(props: EditorPropsType) {
 	const { showCurrentlyUsedAssetsUI } = useSelector((state: RootState) => state.slideEditorState)

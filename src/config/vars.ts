@@ -31,6 +31,8 @@ const vars = {
 		editorSideNavPaddingLeft,
 	editorActiveColor: '#0e7de4',
 	editorSlidesListImageHeight: 120,
+	editorExtraAreaWidth: 250, // Right side of the editing area
+	editorNoteAreaHeight: 100,
 }
 
 export default vars
